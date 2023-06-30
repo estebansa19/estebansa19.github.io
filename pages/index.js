@@ -21,11 +21,13 @@ export default function Home({ allJobsData }) {
       <Head>
         <title>{siteTitle}</title>
       </Head>
+
       <section className={utilStyles.headingMd}>
         <p>Hello 👋, I'm <strong>Esteban</strong>, I’m a software engineer, I live in Colombia 🇨🇴.</p>
         <p>I'm 23 years old, a Ruby/Ruby on Rails lover; Ruby is my main programming language but, I like JavaScript as well (In fact, this resume has been built with JavaScript).</p>
         <p>I'm studying English, I enjoy reading, watching movies/series/animes. I like to have a few beers once in a while as well :) </p>
       </section>
+
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <h2 className={utilStyles.headingLg}>Experience</h2>
         <ul className={utilStyles.list}>
@@ -41,6 +43,15 @@ export default function Home({ allJobsData }) {
             ))
           }
         </ul>
+      </section>
+
+      <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
+        <h2 className={utilStyles.headingLg}>Education</h2>
+        <Link href={'https://senacertificados.co/analisis-desarrollo-de-sistemas-de-informacion/'} target='_blank'>Análisis y Desarrollo de Sistemas de información</Link>
+        <br />
+        <small>SENA</small>
+        <br />
+        <small className={utilStyles.lightText}>September, 2017 - September, 2019</small>
       </section>
     </Layout>
   );
