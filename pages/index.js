@@ -22,9 +22,9 @@ export default function Home({ allPostsData }) {
         <title>{siteTitle}</title>
       </Head>
       <section className={utilStyles.headingMd}>
-        <p>Hello 👋, I'm <strong>Esteban</strong>, I’m a software engineer located in Colombia.</p>
-        <p>I'm 23 years old, a Ruby/Ruby on Rails lover; I like JavaScript as well but, Ruby is my main.</p>
-        <p>I like reading a lot, playing some videogames and I also like watching some series and anime 📺.</p>
+        <p>Hello 👋, I'm <strong>Esteban</strong>, I’m a software engineer, I live in Colombia 🇨🇴.</p>
+        <p>I'm 23 years old, a Ruby/Ruby on Rails lover; Ruby is my main programming language but, I like JavaScript as well (In fact, this resume has been built with JavaScript).</p>
+        <p>I'm studying English, I enjoy reading, watching movies/series/animes. I like to have a few beers once in a while as well :) </p>
       </section>
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <h2 className={utilStyles.headingLg}>Blog</h2>
