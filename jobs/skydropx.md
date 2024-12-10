@@ -1,7 +1,7 @@
 ---
 title: 'Software Engineer - Skydropx'
 date_start: '2021-12-09'
-date_end: 'present'
+date_end: '2024-05-30'
 ---
 
 As a Software Engineer in Skydropx I have the following responsabilities:

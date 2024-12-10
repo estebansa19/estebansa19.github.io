@@ -24,7 +24,7 @@ export default function Home({ allJobsData }) {
 
       <section className={utilStyles.headingMd}>
         <p>Hello 👋, I'm <strong>Esteban</strong>, I’m a software engineer, I live in Colombia 🇨🇴.</p>
-        <p>I'm 23 years old, a Ruby/Ruby on Rails lover; Ruby is my main programming language but, I like JavaScript as well (In fact, this resume has been built with JavaScript).</p>
+        <p>I'm 24 years old, a Ruby/Ruby on Rails lover; Ruby is my main programming language but, I like JavaScript as well (In fact, this resume has been built with JavaScript).</p>
         <p>I'm studying English, I enjoy reading, watching movies/series/animes. I like to have a few beers once in a while as well :) </p>
       </section>
 
