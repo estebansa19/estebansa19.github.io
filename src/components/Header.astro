@@ -72,9 +72,12 @@ const siteTitle = "Esteban's Website";
 	.navbar nav a {
 		padding: 1em 0.5em;
 		color: var(--text-primary);
-		border-bottom: 4px solid transparent;
 		text-decoration: none;
 		transition: all 0.2s ease;
+	}
+
+	.internal-links a {
+		border-bottom: 4px solid transparent;
 	}
 
 	.navbar nav a.active {
@@ -85,7 +88,6 @@ const siteTitle = "Esteban's Website";
 
 	.navbar nav a:hover {
 		color: var(--accent);
-		border-bottom-color: var(--accent);
 	}
 
 	.nav-actions {
@@ -102,13 +104,14 @@ const siteTitle = "Esteban's Website";
 
 	.social-links a {
 		padding: 0.5em;
+		border-bottom: 4px solid transparent;
 		color: var(--text-secondary);
 		transition: color 0.2s ease;
 	}
 
 	.social-links a:hover {
 		color: var(--accent);
-		border: none;
+		border-bottom-color: var(--accent);
 	}
 
 	.internal-links {
