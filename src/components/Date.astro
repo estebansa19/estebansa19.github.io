@@ -1,0 +1,23 @@
+---
+import { parseISO, format } from 'date-fns';
+
+export interface Props {
+  dateString: string;
+}
+
+const { dateString } = Astro.props;
+
+function formatDate(dateString: string) {
+  if (dateString === 'present') return 'Present';
+  const date = parseISO(dateString);
+  return format(date, 'LLLL d, yyyy');
+}
+
+const formattedDate = formatDate(dateString);
+---
+
+{dateString === 'present' ? (
+  <span>{formattedDate}</span>
+) : (
+  <time datetime={dateString}>{formattedDate}</time>
+)}

@@ -1,0 +1,168 @@
+---
+export interface Props {
+  title: string;
+  home?: boolean;
+}
+
+const { title, home = false } = Astro.props;
+const name = 'Esteban Saldarriaga Alzate';
+export const siteTitle = "Esteban's Astro page";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.svg" />
+    <meta name="description" content="My personal website using Astro" />
+    <meta
+      property="og:image"
+      content={`https://og-image.vercel.app/${encodeURI(
+        siteTitle
+      )}.png?theme=light&md=0&fontSize=75px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`}
+    />
+    <meta name="og:title" content={siteTitle} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        {home ? (
+          <>
+            <img
+              src="/images/profile.jpg"
+              class="borderCircle"
+              height="144"
+              width="144"
+              alt="Profile image"
+            />
+            <h1 class="heading2Xl">{name}</h1>
+          </>
+        ) : (
+          <>
+            <a href="/">
+              <img
+                src="/images/profile.jpg"
+                class="borderCircle"
+                height="100"
+                width="100"
+                alt="Profile image"
+              />
+            </a>
+            <h2 class="headingLg">
+              <a href="/" class="colorInherit">
+                {name}
+              </a>
+            </h2>
+          </>
+        )}
+      </header>
+      <main>
+        <slot />
+      </main>
+      {!home && (
+        <div class="backToHome">
+          <a href="/">← Back to home</a>
+        </div>
+      )}
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  /* Global reset and base styles */
+  html,
+  body {
+    padding: 0;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu,
+      Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    line-height: 1.6;
+    font-size: 18px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  a {
+    color: #0070f3;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+</style>
+
+<style>
+  .container {
+    max-width: 36rem;
+    padding: 0 1rem;
+    margin: 3rem auto 6rem;
+  }
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .backToHome {
+    margin: 3rem 0 0;
+  }
+
+  .heading2Xl {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: -0.05rem;
+    margin: 1rem 0;
+  }
+
+  .headingLg {
+    font-size: 1.5rem;
+    line-height: 1.4;
+    margin: 1rem 0;
+  }
+
+  .headingMd {
+    font-size: 1.2rem;
+    line-height: 1.5;
+  }
+
+  .borderCircle {
+    border-radius: 9999px;
+    object-fit: cover;
+  }
+
+  .colorInherit {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .padding1px {
+    padding-top: 1px;
+  }
+
+  .list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .listItem {
+    margin: 0 0 1.25rem;
+  }
+
+  .lightText {
+    color: #666;
+  }
+</style>
