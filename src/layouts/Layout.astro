@@ -19,7 +19,10 @@ export const siteTitle = "Esteban's Website";
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="/favicon.svg" />
-    <meta name="description" content="My personal website using Astro" />
+    <meta name="description" content="Esteban's personal website" />
+    {home && (
+      <link rel="preload" as="image" href="/images/profile.jpg" />
+    )}
     <meta
       property="og:image"
       content={`https://og-image.vercel.app/${encodeURI(
@@ -41,8 +44,11 @@ export const siteTitle = "Esteban's Website";
               src="/images/profile.jpg"
               class="borderCircle"
               alt="Profile image"
-              width="144"
-              height="144"
+              loading="eager"
+              fetchpriority="high"
+              width="300"
+              height="250"
+
             />
             <h1 class="heading2Xl">{name}</h1>
           </>
@@ -50,11 +56,13 @@ export const siteTitle = "Esteban's Website";
           <>
             <a href="/">
               <img
-                src="/images/profile.jpg"
+                src="/images/profile-small.jpg"
                 class="borderCircle small"
                 alt="Profile image"
-                width="100"
-                height="100"
+                loading="eager"
+                fetchpriority="high"
+                width="250"
+                height="200"
               />
             </a>
             <h2 class="headingLg">
@@ -165,16 +173,19 @@ export const siteTitle = "Esteban's Website";
   }
 
   .borderCircle {
-    border-radius: 50%;
-    object-fit: cover;
-    width: 144px;
-    height: 144px;
+    width: 300px;
+    height: 250px;
     display: block;
+    object-fit: cover;
+    object-position: center top;
+    /* Override global img styles */
+    max-width: none !important;
+    border: none;
   }
 
   .borderCircle.small {
-    width: 100px;
-    height: 100px;
+    width: 250px;
+    height: 200px;
   }
 
   .colorInherit {
