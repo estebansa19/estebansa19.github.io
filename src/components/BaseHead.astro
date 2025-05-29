@@ -19,6 +19,18 @@ const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<!-- Theme script - must run before any content renders -->
+<script is:inline>
+  // Immediately apply stored theme to prevent flash
+  (function() {
+    const theme = localStorage.getItem('theme');
+    if (theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>
+
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link
 	rel="alternate"

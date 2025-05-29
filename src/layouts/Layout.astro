@@ -20,6 +20,18 @@ export const siteTitle = "Esteban's Website";
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="/favicon.svg" />
     <meta name="description" content="Esteban's personal website" />
+
+    <!-- Theme script - must run before any content renders -->
+    <script is:inline>
+      // Immediately apply stored theme to prevent flash
+      (function() {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+
     {home && (
       <link rel="preload" as="image" href="/images/profile.jpg" />
     )}
@@ -90,11 +102,13 @@ export const siteTitle = "Esteban's Website";
   .navbar {
     margin: 0;
     padding: 0 1em;
-    background: white;
-    box-shadow: 0 2px 8px rgba(var(--black), 5%);
+    background: var(--navbar-bg);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px var(--navbar-shadow);
     position: sticky;
     top: 0;
     z-index: 100;
+    border-bottom: 1px solid var(--border-color);
   }
 
   .navbar h2 {
@@ -105,7 +119,8 @@ export const siteTitle = "Esteban's Website";
   .navbar h2 a,
   .navbar h2 a.active {
     text-decoration: none;
-    color: rgb(var(--black));
+    color: var(--text-primary);
+    font-weight: 600;
   }
 
   .navbar nav {
@@ -116,13 +131,20 @@ export const siteTitle = "Esteban's Website";
 
   .navbar nav a {
     padding: 1em 0.5em;
-    color: rgb(var(--black));
+    color: var(--text-primary);
     border-bottom: 4px solid transparent;
     text-decoration: none;
+    transition: all 0.2s ease;
   }
 
   .navbar nav a.active {
     text-decoration: none;
+    border-bottom-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .navbar nav a:hover {
+    color: var(--accent);
     border-bottom-color: var(--accent);
   }
 
@@ -152,6 +174,24 @@ export const siteTitle = "Esteban's Website";
     margin: 3rem 0 0;
   }
 
+  .backToHome a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: inline-block;
+  }
+
+  .backToHome a:hover {
+    background-color: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
   .heading2Xl {
     font-size: 2.5rem;
     line-height: 1.2;
@@ -159,17 +199,20 @@ export const siteTitle = "Esteban's Website";
     letter-spacing: -0.05rem;
     margin: 1rem 0;
     text-align: center;
+    color: var(--text-primary);
   }
 
   .headingLg {
     font-size: 1.5rem;
     line-height: 1.4;
     margin: 1rem 0;
+    color: var(--text-primary);
   }
 
   .headingMd {
     font-size: 1.2rem;
     line-height: 1.5;
+    color: var(--text-primary);
   }
 
   .borderCircle {
@@ -180,7 +223,14 @@ export const siteTitle = "Esteban's Website";
     object-position: center top;
     /* Override global img styles */
     max-width: none !important;
-    border: none;
+    border: 4px solid var(--border-color);
+    border-radius: 12px;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .borderCircle:hover {
+    border-color: var(--accent);
+    transform: scale(1.02);
   }
 
   .borderCircle.small {
@@ -205,15 +255,36 @@ export const siteTitle = "Esteban's Website";
 
   .listItem {
     margin: 0 0 1.25rem;
+    padding: 1rem;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .listItem:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-light);
   }
 
   .lightText {
-    color: #666;
+    color: var(--text-muted);
   }
 
   @media (max-width: 720px) {
     .social-links {
       display: none;
+    }
+
+    .borderCircle {
+      width: 250px;
+      height: 200px;
+    }
+
+    .borderCircle.small {
+      width: 200px;
+      height: 160px;
     }
   }
 </style>
