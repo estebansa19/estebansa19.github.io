@@ -1,4 +1,8 @@
 ---
+import HeaderLink from '../components/HeaderLink.astro';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+
 export interface Props {
   title: string;
   home?: boolean;
@@ -6,7 +10,7 @@ export interface Props {
 
 const { title, home = false } = Astro.props;
 const name = 'Esteban Saldarriaga Alzate';
-export const siteTitle = "Esteban's Astro page";
+export const siteTitle = "Esteban's Website";
 ---
 
 <!DOCTYPE html>
@@ -27,15 +31,15 @@ export const siteTitle = "Esteban's Astro page";
     <title>{title}</title>
   </head>
   <body>
+    <Header />
+
     <div class="container">
-      <header class="header">
+      <header class="profile-header">
         {home ? (
           <>
             <img
               src="/images/profile.jpg"
               class="borderCircle"
-              height="144"
-              width="144"
               alt="Profile image"
             />
             <h1 class="heading2Xl">{name}</h1>
@@ -45,9 +49,7 @@ export const siteTitle = "Esteban's Astro page";
             <a href="/">
               <img
                 src="/images/profile.jpg"
-                class="borderCircle"
-                height="100"
-                width="100"
+                class="borderCircle small"
                 alt="Profile image"
               />
             </a>
@@ -71,45 +73,64 @@ export const siteTitle = "Esteban's Astro page";
   </body>
 </html>
 
-<style is:global>
-  /* Global reset and base styles */
-  html,
-  body {
-    padding: 0;
+<style>
+  /* Navbar styles */
+  .navbar {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu,
-      Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-    line-height: 1.6;
-    font-size: 18px;
+    padding: 0 1em;
+    background: white;
+    box-shadow: 0 2px 8px rgba(var(--black), 5%);
+    position: sticky;
+    top: 0;
+    z-index: 100;
   }
 
-  * {
-    box-sizing: border-box;
+  .navbar h2 {
+    margin: 0;
+    font-size: 1em;
   }
 
-  a {
-    color: #0070f3;
+  .navbar h2 a,
+  .navbar h2 a.active {
+    text-decoration: none;
+    color: rgb(var(--black));
+  }
+
+  .navbar nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .navbar nav a {
+    padding: 1em 0.5em;
+    color: rgb(var(--black));
+    border-bottom: 4px solid transparent;
     text-decoration: none;
   }
 
-  a:hover {
-    text-decoration: underline;
+  .navbar nav a.active {
+    text-decoration: none;
+    border-bottom-color: var(--accent);
   }
 
-  img {
-    max-width: 100%;
-    display: block;
+  .social-links,
+  .social-links a {
+    display: flex;
   }
-</style>
 
-<style>
+  .internal-links {
+    display: flex;
+  }
+
+  /* Profile header styles */
   .container {
     max-width: 36rem;
     padding: 0 1rem;
     margin: 3rem auto 6rem;
   }
 
-  .header {
+  .profile-header {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -125,6 +146,7 @@ export const siteTitle = "Esteban's Astro page";
     font-weight: 800;
     letter-spacing: -0.05rem;
     margin: 1rem 0;
+    text-align: center;
   }
 
   .headingLg {
@@ -139,8 +161,16 @@ export const siteTitle = "Esteban's Astro page";
   }
 
   .borderCircle {
-    border-radius: 9999px;
+    border-radius: 50%;
     object-fit: cover;
+    width: 144px;
+    height: 144px;
+    display: block;
+  }
+
+  .borderCircle.small {
+    width: 100px;
+    height: 100px;
   }
 
   .colorInherit {
@@ -164,5 +194,11 @@ export const siteTitle = "Esteban's Astro page";
 
   .lightText {
     color: #666;
+  }
+
+  @media (max-width: 720px) {
+    .social-links {
+      display: none;
+    }
   }
 </style>
