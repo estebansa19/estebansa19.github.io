@@ -1,7 +1,8 @@
 ---
 import HeaderLink from '../components/HeaderLink.astro';
-import '../styles/global.css';
 import Header from '../components/Header.astro';
+import BaseHead from '../components/BaseHead.astro';
+import { SITE_DESCRIPTION } from '../consts';
 
 export interface Props {
   title: string;
@@ -16,34 +17,10 @@ export const siteTitle = "Esteban's Website";
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/favicon.svg" />
-    <meta name="description" content="Esteban's personal website" />
-
-    <!-- Theme script - must run before any content renders -->
-    <script is:inline>
-      // Immediately apply stored theme to prevent flash
-      (function() {
-        const theme = localStorage.getItem('theme');
-        if (theme === 'dark') {
-          document.documentElement.setAttribute('data-theme', 'dark');
-        }
-      })();
-    </script>
-
+    <BaseHead title={title} description={SITE_DESCRIPTION} image="/images/profile.jpg" />
     {home && (
       <link rel="preload" as="image" href="/images/profile.jpg" />
     )}
-    <meta
-      property="og:image"
-      content={`https://og-image.vercel.app/${encodeURI(
-        siteTitle
-      )}.png?theme=light&md=0&fontSize=75px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`}
-    />
-    <meta name="og:title" content={siteTitle} />
-    <meta name="twitter:card" content="summary_large_image" />
-    <title>{title}</title>
   </head>
   <body>
     <Header />
@@ -55,12 +32,12 @@ export const siteTitle = "Esteban's Website";
             <img
               src="/images/profile.jpg"
               class="borderCircle"
-              alt="Profile image"
+              alt="Portrait of Esteban Saldarriaga Alzate"
               loading="eager"
               fetchpriority="high"
+              decoding="sync"
               width="300"
               height="250"
-
             />
             <h1 class="heading2Xl">{name}</h1>
           </>
@@ -70,9 +47,10 @@ export const siteTitle = "Esteban's Website";
               <img
                 src="/images/profile-small.jpg"
                 class="borderCircle small"
-                alt="Profile image"
+                alt="Portrait of Esteban Saldarriaga Alzate"
                 loading="eager"
                 fetchpriority="high"
+                decoding="sync"
                 width="250"
                 height="200"
               />
@@ -95,6 +73,7 @@ export const siteTitle = "Esteban's Website";
       )}
     </div>
   </body>
+
 </html>
 
 <style>

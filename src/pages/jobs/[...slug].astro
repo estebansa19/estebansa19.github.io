@@ -20,7 +20,7 @@ const { Content } = await render(job);
 <Layout title={job.data.title}>
   <article>
     <h1 class="headingXl">{job.data.title}</h1>
-    <div class="lightText">
+    <div class="lightText" itemprop="workLocation" itemscope itemtype="https://schema.org/Place">
       <DateFormatter dateString={job.data.date_start}/> - <DateFormatter dateString={job.data.date_end}/>
     </div>
     <Content />
