@@ -15,7 +15,7 @@ const posts = (await getCollection('blog')).sort(
 <html lang="en">
 	<head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} image="/blog-placeholder-1.jpg" />
-		<style>
+		<style is:inline>
 			main {
 				width: 960px;
 			}
