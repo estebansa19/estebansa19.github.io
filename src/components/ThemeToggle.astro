@@ -14,37 +14,20 @@
     <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
     <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
   </svg>
-  <svg id="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+  <svg id="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
   </svg>
 </button>
 
-<script>
+<script is:inline>
   // Theme management script
   function initTheme() {
     const themeToggle = document.getElementById('theme-toggle');
-    const sunIcon = document.getElementById('sun-icon') as HTMLElement;
-    const moonIcon = document.getElementById('moon-icon') as HTMLElement;
 
     // Check if elements exist
-    if (!themeToggle || !sunIcon || !moonIcon) {
+    if (!themeToggle) {
       return;
     }
-
-    // Update icon visibility based on current theme
-    function updateIcons() {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      if (currentTheme === 'dark') {
-        sunIcon.style.display = 'none';
-        moonIcon.style.display = 'block';
-      } else {
-        sunIcon.style.display = 'block';
-        moonIcon.style.display = 'none';
-      }
-    }
-
-    // Initialize icons based on current theme
-    updateIcons();
 
     // Toggle theme
     function toggleTheme() {
@@ -58,11 +41,13 @@
       }
 
       localStorage.setItem('theme', newTheme);
-      updateIcons();
     }
 
-    // Add event listener
-    themeToggle.addEventListener('click', toggleTheme);
+    // Guard against double-binding on SPA navigations
+    if (!(themeToggle)._bound) {
+      themeToggle.addEventListener('click', toggleTheme);
+      themeToggle._bound = true;
+    }
   }
 
   // Initialize on page load
@@ -77,6 +62,12 @@
 </script>
 
 <style>
+  /* Icon visibility controlled purely via CSS to avoid layout thrash in JS */
+  html[data-theme='dark'] #sun-icon { display: none; }
+  html[data-theme='dark'] #moon-icon { display: block; }
+  html:not([data-theme='dark']) #sun-icon { display: block; }
+  html:not([data-theme='dark']) #moon-icon { display: none; }
+
   .theme-toggle {
     background: none;
     border: 2px solid var(--border-color);
