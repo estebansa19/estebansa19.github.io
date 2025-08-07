@@ -9,7 +9,7 @@ export default defineConfig({
 	integrations: [mdx(), sitemap()],
 	compressHTML: true,
 	build: {
-		inlineStylesheets: 'auto'
+		inlineStylesheets: 'always'
 	},
 	trailingSlash: 'ignore'
 });
