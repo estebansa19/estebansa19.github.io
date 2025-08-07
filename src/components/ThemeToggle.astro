@@ -61,7 +61,7 @@
   document.addEventListener('astro:page-load', initTheme);
 </script>
 
-<style>
+<style is:inline>
   /* Icon visibility controlled purely via CSS to avoid layout thrash in JS */
   html[data-theme='dark'] #sun-icon { display: none; }
   html[data-theme='dark'] #moon-icon { display: block; }

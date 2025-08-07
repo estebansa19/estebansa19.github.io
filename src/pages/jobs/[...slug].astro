@@ -27,7 +27,7 @@ const { Content } = await render(job);
   </article>
 </Layout>
 
-<style>
+<style is:inline>
   .headingXl {
     font-size: 2rem;
     line-height: 1.3;
@@ -44,5 +44,9 @@ const { Content } = await render(job);
 
   article {
     margin-top: 2rem;
+  }
+
+  a {
+    color: var(--link-color);
   }
 </style>

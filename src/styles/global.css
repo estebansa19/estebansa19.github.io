@@ -8,15 +8,15 @@
 	/* New Color Palette */
 	--primary: rgb(53, 53, 62);
 	--secondary: rgb(182, 181, 149);
-	--accent: rgb(136, 120, 196);
+  --accent: rgb(92, 71, 172);
 
 	/* Light Theme Colors */
 	--bg-primary: #ffffff;
 	--bg-secondary: #f8f9fa;
 	--bg-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 	--text-primary: rgb(53, 53, 62);
-	--text-secondary: rgb(108, 117, 125);
-	--text-muted: rgb(136, 136, 136);
+  --text-secondary: rgb(73, 80, 87);
+  --text-muted: rgb(107, 114, 128);
 	--border-color: rgb(222, 226, 230);
 	--shadow-light: rgba(53, 53, 62, 0.1);
 	--shadow-medium: rgba(53, 53, 62, 0.15);
@@ -27,8 +27,8 @@
 	--navbar-shadow: rgba(53, 53, 62, 0.1);
 	--card-bg: #ffffff;
 	--code-bg: rgb(248, 249, 250);
-	--link-color: rgb(136, 120, 196);
-	--link-hover: rgb(118, 102, 176);
+    --link-color: rgb(92, 71, 172);
+    --link-hover: rgb(74, 57, 138);
 
 	/* Legacy variables for compatibility */
 	--black: 53, 53, 62;
@@ -43,12 +43,12 @@
 
 /* Dark Theme */
 [data-theme="dark"] {
-	--bg-primary: rgb(25, 25, 28);
-	--bg-secondary: rgb(32, 32, 36);
+  --bg-primary: rgb(16, 16, 19);
+  --bg-secondary: rgb(28, 28, 32);
 	--bg-gradient: linear-gradient(135deg, rgb(25, 25, 28) 0%, rgb(32, 32, 36) 100%);
 	--text-primary: rgb(245, 245, 245);
-	--text-secondary: rgb(182, 181, 149);
-	--text-muted: rgb(156, 163, 175);
+  --text-secondary: rgb(208, 209, 210);
+  --text-muted: rgb(170, 176, 189);
 	--border-color: rgb(75, 85, 99);
 	--shadow-light: rgba(0, 0, 0, 0.2);
 	--shadow-medium: rgba(0, 0, 0, 0.3);
@@ -59,8 +59,8 @@
 	--navbar-shadow: rgba(0, 0, 0, 0.3);
 	--card-bg: rgb(32, 32, 36);
 	--code-bg: rgb(40, 40, 44);
-	--link-color: rgb(156, 140, 216);
-	--link-hover: rgb(176, 160, 236);
+  --link-color: rgb(195, 180, 255);
+  --link-hover: rgb(217, 205, 255);
 }
 
 @font-face {
