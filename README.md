@@ -1,68 +1,75 @@
-# Astro Starter Kit: blog
+### Esteban's Resume & Blog (Astro)
 
-```sh
-npm create astro@latest -- --template blog
-```
+Personal resume and blog for Esteban Saldarriaga Alzate. Built with Astro, content collections, and minimal, accessible styling.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/blog)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/blog)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/blog/devcontainer.json)
+- **Live site**: `https://estebansa.site`
+- **Tech**: Astro 5, MDX, RSS, Sitemap, TypeScript support
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-![blog](https://github.com/withastro/astro/assets/2244813/ff10799f-a816-4703-b967-c78997e8323d)
-
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+### Project structure
 
 ```text
-├── public/
-├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+public/                # Static assets (favicon, images, fonts, manifest)
+src/
+  components/          # Reusable UI components
+  content/
+    blog/              # Blog posts (Markdown/MDX)
+    jobs/              # Resume experience entries (Markdown)
+  layouts/             # Page/post layouts
+  pages/               # Routed pages
+  styles/              # Global CSS
+astro.config.mjs       # Astro configuration
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Local development
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- `npm install`
+- `npm run dev` → open `http://localhost:4321`
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+### Build & preview
 
-Any static assets, like images, can be placed in the `public/` directory.
+- `npm run build` → outputs to `dist/`
+- `npm run preview` → serve the production build locally
 
-## 🧞 Commands
+### Content authoring
 
-All commands are run from the root of the project, from a terminal:
+- **Blog posts**: add a Markdown or MDX file under `src/content/blog/` with frontmatter fields like:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+```md
+---
+title: 'Post title'
+description: 'Short description'
+pubDate: 'YYYY-MM-DD'
+heroImage: '/images/profile.jpg'  # or your custom image in /public/images
+---
+```
 
-## 👀 Want to learn more?
+- **Jobs (experience)**: add a Markdown file under `src/content/jobs/` with:
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```md
+---
+title: 'Role — Company'
+date_start: 'YYYY-MM-DD'
+date_end: 'YYYY-MM-DD' | 'present'
+---
 
-## Credit
+Bullet points describing responsibilities and impact.
+```
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+### SEO & metadata
+
+- Global metadata is handled in `src/components/BaseHead.astro` using `SITE_TITLE` and `SITE_DESCRIPTION` from `src/consts.ts`.
+- Open Graph and Twitter cards use the page `image` (defaults to `/images/profile.jpg`).
+
+### Favicon
+
+- Custom animated ruby favicon at `public/favicon.svg`. This replaces the default Astro favicon.
+- Referenced from `BaseHead.astro` and `public/site.webmanifest`.
+
+### Deployment
+
+- The site base URL is set to `https://estebansa.site` in `astro.config.mjs`.
+- Deploy the `dist/` folder to your hosting provider of choice.
+
+### Notes
+
+- Placeholder demo images from the original Astro starter were removed. Blog posts now default to `/images/profile.jpg` unless a specific hero image is provided.
