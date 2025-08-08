@@ -39,7 +39,7 @@ astro.config.mjs       # Astro configuration
 title: 'Post title'
 description: 'Short description'
 pubDate: 'YYYY-MM-DD'
-heroImage: '/images/profile.jpg'  # or your custom image in /public/images
+heroImage: '/blog-placeholder-1.jpg'  # or use any custom image under /public
 ---
 ```
 
@@ -58,7 +58,7 @@ Bullet points describing responsibilities and impact.
 ### SEO & metadata
 
 - Global metadata is handled in `src/components/BaseHead.astro` using `SITE_TITLE` and `SITE_DESCRIPTION` from `src/consts.ts`.
-- Open Graph and Twitter cards use the page `image` (defaults to `/images/profile.jpg`).
+- Open Graph and Twitter cards use the page `image` (defaults to `/blog-placeholder-1.jpg`).
 
 ### Favicon
 
@@ -69,7 +69,3 @@ Bullet points describing responsibilities and impact.
 
 - The site base URL is set to `https://estebansa.site` in `astro.config.mjs`.
 - Deploy the `dist/` folder to your hosting provider of choice.
-
-### Notes
-
-- Placeholder demo images from the original Astro starter were removed. Blog posts now default to `/images/profile.jpg` unless a specific hero image is provided.
