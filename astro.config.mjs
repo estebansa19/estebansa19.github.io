@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://estebansa.site', // Reemplaza con tu dominio real de GoDaddy
+	site: 'https://estebansa19.github.io',
 	integrations: [mdx(), sitemap()],
 	compressHTML: true,
 	build: {
