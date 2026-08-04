@@ -2,6 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 import DateFormatter from '../components/Date.astro';
 import { getCollection } from 'astro:content';
+import { differenceInYears } from 'date-fns';
+
+const birthDate = new Date('2000-05-08');
+const age = differenceInYears(new Date(), birthDate);
 
 const allJobsData = await getCollection('jobs');
 
@@ -18,7 +22,7 @@ const siteTitle = "Esteban's Resume";
 <Layout title={siteTitle} home={true}>
 	<section class="headingMd">
 		<p>Hello 👋, I'm <strong>Esteban</strong>, I'm a software engineer, I live in Colombia 🇨🇴.</p>
-		<p>I'm 25 years old, a Ruby/Ruby on Rails lover; Ruby is my main programming language but, I like JavaScript as well (In fact, this resume has been built with JavaScript).</p>
+		<p>I'm {age} years old, a Ruby/Ruby on Rails lover; Ruby is my main programming language but, I like JavaScript as well (In fact, this resume has been built with JavaScript).</p>
 		<p>I'm studying English, I enjoy reading, watching movies/series/animes. I like to have a few beers once in a while as well :) </p>
 	</section>
 
@@ -46,6 +50,11 @@ const siteTitle = "Esteban's Resume";
 		<small>SENA</small>
 		<br />
 		<small class="lightText">September, 2017 - September, 2019</small>
+		<br />
+		<br />
+		<a href="https://idiomasblendex.edu.co/" target="_blank" rel="noopener noreferrer">English - C1 level</a>
+		<br />
+		<small>Blendex Academy</small>
 	</section>
 </Layout>
 
