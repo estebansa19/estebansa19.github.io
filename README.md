@@ -2,8 +2,8 @@
 
 Personal resume and blog for Esteban Saldarriaga Alzate. Built with Astro, content collections, and minimal, accessible styling.
 
-- **Live site**: `https://estebansa.site`
-- **Tech**: Astro 5, MDX, RSS, Sitemap, TypeScript support
+- **Live site**: `https://estebansa19.github.io/`
+- **Tech**: Astro 7, MDX, RSS, Sitemap, TypeScript support
 
 ### Project structure
 
@@ -67,5 +67,5 @@ Bullet points describing responsibilities and impact.
 
 ### Deployment
 
-- The site base URL is set to `https://estebansa.site` in `astro.config.mjs`.
-- Deploy the `dist/` folder to your hosting provider of choice.
+- The site is deployed to GitHub Pages via `.github/workflows/deploy.yml`, and the base URL is set to `https://estebansa19.github.io/` in `astro.config.mjs`.
+- The workflow builds the site, uploads `dist/` as a GitHub Pages artifact, and deploys it on every push to `main`.
