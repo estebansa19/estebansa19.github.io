@@ -1,10 +1,12 @@
 ---
-title: 'Senior Software Engineer - Recurly'
+role: 'Senior Software Engineer'
+company: 'Recurly'
+summary: 'Full-stack feature work, architecture and search on a subscription platform.'
 date_start: '2025-10-01'
 date_end: 'present'
 ---
 
-As a Senior Software Engineer in Recurly I have the following responsibilities:
+As a Senior Software Engineer at Recurly I have the following responsibilities:
 
 * Feature development using Ruby on Rails, React and TypeScript.
 * Software architecture and technical design decisions.

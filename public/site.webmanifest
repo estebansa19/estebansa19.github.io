@@ -1,16 +1,18 @@
 {
   "name": "Esteban's Website",
   "short_name": "Esteban",
+  "description": "Software engineer resume and blog by Esteban Saldarriaga Alzate.",
   "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "scope": "/",
+  "display": "minimal-ui",
+  "background_color": "#101013",
+  "theme_color": "#101013",
   "icons": [
     {
       "src": "/favicon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ]
 }
-
