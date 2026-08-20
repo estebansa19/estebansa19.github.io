@@ -1,113 +1,93 @@
 /*
-  The CSS in this style tag is based off of Bear Blog's default CSS.
-  https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
-  License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
- */
+  Design tokens and base element styles.
+
+  The site is monospace throughout — headings, labels, dates, navigation and
+  code — with one deliberate exception: long-form prose (`.prose`) is set in a
+  sans face, because a mono body is tiring to read at article length.
+*/
+
+/* Variable fonts, latin subset, self-hosted so no third party is contacted. */
+@font-face {
+	font-family: 'JetBrains Mono';
+	src: url('/fonts/jetbrains-mono-latin.woff2') format('woff2-variations');
+	font-weight: 400 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'IBM Plex Sans';
+	src: url('/fonts/ibm-plex-sans-latin.woff2') format('woff2-variations');
+	font-weight: 400 500;
+	font-style: normal;
+	font-display: swap;
+}
 
 :root {
-	/* New Color Palette */
-	--primary: rgb(53, 53, 62);
-	--secondary: rgb(182, 181, 149);
-  --accent: rgb(92, 71, 172);
+	color-scheme: light;
 
-	/* Light Theme Colors */
-	--bg-primary: #ffffff;
-	--bg-secondary: #f8f9fa;
-	--bg-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-	--text-primary: rgb(53, 53, 62);
-  --text-secondary: rgb(73, 80, 87);
-  --text-muted: rgb(107, 114, 128);
-	--border-color: rgb(222, 226, 230);
-	--shadow-light: rgba(53, 53, 62, 0.1);
-	--shadow-medium: rgba(53, 53, 62, 0.15);
-	--shadow-dark: rgba(53, 53, 62, 0.2);
+	--font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	--font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
 
-	/* Component specific colors */
-	--navbar-bg: rgba(255, 255, 255, 0.95);
-	--navbar-shadow: rgba(53, 53, 62, 0.1);
-	--card-bg: #ffffff;
-	--code-bg: rgb(248, 249, 250);
-    --link-color: rgb(92, 71, 172);
-    --link-hover: rgb(74, 57, 138);
-
-	/* Legacy variables for compatibility */
-	--black: 53, 53, 62;
-	--gray: 108, 117, 125;
-	--gray-light: 222, 226, 230;
-	--gray-dark: 53, 53, 62;
-	--gray-gradient: var(--bg-gradient);
-	--box-shadow:
-		0 2px 6px var(--shadow-light), 0 8px 24px var(--shadow-medium),
-		0 16px 32px var(--shadow-medium);
+	--bg: oklch(0.98 0.003 250);
+	--text: oklch(0.24 0.008 250);
+	--muted: oklch(0.5 0.01 250);
+	--line: oklch(0.88 0.005 250);
+	--accent: oklch(0.5 0.14 155);
+	--accent-contrast: oklch(0.99 0 0);
+	--glow: oklch(0.5 0.14 155 / 0.16);
+	--code-bg: oklch(0.955 0.004 250);
 }
 
-/* Dark Theme */
-[data-theme="dark"] {
-  --bg-primary: rgb(16, 16, 19);
-  --bg-secondary: rgb(28, 28, 32);
-	--bg-gradient: linear-gradient(135deg, rgb(25, 25, 28) 0%, rgb(32, 32, 36) 100%);
-	--text-primary: rgb(245, 245, 245);
-  --text-secondary: rgb(208, 209, 210);
-  --text-muted: rgb(170, 176, 189);
-	--border-color: rgb(75, 85, 99);
-	--shadow-light: rgba(0, 0, 0, 0.2);
-	--shadow-medium: rgba(0, 0, 0, 0.3);
-	--shadow-dark: rgba(0, 0, 0, 0.4);
+[data-theme='dark'] {
+	color-scheme: dark;
 
-	/* Component specific dark colors */
-	--navbar-bg: rgba(32, 32, 36, 0.95);
-	--navbar-shadow: rgba(0, 0, 0, 0.3);
-	--card-bg: rgb(32, 32, 36);
-	--code-bg: rgb(40, 40, 44);
-  --link-color: rgb(195, 180, 255);
-  --link-hover: rgb(217, 205, 255);
+	--bg: oklch(0.16 0.008 250);
+	--text: oklch(0.93 0.005 250);
+	--muted: oklch(0.64 0.01 250);
+	--line: oklch(0.29 0.008 250);
+	--accent: oklch(0.72 0.15 155);
+	--accent-contrast: oklch(0.16 0.008 250);
+	--glow: oklch(0.72 0.15 155 / 0.22);
+	--code-bg: oklch(0.2 0.008 250);
 }
 
-@font-face {
-	font-family: 'Atkinson';
-	src: url('/fonts/atkinson-regular.woff') format('woff');
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face {
-	font-family: 'Atkinson';
-	src: url('/fonts/atkinson-bold.woff') format('woff');
-	font-weight: 700;
-	font-style: normal;
-	font-display: swap;
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
 }
 
-/* Global reset and base styles */
 html,
 body {
 	padding: 0;
 	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu,
-		Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-	line-height: 1.6;
-	font-size: 18px;
-	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-* {
-	box-sizing: border-box;
+html {
+	font-family: var(--font-mono);
+	font-size: 16px;
+	line-height: 1.6;
+	-webkit-text-size-adjust: 100%;
 }
 
 body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	background-color: var(--bg);
+	color: var(--text);
 	text-align: left;
-	background-size: 100% 600px;
-	background-color: var(--bg-primary);
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-	color: var(--text-primary);
 }
 
 main {
-	width: 720px;
-	max-width: calc(100% - 2em);
-	margin: auto;
-	padding: 1em;
+	flex: 1;
+	width: 100%;
+	max-width: 52rem;
+	margin: 0 auto;
+	padding: 3.5rem 2rem 0;
 }
 
 h1,
@@ -116,150 +96,204 @@ h3,
 h4,
 h5,
 h6 {
-	margin: 0 0 0.5rem 0;
-	color: var(--text-primary);
-	line-height: 1.2;
+	margin: 0 0 0.5rem;
+	color: var(--text);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	line-height: 1.25;
+	text-wrap: balance;
 }
+
 h1 {
-	font-size: 3.052em;
+	font-size: 1.75rem;
 }
 h2 {
-	font-size: 2.441em;
+	font-size: 1.25rem;
 }
 h3 {
-	font-size: 1.953em;
+	font-size: 1.0625rem;
 }
-h4 {
-	font-size: 1.563em;
+h4,
+h5,
+h6 {
+	font-size: 1rem;
 }
-h5 {
-	font-size: 1.25em;
-}
-strong,
-b {
-	font-weight: 700;
-}
+
 a {
-	color: var(--link-color);
+	color: var(--accent);
 	text-decoration: none;
-	transition: color 0.2s ease;
+	transition: color 0.18s ease;
 }
+
 a:hover {
-	color: var(--link-hover);
 	text-decoration: underline;
 }
+
 p {
-	margin-bottom: 1em;
-	color: var(--text-primary);
+	margin: 0 0 1rem;
 }
-.prose p {
-	margin-bottom: 2em;
-}
-textarea {
-	width: 100%;
-	font-size: 16px;
-	background-color: var(--card-bg);
-	border: 1px solid var(--border-color);
-	color: var(--text-primary);
-}
-input {
-	font-size: 16px;
-	background-color: var(--card-bg);
-	border: 1px solid var(--border-color);
-	color: var(--text-primary);
-}
-table {
-	width: 100%;
-}
-img {
+
+img,
+video {
+	display: block;
 	max-width: 100%;
 	height: auto;
-	border-radius: 8px;
-	display: block;
+	border-radius: 3px;
 }
-code {
-	padding: 2px 5px;
-	background-color: var(--code-bg);
-	border: 1px solid var(--border-color);
-	border-radius: 2px;
-	color: var(--text-primary);
-}
-pre {
-	padding: 1.5em;
-	border-radius: 8px;
-	background-color: var(--code-bg);
-	border: 1px solid var(--border-color);
-}
-pre > code {
-	all: unset;
-	color: var(--text-primary);
-}
-blockquote {
-	border-left: 4px solid var(--accent);
-	padding: 0 0 0 20px;
-	margin: 0px;
-	font-size: 1.333em;
-	color: var(--text-secondary);
-}
+
 hr {
 	border: none;
-	border-top: 1px solid var(--border-color);
+	border-top: 1px solid var(--line);
+	margin: 2rem 0;
 }
-@media (max-width: 720px) {
-	body {
-		font-size: 18px;
-	}
-	main {
-		padding: 1em;
-	}
+
+/* Long-form reading: the one place the mono face steps aside. */
+.prose {
+	font-family: var(--font-sans);
+	font-size: 1rem;
+	line-height: 1.8;
+}
+
+.prose p {
+	margin: 0 0 1.5rem;
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+	font-family: var(--font-mono);
+	margin: 2.5rem 0 1rem;
+}
+
+.prose ul,
+.prose ol {
+	margin: 0 0 1.5rem;
+	padding-left: 1.25rem;
+}
+
+.prose li {
+	margin-bottom: 0.5rem;
+}
+
+.prose blockquote {
+	margin: 0 0 1.5rem;
+	padding-left: 1.25rem;
+	border-left: 2px solid var(--accent);
+	color: var(--muted);
+}
+
+.prose a {
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+}
+
+code {
+	font-family: var(--font-mono);
+	font-size: 0.875em;
+	padding: 0.1em 0.35em;
+	background-color: var(--code-bg);
+	border: 1px solid var(--line);
+	border-radius: 3px;
+}
+
+pre {
+	margin: 0 0 1.5rem;
+	padding: 1.25rem;
+	background-color: var(--code-bg);
+	border: 1px solid var(--line);
+	border-radius: 3px;
+	overflow-x: auto;
+	font-size: 0.8125rem;
+	line-height: 1.7;
+}
+
+pre > code {
+	all: unset;
+	font-family: var(--font-mono);
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.875rem;
+}
+
+th,
+td {
+	padding: 0.5rem 0.75rem;
+	border-bottom: 1px solid var(--line);
+	text-align: left;
+}
+
+/* A section label with a hairline rule running to the right edge. */
+.section-label {
+	display: flex;
+	align-items: baseline;
+	gap: 1rem;
+	font-size: 0.6875rem;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+.section-label::after {
+	content: '';
+	flex-grow: 1;
+	height: 1px;
+	background: var(--line);
+}
+
+:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 3px;
+	border-radius: 2px;
+}
+
+.skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	z-index: 200;
+	padding: 0.75rem 1rem;
+	background: var(--bg);
+	border: 1px solid var(--accent);
+	font-size: 0.8125rem;
+}
+
+.skip-link:focus {
+	left: 0;
 }
 
 .sr-only {
-	border: 0;
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
 	padding: 0;
 	margin: 0;
-	position: absolute !important;
-	height: 1px;
-	width: 1px;
+	border: 0;
 	overflow: hidden;
-	/* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
-	clip: rect(1px 1px 1px 1px);
-	/* maybe deprecated but we need to support legacy browsers */
 	clip: rect(1px, 1px, 1px, 1px);
-	/* modern browsers, clip-path works inwards from each corner */
 	clip-path: inset(50%);
-	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
 
-/* Theme Toggle Styles */
-.theme-toggle {
-	background: none;
-	border: 2px solid var(--border-color);
-	border-radius: 50%;
-	width: 40px;
-	height: 40px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	transition: all 0.3s ease;
-	color: var(--text-primary);
+@media (max-width: 720px) {
+	main {
+		padding: 2.5rem 1.25rem 0;
+	}
+
+	h1 {
+		font-size: 1.5rem;
+	}
 }
 
-.theme-toggle:hover {
-	background-color: var(--accent);
-	color: white;
-	border-color: var(--accent);
-	transform: scale(1.1);
-}
-
-.theme-toggle svg {
-	width: 20px;
-	height: 20px;
-	transition: transform 0.3s ease;
-}
-
-.theme-toggle:hover svg {
-	transform: rotate(180deg);
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
 }

@@ -1,52 +1,203 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
-import DateFormatter from '../../components/Date.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { AUTHOR } from '../../consts';
+import { toISODate } from '../../utils/date';
 
 export async function getStaticPaths() {
-  const jobs = await getCollection('jobs');
-  return jobs.map((job) => ({
-    params: { slug: job.id },
-    props: job,
-  }));
+	const jobs = (await getCollection('jobs')).sort(
+		(a, b) => b.data.date_start.getTime() - a.data.date_start.getTime(),
+	);
+
+	return jobs.map((job, index) => ({
+		params: { slug: job.id },
+		props: { job, previous: jobs[index + 1] },
+	}));
 }
 
-type Props = CollectionEntry<'jobs'>;
+type Props = {
+	job: CollectionEntry<'jobs'>;
+	previous?: CollectionEntry<'jobs'>;
+};
 
-const job = Astro.props;
+const { job, previous } = Astro.props;
 const { Content } = await render(job);
+const { role, company, companyUrl, summary, date_start, date_end } = job.data;
+
+const isCurrent = date_end === 'present';
+const heading = `${role} at ${company}`;
+
+const schema = {
+	'@context': 'https://schema.org',
+	'@type': 'Occupation',
+	name: role,
+	occupationLocation: {
+		'@type': 'Organization',
+		name: company,
+		...(companyUrl && { url: companyUrl }),
+	},
+	startDate: toISODate(date_start),
+	...(date_end !== 'present' && { endDate: toISODate(date_end) }),
+	description: summary,
+	mainEntityOfPage: { '@type': 'Person', name: AUTHOR.name },
+};
 ---
 
-<Layout title={job.data.title}>
-  <article>
-    <h1 class="headingXl">{job.data.title}</h1>
-    <div class="lightText" itemprop="workLocation" itemscope itemtype="https://schema.org/Place">
-      <DateFormatter dateString={job.data.date_start}/> - <DateFormatter dateString={job.data.date_end}/>
-    </div>
-    <Content />
-  </article>
-</Layout>
+<BaseLayout
+	title={heading}
+	description={summary ?? `${role} at ${company} — part of ${AUTHOR.name}'s resume.`}
+	schema={[schema]}
+>
+	<a href="/" class="back">
+		<svg
+			width="13"
+			height="13"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			aria-hidden="true"
+		>
+			<path d="M19 12H5M11 18l-6-6 6-6"></path>
+		</svg>
+		back to resume
+	</a>
 
-<style is:inline>
-  .headingXl {
-    font-size: 2rem;
-    line-height: 1.3;
-    font-weight: 800;
-    letter-spacing: -0.05rem;
-    margin: 1rem 0;
-    color: var(--text-primary);
-  }
+	<article>
+		{
+			isCurrent && (
+				<p class="badge">
+					<span class="badge-dot" aria-hidden="true" />
+					current role
+				</p>
+			)
+		}
 
-  .lightText {
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
-  }
+		<h1>{role}<br />at {company}</h1>
 
-  article {
-    margin-top: 2rem;
-  }
+		<p class="period">
+			<FormattedDate date={date_start} format="short" />
+			{' — '}
+			<FormattedDate date={date_end} format="short" />
+		</p>
 
-  a {
-    color: var(--link-color);
-  }
+		<hr />
+
+		<div class="prose">
+			<Content />
+		</div>
+	</article>
+
+	{
+		previous && (
+			<footer class="pagination">
+				<a href={`/jobs/${previous.id}/`}>
+					← {previous.data.role}, {previous.data.company}
+				</a>
+				<span>previous role</span>
+			</footer>
+		)
+	}
+</BaseLayout>
+
+<style>
+	.back {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.75rem;
+		color: var(--muted);
+		text-decoration: none;
+		margin-bottom: 3rem;
+	}
+
+	.back:hover {
+		color: var(--accent);
+		text-decoration: none;
+	}
+
+	.back svg {
+		transition: transform 0.18s ease;
+	}
+
+	.back:hover svg {
+		transform: translateX(-3px);
+	}
+
+	.badge {
+		display: flex;
+		align-items: center;
+		gap: 0.625rem;
+		margin: 0 0 0.875rem;
+		font-size: 0.75rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--accent);
+	}
+
+	.badge-dot {
+		width: 7px;
+		height: 7px;
+		flex-shrink: 0;
+		border-radius: 999px;
+		background: var(--accent);
+		box-shadow: 0 0 0 4px var(--glow);
+	}
+
+	h1 {
+		margin: 0 0 0.75rem;
+	}
+
+	.period {
+		margin: 0;
+		font-size: 0.8125rem;
+		color: var(--muted);
+		font-variant-numeric: tabular-nums;
+	}
+
+	hr {
+		margin: 2.5rem 0;
+	}
+
+	/* Job bullets read as a dashed list rather than discs. */
+	.prose :global(ul) {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.prose :global(li) {
+		position: relative;
+		padding-left: 1.75rem;
+		margin-bottom: 0.875rem;
+	}
+
+	.prose :global(li)::before {
+		content: '—';
+		position: absolute;
+		left: 0;
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		color: var(--accent);
+	}
+
+	.pagination {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1.5rem;
+		margin-top: 3rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--line);
+		font-size: 0.8125rem;
+	}
+
+	.pagination span {
+		color: var(--muted);
+		font-size: 0.75rem;
+		white-space: nowrap;
+	}
 </style>

@@ -1,17 +1,31 @@
 ---
+/**
+ * Renders a date as a machine-readable <time>. Accepts the literal `'present'`
+ * used by the current job, which has no end date to mark up.
+ */
 interface Props {
-	date: Date;
+	date: Date | 'present';
+	/** `long` → "January 5, 2025"; `short` → "Jan 2025". */
+	format?: 'long' | 'short';
 }
 
-const { date } = Astro.props;
+const { date, format = 'long' } = Astro.props;
+
+const FORMATTERS = {
+	long: new Intl.DateTimeFormat('en-US', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
+		timeZone: 'UTC',
+	}),
+	short: new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', timeZone: 'UTC' }),
+};
 ---
 
-<time datetime={date.toISOString()}>
-	{
-		date.toLocaleDateString('en-us', {
-			year: 'numeric',
-			month: 'short',
-			day: 'numeric',
-		})
-	}
-</time>
+{
+	date === 'present' ? (
+		<span>Present</span>
+	) : (
+		<time datetime={date.toISOString().slice(0, 10)}>{FORMATTERS[format].format(date)}</time>
+	)
+}

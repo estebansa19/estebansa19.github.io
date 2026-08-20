@@ -1,101 +1,115 @@
 ---
-// Theme Toggle Component
+/**
+ * Light/dark switch. The theme itself is resolved before first paint by the
+ * inline script in BaseHead; this only handles the click.
+ */
 ---
 
-<button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
-  <svg id="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="5"></circle>
-    <line x1="12" y1="1" x2="12" y2="3"></line>
-    <line x1="12" y1="21" x2="12" y2="23"></line>
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-    <line x1="1" y1="12" x2="3" y2="12"></line>
-    <line x1="21" y1="12" x2="23" y2="12"></line>
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-  </svg>
-  <svg id="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-  </svg>
+<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch colour theme">
+	<svg
+		class="icon icon--sun"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		aria-hidden="true"
+	>
+		<circle cx="12" cy="12" r="5"></circle>
+		<line x1="12" y1="1" x2="12" y2="3"></line>
+		<line x1="12" y1="21" x2="12" y2="23"></line>
+		<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+		<line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+		<line x1="1" y1="12" x2="3" y2="12"></line>
+		<line x1="21" y1="12" x2="23" y2="12"></line>
+		<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+		<line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+	</svg>
+	<svg
+		class="icon icon--moon"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		aria-hidden="true"
+	>
+		<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+	</svg>
 </button>
 
-<script is:inline>
-  // Theme management script
-  function initTheme() {
-    const themeToggle = document.getElementById('theme-toggle');
+<script>
+	const root = document.documentElement;
 
-    // Check if elements exist
-    if (!themeToggle) {
-      return;
-    }
+	function apply(theme: 'light' | 'dark') {
+		root.dataset.theme = theme;
+		root.style.colorScheme = theme;
+		document
+			.querySelector('meta[name="theme-color"]')
+			?.setAttribute('content', theme === 'dark' ? '#0b0e11' : '#f7f9fa');
+		try {
+			localStorage.setItem('theme', theme);
+		} catch {
+			/* storage unavailable — the choice just won't persist */
+		}
+	}
 
-    // Toggle theme
-    function toggleTheme() {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+	document.getElementById('theme-toggle')?.addEventListener('click', () => {
+		apply(root.dataset.theme === 'dark' ? 'light' : 'dark');
+	});
 
-      if (newTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      } else {
-        document.documentElement.removeAttribute('data-theme');
-      }
-
-      localStorage.setItem('theme', newTheme);
-    }
-
-    // Guard against double-binding on SPA navigations
-    if (!(themeToggle)._bound) {
-      themeToggle.addEventListener('click', toggleTheme);
-      themeToggle._bound = true;
-    }
-  }
-
-  // Initialize on page load
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initTheme);
-  } else {
-    initTheme();
-  }
-
-  // Re-initialize on page navigation (for SPA-like behavior)
-  document.addEventListener('astro:page-load', initTheme);
+	// Follow the OS while the visitor has not made an explicit choice.
+	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+		let stored: string | null = null;
+		try {
+			stored = localStorage.getItem('theme');
+		} catch {
+			/* ignore */
+		}
+		if (!stored) {
+			const theme = event.matches ? 'dark' : 'light';
+			root.dataset.theme = theme;
+			root.style.colorScheme = theme;
+		}
+	});
 </script>
 
-<style is:inline>
-  /* Icon visibility controlled purely via CSS to avoid layout thrash in JS */
-  html[data-theme='dark'] #sun-icon { display: none; }
-  html[data-theme='dark'] #moon-icon { display: block; }
-  html:not([data-theme='dark']) #sun-icon { display: block; }
-  html:not([data-theme='dark']) #moon-icon { display: none; }
+<style>
+	.theme-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		margin-right: -6px;
+		padding: 0;
+		background: none;
+		border: 0;
+		color: var(--muted);
+		cursor: pointer;
+		transition: color 0.18s ease;
+	}
 
-  .theme-toggle {
-    background: none;
-    border: 2px solid var(--border-color);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: var(--text-primary);
-  }
+	.theme-toggle:hover {
+		color: var(--accent);
+	}
 
-  .theme-toggle:hover {
-    background-color: var(--accent);
-    color: white;
-    border-color: var(--accent);
-    transform: scale(1.1);
-  }
+	.icon {
+		width: 14px;
+		height: 14px;
+	}
 
-  .theme-toggle svg {
-    width: 20px;
-    height: 20px;
-    transition: transform 0.3s ease;
-  }
+	/* Which glyph shows is pure CSS, so it is correct on the very first paint. */
+	:global(html[data-theme='dark']) .icon--sun,
+	:global(html:not([data-theme='dark'])) .icon--moon {
+		display: none;
+	}
 
-  .theme-toggle:hover svg {
-    transform: rotate(180deg);
-  }
+	@media (prefers-reduced-motion: reduce) {
+		.theme-toggle {
+			transition: none;
+		}
+	}
 </style>

@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found" description="That page does not exist.">
+	<div class="not-found">
+		<p class="code">404</p>
+		<h1>This page doesn't exist</h1>
+		<p class="hint">The link may be out of date, or the page has moved.</p>
+		<a href="/" class="home">
+			<svg
+				width="13"
+				height="13"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				aria-hidden="true"
+			>
+				<path d="M19 12H5M11 18l-6-6 6-6"></path>
+			</svg>
+			back to resume
+		</a>
+	</div>
+</BaseLayout>
+
+<style>
+	.not-found {
+		max-width: 32rem;
+		margin: 4rem 0;
+	}
+
+	.code {
+		margin: 0 0 1rem;
+		font-size: 0.75rem;
+		letter-spacing: 0.16em;
+		color: var(--accent);
+	}
+
+	h1 {
+		margin: 0 0 0.75rem;
+	}
+
+	.hint {
+		margin: 0 0 2rem;
+		font-size: 0.875rem;
+		color: var(--muted);
+	}
+
+	.home {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.8125rem;
+		text-decoration: none;
+	}
+
+	.home svg {
+		transition: transform 0.18s ease;
+	}
+
+	.home:hover svg {
+		transform: translateX(-3px);
+	}
+</style>
