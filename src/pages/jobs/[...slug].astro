@@ -1,52 +1,75 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import DateFormatter from '../../components/Date.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { AUTHOR } from '../../consts';
+import { toISODate } from '../../utils/date';
 
 export async function getStaticPaths() {
-  const jobs = await getCollection('jobs');
-  return jobs.map((job) => ({
-    params: { slug: job.id },
-    props: job,
-  }));
+	const jobs = await getCollection('jobs');
+	return jobs.map((job) => ({
+		params: { slug: job.id },
+		props: job,
+	}));
 }
 
 type Props = CollectionEntry<'jobs'>;
 
 const job = Astro.props;
 const { Content } = await render(job);
+const { role, company, companyUrl, summary, date_start, date_end } = job.data;
+
+const heading = `${role} at ${company}`;
+
+const schema = {
+	'@context': 'https://schema.org',
+	'@type': 'Occupation',
+	name: role,
+	occupationLocation: {
+		'@type': 'Organization',
+		name: company,
+		...(companyUrl && { url: companyUrl }),
+	},
+	startDate: toISODate(date_start),
+	...(date_end !== 'present' && { endDate: toISODate(date_end) }),
+	description: summary,
+	mainEntityOfPage: { '@type': 'Person', name: AUTHOR.name },
+};
 ---
 
-<Layout title={job.data.title}>
-  <article>
-    <h1 class="headingXl">{job.data.title}</h1>
-    <div class="lightText" itemprop="workLocation" itemscope itemtype="https://schema.org/Place">
-      <DateFormatter dateString={job.data.date_start}/> - <DateFormatter dateString={job.data.date_end}/>
-    </div>
-    <Content />
-  </article>
+<Layout
+	title={heading}
+	description={summary ?? `${role} at ${company} — part of ${AUTHOR.name}'s resume.`}
+	schema={[schema]}
+>
+	<article>
+		<h1>{heading}</h1>
+		<p class="meta">
+			<FormattedDate date={date_start} />
+			{' — '}
+			<FormattedDate date={date_end} />
+		</p>
+		<div class="content">
+			<Content />
+		</div>
+	</article>
 </Layout>
 
-<style is:inline>
-  .headingXl {
-    font-size: 2rem;
-    line-height: 1.3;
-    font-weight: 800;
-    letter-spacing: -0.05rem;
-    margin: 1rem 0;
-    color: var(--text-primary);
-  }
+<style>
+	article {
+		margin-top: 2rem;
+	}
 
-  .lightText {
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
-  }
+	h1 {
+		font-size: 2rem;
+		line-height: 1.3;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+		margin: 0 0 0.5rem;
+	}
 
-  article {
-    margin-top: 2rem;
-  }
-
-  a {
-    color: var(--link-color);
-  }
+	.meta {
+		margin: 0 0 1.5rem;
+		color: var(--text-muted);
+	}
 </style>

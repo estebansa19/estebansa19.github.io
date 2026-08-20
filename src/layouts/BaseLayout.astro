@@ -1,0 +1,59 @@
+---
+/**
+ * The single <html> shell for the whole site. Every page renders through this
+ * so <head>, header and footer are defined in exactly one place.
+ */
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import IconSprite from '../components/IconSprite.astro';
+import { SITE_DESCRIPTION } from '../consts';
+
+interface Props {
+	title: string;
+	description?: string;
+	image?: string;
+	type?: 'website' | 'article';
+	publishedTime?: Date;
+	modifiedTime?: Date;
+	schema?: Record<string, unknown>[];
+	fullTitle?: boolean;
+}
+
+const {
+	title,
+	description = SITE_DESCRIPTION,
+	image,
+	type,
+	publishedTime,
+	modifiedTime,
+	schema,
+	fullTitle,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead
+			title={title}
+			description={description}
+			image={image}
+			type={type}
+			publishedTime={publishedTime}
+			modifiedTime={modifiedTime}
+			schema={schema}
+			fullTitle={fullTitle}
+		/>
+		<slot name="head" />
+	</head>
+	<body>
+		<IconSprite />
+		<a href="#main" class="skip-link">Skip to content</a>
+		<Header />
+		<main id="main">
+			<slot />
+		</main>
+		<Footer />
+	</body>
+</html>

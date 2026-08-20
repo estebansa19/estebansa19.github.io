@@ -1,112 +1,95 @@
 /*
-  The CSS in this style tag is based off of Bear Blog's default CSS.
-  https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
+  Base styles, originally derived from Bear Blog's default CSS.
+  https://github.com/HermanMartinus/bearblog
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
  */
 
 :root {
-	/* New Color Palette */
-	--primary: rgb(53, 53, 62);
-	--secondary: rgb(182, 181, 149);
-  --accent: rgb(92, 71, 172);
+	color-scheme: light;
 
-	/* Light Theme Colors */
+	--accent: rgb(92, 71, 172);
+	--accent-contrast: #ffffff;
+
 	--bg-primary: #ffffff;
 	--bg-secondary: #f8f9fa;
-	--bg-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 	--text-primary: rgb(53, 53, 62);
-  --text-secondary: rgb(73, 80, 87);
-  --text-muted: rgb(107, 114, 128);
+	--text-secondary: rgb(73, 80, 87);
+	--text-muted: rgb(107, 114, 128);
 	--border-color: rgb(222, 226, 230);
+
+	--navbar-bg: rgba(255, 255, 255, 0.85);
+	--card-bg: #ffffff;
+	--surface-hover: rgba(92, 71, 172, 0.08);
+	--code-bg: rgb(248, 249, 250);
+	--link-color: rgb(92, 71, 172);
+	--link-hover: rgb(74, 57, 138);
+
 	--shadow-light: rgba(53, 53, 62, 0.1);
 	--shadow-medium: rgba(53, 53, 62, 0.15);
-	--shadow-dark: rgba(53, 53, 62, 0.2);
-
-	/* Component specific colors */
-	--navbar-bg: rgba(255, 255, 255, 0.95);
-	--navbar-shadow: rgba(53, 53, 62, 0.1);
-	--card-bg: #ffffff;
-	--code-bg: rgb(248, 249, 250);
-    --link-color: rgb(92, 71, 172);
-    --link-hover: rgb(74, 57, 138);
-
-	/* Legacy variables for compatibility */
-	--black: 53, 53, 62;
-	--gray: 108, 117, 125;
-	--gray-light: 222, 226, 230;
-	--gray-dark: 53, 53, 62;
-	--gray-gradient: var(--bg-gradient);
-	--box-shadow:
-		0 2px 6px var(--shadow-light), 0 8px 24px var(--shadow-medium),
-		0 16px 32px var(--shadow-medium);
+	--box-shadow: 0 2px 6px var(--shadow-light), 0 8px 24px var(--shadow-medium);
 }
 
-/* Dark Theme */
-[data-theme="dark"] {
-  --bg-primary: rgb(16, 16, 19);
-  --bg-secondary: rgb(28, 28, 32);
-	--bg-gradient: linear-gradient(135deg, rgb(25, 25, 28) 0%, rgb(32, 32, 36) 100%);
+[data-theme='dark'] {
+	color-scheme: dark;
+
+	--accent: rgb(167, 148, 255);
+	--accent-contrast: rgb(16, 16, 19);
+
+	--bg-primary: rgb(16, 16, 19);
+	--bg-secondary: rgb(28, 28, 32);
 	--text-primary: rgb(245, 245, 245);
-  --text-secondary: rgb(208, 209, 210);
-  --text-muted: rgb(170, 176, 189);
-	--border-color: rgb(75, 85, 99);
+	--text-secondary: rgb(208, 209, 210);
+	--text-muted: rgb(170, 176, 189);
+	--border-color: rgb(60, 60, 68);
+
+	--navbar-bg: rgba(16, 16, 19, 0.85);
+	--card-bg: rgb(28, 28, 32);
+	--surface-hover: rgba(167, 148, 255, 0.12);
+	--code-bg: rgb(40, 40, 44);
+	--link-color: rgb(195, 180, 255);
+	--link-hover: rgb(217, 205, 255);
+
 	--shadow-light: rgba(0, 0, 0, 0.2);
 	--shadow-medium: rgba(0, 0, 0, 0.3);
-	--shadow-dark: rgba(0, 0, 0, 0.4);
-
-	/* Component specific dark colors */
-	--navbar-bg: rgba(32, 32, 36, 0.95);
-	--navbar-shadow: rgba(0, 0, 0, 0.3);
-	--card-bg: rgb(32, 32, 36);
-	--code-bg: rgb(40, 40, 44);
-  --link-color: rgb(195, 180, 255);
-  --link-hover: rgb(217, 205, 255);
 }
 
-@font-face {
-	font-family: 'Atkinson';
-	src: url('/fonts/atkinson-regular.woff') format('woff');
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face {
-	font-family: 'Atkinson';
-	src: url('/fonts/atkinson-bold.woff') format('woff');
-	font-weight: 700;
-	font-style: normal;
-	font-display: swap;
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
 }
 
-/* Global reset and base styles */
 html,
 body {
 	padding: 0;
 	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu,
-		Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-	line-height: 1.6;
-	font-size: 18px;
-	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-* {
-	box-sizing: border-box;
+html {
+	font-family:
+		-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+		'Helvetica Neue', sans-serif;
+	font-size: 18px;
+	line-height: 1.6;
+	-webkit-text-size-adjust: 100%;
 }
 
 body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
 	text-align: left;
-	background-size: 100% 600px;
 	background-color: var(--bg-primary);
+	color: var(--text-primary);
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-	color: var(--text-primary);
 }
 
 main {
+	flex: 1;
 	width: 720px;
 	max-width: calc(100% - 2em);
-	margin: auto;
+	margin: 3rem auto 0;
 	padding: 1em;
 }
 
@@ -119,147 +102,148 @@ h6 {
 	margin: 0 0 0.5rem 0;
 	color: var(--text-primary);
 	line-height: 1.2;
+	text-wrap: balance;
 }
+
 h1 {
-	font-size: 3.052em;
+	font-size: 2.5rem;
 }
 h2 {
-	font-size: 2.441em;
+	font-size: 1.953rem;
 }
 h3 {
-	font-size: 1.953em;
+	font-size: 1.563rem;
 }
 h4 {
-	font-size: 1.563em;
+	font-size: 1.25rem;
 }
 h5 {
-	font-size: 1.25em;
+	font-size: 1.1rem;
 }
+
 strong,
 b {
 	font-weight: 700;
 }
+
 a {
 	color: var(--link-color);
 	text-decoration: none;
 	transition: color 0.2s ease;
 }
+
 a:hover {
 	color: var(--link-hover);
 	text-decoration: underline;
 }
+
 p {
 	margin-bottom: 1em;
-	color: var(--text-primary);
 }
+
 .prose p {
-	margin-bottom: 2em;
+	margin-bottom: 1.5em;
 }
-textarea {
-	width: 100%;
-	font-size: 16px;
-	background-color: var(--card-bg);
-	border: 1px solid var(--border-color);
-	color: var(--text-primary);
-}
-input {
-	font-size: 16px;
-	background-color: var(--card-bg);
-	border: 1px solid var(--border-color);
-	color: var(--text-primary);
-}
-table {
-	width: 100%;
-}
-img {
+
+img,
+video {
 	max-width: 100%;
 	height: auto;
 	border-radius: 8px;
 	display: block;
 }
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
 code {
 	padding: 2px 5px;
 	background-color: var(--code-bg);
 	border: 1px solid var(--border-color);
-	border-radius: 2px;
-	color: var(--text-primary);
+	border-radius: 4px;
+	font-size: 0.9em;
 }
+
 pre {
 	padding: 1.5em;
 	border-radius: 8px;
 	background-color: var(--code-bg);
 	border: 1px solid var(--border-color);
+	overflow-x: auto;
 }
+
 pre > code {
 	all: unset;
-	color: var(--text-primary);
 }
+
 blockquote {
 	border-left: 4px solid var(--accent);
 	padding: 0 0 0 20px;
-	margin: 0px;
-	font-size: 1.333em;
+	margin: 0;
+	font-size: 1.2em;
 	color: var(--text-secondary);
 }
+
 hr {
 	border: none;
 	border-top: 1px solid var(--border-color);
 }
-@media (max-width: 720px) {
-	body {
-		font-size: 18px;
-	}
-	main {
-		padding: 1em;
-	}
+
+/* Visible focus ring for keyboard users on every interactive element. */
+:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+	border-radius: 4px;
+}
+
+.skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	z-index: 200;
+	padding: 0.75rem 1rem;
+	background: var(--bg-primary);
+	border: 1px solid var(--accent);
+	border-radius: 0 0 8px 0;
+}
+
+.skip-link:focus {
+	left: 0;
 }
 
 .sr-only {
-	border: 0;
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
 	padding: 0;
 	margin: 0;
-	position: absolute !important;
-	height: 1px;
-	width: 1px;
+	border: 0;
 	overflow: hidden;
-	/* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
-	clip: rect(1px 1px 1px 1px);
-	/* maybe deprecated but we need to support legacy browsers */
 	clip: rect(1px, 1px, 1px, 1px);
-	/* modern browsers, clip-path works inwards from each corner */
 	clip-path: inset(50%);
-	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
 
-/* Theme Toggle Styles */
-.theme-toggle {
-	background: none;
-	border: 2px solid var(--border-color);
-	border-radius: 50%;
-	width: 40px;
-	height: 40px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	transition: all 0.3s ease;
-	color: var(--text-primary);
+@media (max-width: 720px) {
+	main {
+		margin-top: 2rem;
+		padding: 1em;
+	}
+
+	h1 {
+		font-size: 2rem;
+	}
 }
 
-.theme-toggle:hover {
-	background-color: var(--accent);
-	color: white;
-	border-color: var(--accent);
-	transform: scale(1.1);
-}
-
-.theme-toggle svg {
-	width: 20px;
-	height: 20px;
-	transition: transform 0.3s ease;
-}
-
-.theme-toggle:hover svg {
-	transform: rotate(180deg);
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
 }

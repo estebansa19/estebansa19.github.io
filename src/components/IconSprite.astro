@@ -1,0 +1,24 @@
+---
+/**
+ * Emits every icon once per page as <symbol>s. Components then reference them
+ * with <use href="#icon-name">, so a glyph used in both the header and the
+ * footer costs its path data only once.
+ */
+import { ICONS } from '../data/icons';
+---
+
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="sprite">
+	{
+		Object.entries(ICONS).map(([name, icon]) => (
+			<symbol id={`icon-${name}`} viewBox={icon.viewBox}>
+				<path fill="currentColor" d={icon.path} />
+			</symbol>
+		))
+	}
+</svg>
+
+<style>
+	.sprite {
+		display: none;
+	}
+</style>
