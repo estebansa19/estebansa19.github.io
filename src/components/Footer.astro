@@ -1,7 +1,9 @@
 ---
 import { SOCIALS, AUTHOR } from '../consts';
+import { getPosts } from '../utils/content';
 
 const year = new Date().getFullYear();
+const hasPosts = (await getPosts({ includeDrafts: false })).length > 0;
 ---
 
 <footer>
@@ -14,7 +16,7 @@ const year = new Date().getFullYear();
 					</a>
 				))
 			}
-			<a href="/rss.xml">rss</a>
+			{hasPosts && <a href="/rss.xml">rss</a>}
 		</div>
 		<p class="copyright">&copy; {year} {AUTHOR.name}</p>
 	</div>

@@ -13,7 +13,7 @@ const posts = await getPosts();
 >
 	<div class="masthead">
 		<h1>Blog</h1>
-		<a href="/rss.xml" class="feed">rss feed</a>
+		{posts.length > 0 && <a href="/rss.xml" class="feed">rss feed</a>}
 	</div>
 
 	<p class="intro prose">
