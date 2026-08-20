@@ -70,14 +70,14 @@ const jsonLd = [person, website, ...schema];
 	one. Falls back to the OS preference when the visitor has no stored choice.
 -->
 <script is:inline>
-	(function () {
-		var stored = null;
+	(() => {
+		let stored = null;
 		try {
 			stored = localStorage.getItem('theme');
-		} catch (e) {
+		} catch {
 			/* private mode / storage disabled */
 		}
-		var theme =
+		const theme =
 			stored === 'dark' || stored === 'light'
 				? stored
 				: window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -85,7 +85,7 @@ const jsonLd = [person, website, ...schema];
 					: 'light';
 		document.documentElement.dataset.theme = theme;
 		document.documentElement.style.colorScheme = theme;
-		var meta = document.querySelector('meta[name="theme-color"]');
+		const meta = document.querySelector('meta[name="theme-color"]');
 		if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b0e11' : '#f7f9fa');
 	})();
 </script>
