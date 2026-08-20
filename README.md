@@ -8,17 +8,16 @@ Personal resume and blog for Esteban Saldarriaga Alzate. Built with Astro, conte
 ## Project structure
 
 ```text
-public/                  # Static assets served as-is (favicon, manifest, robots, OG image)
+public/                  # Static assets served as-is (favicon, fonts, manifest, robots, OG image)
 src/
   assets/                # Images processed & optimised by Astro at build time
   components/            # Reusable UI components
   content/
     blog/                # Blog posts (Markdown/MDX)
     jobs/                # Resume experience entries (Markdown)
-  data/                  # Static structured data (education, icon paths)
+  data/                  # Static structured data (education)
   layouts/
     BaseLayout.astro     # The single <html> shell — head, header, footer
-    Layout.astro         # Resume pages: profile header + reading column
     BlogPost.astro       # Blog article layout
   pages/                 # Routed pages
   styles/global.css      # Design tokens + base element styles
@@ -95,6 +94,18 @@ Entries sort themselves by start date, newest first.
   `Occupation` per job, and posts add `BlogPosting`.
 - Page titles use the `Page — Esteban` template; the home page supplies its own full title.
 - `sitemap-index.xml` and `rss.xml` are generated at build time. The 404 page is excluded from the sitemap.
+
+## Design
+
+The site is monospace throughout — headings, dates, labels, navigation and code are set in
+JetBrains Mono. The one exception is long-form prose (anything inside `.prose`), which uses
+IBM Plex Sans, because a monospace body is tiring to read at article length.
+
+Both are variable fonts, latin subset, self-hosted from `public/fonts/` and preloaded — no
+request ever leaves the site for a font.
+
+Experience is a timeline: a hairline rail with a dot per role. The current role's dot is
+filled and haloed in the accent colour; past roles are hollow and fill on hover.
 
 ## Theming
 

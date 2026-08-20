@@ -1,18 +1,19 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import profileImage from '../assets/profile.jpg';
 import { AUTHOR, SITE_DESCRIPTION } from '../consts';
 import { EDUCATION } from '../data/education';
-import { yearsSince, toISODate } from '../utils/date';
-
-const age = yearsSince(new Date(AUTHOR.birthDate));
+import { toISODate } from '../utils/date';
 
 const jobs = (await getCollection('jobs')).sort(
 	(a, b) => b.data.date_start.getTime() - a.data.date_start.getTime(),
 );
 
-// Rich structured data for the resume: every role plus the schools.
+const currentJob = jobs.find((job) => job.data.date_end === 'present');
+
 const resumeSchema = {
 	'@context': 'https://schema.org',
 	'@type': 'ProfilePage',
@@ -37,49 +38,94 @@ const resumeSchema = {
 };
 ---
 
-<Layout title={`${AUTHOR.name} — ${AUTHOR.jobTitle}`} description={SITE_DESCRIPTION} home fullTitle schema={[resumeSchema]}>
-	<section class="intro">
-		<p>
-			Hello 👋, I'm <strong>Esteban</strong>, I'm a software engineer, I live in Colombia 🇨🇴.
-		</p>
-		<p>
-			I'm {age} years old, a Ruby/Ruby on Rails lover; Ruby is my main programming language but, I
-			like JavaScript as well (in fact, this resume has been built with JavaScript).
-		</p>
-		<p>
-			I'm studying English, I enjoy reading, watching movies/series/animes. I like to have a few
-			beers once in a while as well :)
-		</p>
-	</section>
-
-	<section>
-		<h2>Experience</h2>
-		<ul class="list">
+<BaseLayout
+	title={`${AUTHOR.name} — ${AUTHOR.jobTitle}`}
+	description={SITE_DESCRIPTION}
+	fullTitle
+	schema={[resumeSchema]}
+>
+	<header class="hero">
+		<Image
+			src={profileImage}
+			alt={`Portrait of ${AUTHOR.name}`}
+			class="portrait"
+			loading="eager"
+			fetchpriority="high"
+			widths={[96, 192]}
+			sizes="96px"
+		/>
+		<div class="identity">
+			<h1>{AUTHOR.name}</h1>
 			{
-				jobs.map((job) => (
-					<li class="card">
-						<a href={`/jobs/${job.id}/`} class="card-link">
-							<span class="role">{job.data.role}</span>
-							<span class="company">{job.data.company}</span>
-						</a>
-						<p class="meta">
-							<FormattedDate date={job.data.date_start} format="short" />
-							{' — '}
-							<FormattedDate date={job.data.date_end} format="short" />
-						</p>
-						{job.data.summary && <p class="summary">{job.data.summary}</p>}
-					</li>
-				))
+				currentJob && (
+					<p class="status">
+						<span class="status-dot" aria-hidden="true" />
+						{currentJob.data.role} &middot; {currentJob.data.company}
+					</p>
+				)
 			}
-		</ul>
-	</section>
+			<p class="location">{AUTHOR.location} — UTC−5</p>
+		</div>
+	</header>
 
-	<section>
-		<h2>Education</h2>
-		<ul class="list">
-			{
-				EDUCATION.map((entry) => (
-					<li class="card">
+	<p class="intro prose">
+		Ruby and Rails are where I do my best work — seven years of it, across billing, logistics and
+		search systems. I reach for JavaScript and TypeScript when the front end needs me. Outside
+		work: reading, films, and the occasional beer.
+	</p>
+
+	<h2 class="section-label">Experience</h2>
+
+	<ol class="timeline">
+		{
+			jobs.map((job) => {
+				const isCurrent = job.data.date_end === 'present';
+				return (
+					<li class="node">
+						<a href={`/jobs/${job.id}/`}>
+							<span class="rail" aria-hidden="true">
+								<span class="rail-line rail-line--top" />
+								<span class:list={['dot', { 'dot--current': isCurrent }]} />
+								<span class="rail-line rail-line--bottom" />
+							</span>
+							<span class="entry">
+								<span class="period">
+									<FormattedDate date={job.data.date_start} format="short" />
+									{' — '}
+									<FormattedDate date={job.data.date_end} format="short" />
+								</span>
+								<span class="role">{job.data.role}</span>
+								<span class="company">{job.data.company}</span>
+							</span>
+							<svg
+								class="arrow"
+								width="14"
+								height="14"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<path d="M5 12h14M13 6l6 6-6 6" />
+							</svg>
+						</a>
+					</li>
+				);
+			})
+		}
+	</ol>
+
+	<h2 class="section-label education-label">Education</h2>
+
+	<ul class="education">
+		{
+			EDUCATION.map((entry) => (
+				<li>
+					<span class="period">{entry.period ?? '—'}</span>
+					<span class="entry">
 						{entry.url ? (
 							<a href={entry.url} target="_blank" rel="noopener noreferrer">
 								{entry.title}
@@ -87,84 +133,244 @@ const resumeSchema = {
 						) : (
 							<span class="role">{entry.title}</span>
 						)}
-						<p class="meta">
-							{entry.institution}
-							{entry.period && <> · {entry.period}</>}
-						</p>
-					</li>
-				))
-			}
-		</ul>
-	</section>
-</Layout>
+						<span class="company">{entry.institution}</span>
+					</span>
+				</li>
+			))
+		}
+	</ul>
+</BaseLayout>
 
 <style>
-	.intro {
-		font-size: 1.15rem;
-		line-height: 1.6;
-	}
-
-	h2 {
-		font-size: 1.5rem;
-		line-height: 1.4;
-		margin: 2.5rem 0 1rem;
-	}
-
-	.list {
-		list-style: none;
-		padding: 0;
-		margin: 0;
-	}
-
-	.card {
-		margin: 0 0 1rem;
-		padding: 1rem;
-		background-color: var(--card-bg);
-		border: 1px solid var(--border-color);
-		border-radius: 8px;
-		transition:
-			border-color 0.2s ease,
-			background-color 0.2s ease;
-	}
-
-	.card:hover {
-		border-color: var(--accent);
-	}
-
-	.card-link {
+	.hero {
 		display: flex;
-		flex-wrap: wrap;
-		align-items: baseline;
+		align-items: flex-start;
+		gap: 1.75rem;
+		margin-bottom: 3.5rem;
+	}
+
+	.portrait {
+		width: 96px;
+		height: 96px;
+		flex-shrink: 0;
+		object-fit: cover;
+		object-position: center top;
+		border-radius: 2px;
+		filter: grayscale(1) contrast(1.05);
+	}
+
+	.identity {
+		display: flex;
+		flex-direction: column;
 		gap: 0.5rem;
+		padding-top: 0.25rem;
+	}
+
+	.identity h1 {
+		margin: 0;
+		font-size: 1.75rem;
+	}
+
+	.status {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin: 0;
+		font-size: 0.875rem;
+		color: var(--accent);
+	}
+
+	.status-dot {
+		width: 6px;
+		height: 6px;
+		flex-shrink: 0;
+		border-radius: 999px;
+		background: var(--accent);
+		box-shadow: 0 0 0 3px var(--glow);
+	}
+
+	.location {
+		margin: 0;
+		font-size: 0.8125rem;
+		color: var(--muted);
+	}
+
+	.intro {
+		max-width: 38rem;
+		margin: 0 0 4rem;
+	}
+
+	.timeline {
+		list-style: none;
+		margin: 0.5rem 0 0;
+		padding: 0;
+	}
+
+	.node a {
+		display: flex;
+		gap: 1.25rem;
+		align-items: stretch;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.rail {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 12px;
+		flex-shrink: 0;
+	}
+
+	.rail-line {
+		width: 1px;
+		background: var(--line);
+	}
+
+	.rail-line--top {
+		height: 1.5rem;
+	}
+
+	.rail-line--bottom {
+		flex-grow: 1;
+	}
+
+	/* The first node has no line above it and the last none below. */
+	.node:first-child .rail-line--top,
+	.node:last-child .rail-line--bottom {
+		background: transparent;
+	}
+
+	.dot {
+		width: 9px;
+		height: 9px;
+		flex-shrink: 0;
+		border-radius: 999px;
+		background: var(--line);
+		transition:
+			background 0.18s ease,
+			box-shadow 0.18s ease;
+	}
+
+	.dot--current {
+		background: var(--accent);
+		box-shadow: 0 0 0 4px var(--glow);
+	}
+
+	.entry {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		padding: 1rem 0 1.625rem;
+	}
+
+	.period {
+		font-size: 0.75rem;
+		color: var(--muted);
+		font-variant-numeric: tabular-nums;
+		margin-bottom: 0.4375rem;
 	}
 
 	.role {
-		font-weight: 600;
+		font-size: 0.9375rem;
+		font-weight: 500;
+		margin-bottom: 0.25rem;
+		transition: color 0.18s ease;
 	}
 
 	.company {
-		color: var(--text-secondary);
+		font-size: 0.8125rem;
+		color: var(--muted);
 	}
 
-	.card-link:hover .company {
+	.arrow {
+		align-self: center;
+		flex-shrink: 0;
+		color: var(--accent);
+		opacity: 0;
+		transform: translateX(-4px);
+		transition:
+			opacity 0.18s ease,
+			transform 0.18s ease;
+	}
+
+	.node a:hover .dot {
+		background: var(--accent);
+		box-shadow: 0 0 0 4px var(--glow);
+	}
+
+	.node a:hover .role {
+		color: var(--accent);
+	}
+
+	.node a:hover .arrow {
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	.education-label {
+		margin-top: 3.5rem;
+	}
+
+	.education {
+		list-style: none;
+		margin: 1.5rem 0 0;
+		padding: 0;
+	}
+
+	.education li {
+		display: flex;
+		gap: 2rem;
+		align-items: baseline;
+		padding: 1.125rem 0;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.education .period {
+		width: 11rem;
+		flex-shrink: 0;
+		margin-bottom: 0;
+	}
+
+	.education .entry {
+		gap: 0.3125rem;
+		padding: 0;
+	}
+
+	.education a {
+		font-size: 0.9375rem;
+		font-weight: 500;
 		color: inherit;
+		text-decoration: none;
+		transition: color 0.18s ease;
 	}
 
-	.meta {
-		margin: 0.25rem 0 0;
-		font-size: 0.9rem;
-		color: var(--text-muted);
+	.education a:hover {
+		color: var(--accent);
+		text-decoration: none;
 	}
 
-	.summary {
-		margin: 0.5rem 0 0;
-		font-size: 0.95rem;
-		color: var(--text-secondary);
-	}
+	@media (max-width: 720px) {
+		.hero {
+			gap: 1.25rem;
+		}
 
-	@media (prefers-reduced-motion: reduce) {
-		.card {
-			transition: none;
+		.portrait {
+			width: 72px;
+			height: 72px;
+		}
+
+		.identity h1 {
+			font-size: 1.375rem;
+		}
+
+		.education li {
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+
+		.education .period {
+			width: auto;
 		}
 	}
 </style>

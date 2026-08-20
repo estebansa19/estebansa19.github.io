@@ -7,57 +7,61 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 		<p class="code">404</p>
 		<h1>This page doesn't exist</h1>
 		<p class="hint">The link may be out of date, or the page has moved.</p>
-		<a href="/" class="button">← Back to home</a>
+		<a href="/" class="home">
+			<svg
+				width="13"
+				height="13"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				aria-hidden="true"
+			>
+				<path d="M19 12H5M11 18l-6-6 6-6"></path>
+			</svg>
+			back to resume
+		</a>
 	</div>
 </BaseLayout>
 
 <style>
 	.not-found {
-		max-width: 36rem;
-		margin: 4rem auto;
-		text-align: center;
+		max-width: 32rem;
+		margin: 4rem 0;
 	}
 
 	.code {
-		margin: 0;
-		font-size: 4rem;
-		font-weight: 800;
-		line-height: 1;
+		margin: 0 0 1rem;
+		font-size: 0.75rem;
+		letter-spacing: 0.16em;
 		color: var(--accent);
 	}
 
 	h1 {
-		font-size: 1.75rem;
-		margin: 1rem 0 0.5rem;
+		margin: 0 0 0.75rem;
 	}
 
 	.hint {
-		color: var(--text-muted);
+		margin: 0 0 2rem;
+		font-size: 0.875rem;
+		color: var(--muted);
 	}
 
-	.button {
-		display: inline-block;
-		margin-top: 1.5rem;
-		padding: 0.5rem 1rem;
-		border: 2px solid var(--border-color);
-		border-radius: 8px;
-		font-weight: 500;
+	.home {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.8125rem;
 		text-decoration: none;
-		transition:
-			background-color 0.2s ease,
-			border-color 0.2s ease,
-			color 0.2s ease;
 	}
 
-	.button:hover {
-		background-color: var(--accent);
-		border-color: var(--accent);
-		color: var(--accent-contrast);
+	.home svg {
+		transition: transform 0.18s ease;
 	}
 
-	@media (prefers-reduced-motion: reduce) {
-		.button {
-			transition: none;
-		}
+	.home:hover svg {
+		transform: translateX(-3px);
 	}
 </style>

@@ -1,5 +1,4 @@
 ---
-import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { AUTHOR } from '../../consts';
@@ -10,83 +9,163 @@ const posts = await getPosts();
 
 <BaseLayout
 	title="Blog"
-	description={`Writing about software engineering, Ruby and the web by ${AUTHOR.name}.`}
+	description={`Notes on Ruby, Rails and the web by ${AUTHOR.name}.`}
 >
-	<h1>Blog</h1>
+	<div class="masthead">
+		<h1>Blog</h1>
+		<a href="/rss.xml" class="feed">rss feed</a>
+	</div>
+
+	<p class="intro prose">
+		Notes on Ruby, Rails and whatever else I have been taking apart lately.
+	</p>
 
 	{
 		posts.length === 0 ? (
-			<p class="empty">No posts yet — something is on the way.</p>
+			<p class="empty">Nothing published yet — something is on the way.</p>
 		) : (
-			<ul class="posts">
-				{posts.map((post) => (
-					<li>
-						<a href={`/blog/${post.id}/`}>
-							{post.data.heroImage && (
-								<Image
-									src={post.data.heroImage}
-									alt=""
-									widths={[360, 720]}
-									sizes="(max-width: 720px) 100vw, 340px"
-									loading="lazy"
-								/>
-							)}
-							<h2 class="title">{post.data.title}</h2>
-							<p class="date">
-								<FormattedDate date={post.data.pubDate} />
-							</p>
-						</a>
-					</li>
-				))}
-			</ul>
+			<>
+				<ul class="posts">
+					{posts.map((post) => (
+						<li>
+							<a href={`/blog/${post.id}/`}>
+								<span class="meta">
+									<span class="marker" aria-hidden="true" />
+									<span class="date">
+										<FormattedDate date={post.data.pubDate} />
+									</span>
+								</span>
+								<span class="entry">
+									<span class="title">{post.data.title}</span>
+									<span class="description">{post.data.description}</span>
+								</span>
+							</a>
+						</li>
+					))}
+				</ul>
+				<p class="end">That is everything so far.</p>
+			</>
 		)
 	}
 </BaseLayout>
 
 <style>
-	h1 {
-		font-size: 2.5rem;
-		letter-spacing: -0.03em;
-		margin-bottom: 2rem;
+	.masthead {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1.5rem;
+		margin-bottom: 0.75rem;
+	}
+
+	.masthead h1 {
+		margin: 0;
+	}
+
+	.feed {
+		font-size: 0.75rem;
+		color: var(--muted);
+		text-decoration: none;
+	}
+
+	.feed:hover {
+		color: var(--accent);
+		text-decoration: none;
+	}
+
+	.intro {
+		max-width: 35rem;
+		margin: 0 0 3.5rem;
+		color: var(--muted);
 	}
 
 	.empty {
-		color: var(--text-muted);
+		color: var(--muted);
+		font-size: 0.875rem;
 	}
 
 	.posts {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-		gap: 2rem;
 		list-style: none;
 		margin: 0;
 		padding: 0;
+		border-bottom: 1px solid var(--line);
 	}
 
 	.posts a {
-		display: block;
+		display: flex;
+		gap: 2rem;
+		align-items: baseline;
+		padding: 1.375rem 0;
+		border-top: 1px solid var(--line);
 		color: inherit;
 		text-decoration: none;
 	}
 
-	.posts img {
-		margin-bottom: 0.75rem;
-		border-radius: 12px;
+	.meta {
+		display: flex;
+		align-items: baseline;
+		gap: 0.75rem;
+		width: 9rem;
+		flex-shrink: 0;
 	}
 
-	.title {
-		font-size: 1.25rem;
-		margin: 0;
-		line-height: 1.3;
+	.marker {
+		width: 5px;
+		height: 5px;
+		flex-shrink: 0;
+		border-radius: 999px;
+		background: var(--line);
+		transition: background 0.18s ease;
 	}
 
 	.date {
-		margin: 0.25rem 0 0;
-		font-size: 0.9rem;
-		color: var(--text-muted);
+		font-size: 0.75rem;
+		color: var(--muted);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.entry {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+	}
+
+	.title {
+		font-size: 1rem;
+		font-weight: 500;
+		margin-bottom: 0.5rem;
+		transition: color 0.18s ease;
+	}
+
+	.description {
+		font-family: var(--font-sans);
+		font-size: 0.875rem;
+		line-height: 1.6;
+		color: var(--muted);
 	}
 
 	.posts a:hover .title {
 		color: var(--accent);
+	}
+
+	.posts a:hover .marker {
+		background: var(--accent);
+	}
+
+	.end {
+		margin: 4rem 0 0;
+		font-size: 0.75rem;
+		color: var(--muted);
+	}
+
+	@media (max-width: 720px) {
+		.posts a {
+			flex-direction: column;
+			gap: 0.75rem;
+		}
+
+		.meta {
+			width: auto;
+		}
 	}
 </style>

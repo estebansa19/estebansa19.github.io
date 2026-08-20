@@ -1,8 +1,7 @@
 ---
 import HeaderLink from './HeaderLink.astro';
-import SocialLinks from './SocialLinks.astro';
 import ThemeToggle from './ThemeToggle.astro';
-import { SITE_TITLE } from '../consts';
+import { AUTHOR } from '../consts';
 import { getPosts } from '../utils/content';
 
 // The blog only appears in the nav once there is something to read.
@@ -11,13 +10,10 @@ const hasPosts = (await getPosts({ includeDrafts: false })).length > 0;
 
 <header class="navbar">
 	<nav aria-label="Main">
-		<a href="/" class="brand">{SITE_TITLE}</a>
-		<div class="internal-links">
-			<HeaderLink href="/">Resume</HeaderLink>
-			{hasPosts && <HeaderLink href="/blog">Blog</HeaderLink>}
-		</div>
-		<div class="nav-actions">
-			<SocialLinks class="header-socials" />
+		<a href="/" class="wordmark">{AUTHOR.shortName}</a>
+		<div class="nav-right">
+			<HeaderLink href="/">resume</HeaderLink>
+			{hasPosts && <HeaderLink href="/blog">blog</HeaderLink>}
 			<ThemeToggle />
 		</div>
 	</nav>
@@ -28,11 +24,8 @@ const hasPosts = (await getPosts({ includeDrafts: false })).length > 0;
 		position: sticky;
 		top: 0;
 		z-index: 100;
-		margin: 0;
-		padding: 0 1em;
-		background: var(--navbar-bg);
-		backdrop-filter: blur(10px);
-		border-bottom: 1px solid var(--border-color);
+		background: var(--bg);
+		border-bottom: 1px solid var(--line);
 	}
 
 	nav {
@@ -40,28 +33,37 @@ const hasPosts = (await getPosts({ includeDrafts: false })).length > 0;
 		align-items: center;
 		justify-content: space-between;
 		gap: 1rem;
+		max-width: 52rem;
+		margin: 0 auto;
+		padding: 1.125rem 2rem;
 	}
 
-	.brand {
-		font-size: 1rem;
-		font-weight: 600;
-		color: var(--text-primary);
+	.wordmark {
+		font-size: 0.75rem;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--muted);
 		text-decoration: none;
 	}
 
-	.internal-links {
-		display: flex;
+	.wordmark:hover {
+		color: var(--text);
+		text-decoration: none;
 	}
 
-	.nav-actions {
+	.nav-right {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
+		gap: 1.75rem;
 	}
 
 	@media (max-width: 720px) {
-		.navbar :global(.header-socials) {
-			display: none;
+		nav {
+			padding: 1rem 1.25rem;
+		}
+
+		.nav-right {
+			gap: 1.25rem;
 		}
 	}
 </style>
