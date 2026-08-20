@@ -1,56 +1,55 @@
 /*
-  Base styles, originally derived from Bear Blog's default CSS.
-  https://github.com/HermanMartinus/bearblog
-  License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
- */
+  Design tokens and base element styles.
+
+  The site is monospace throughout — headings, labels, dates, navigation and
+  code — with one deliberate exception: long-form prose (`.prose`) is set in a
+  sans face, because a mono body is tiring to read at article length.
+*/
+
+/* Variable fonts, latin subset, self-hosted so no third party is contacted. */
+@font-face {
+	font-family: 'JetBrains Mono';
+	src: url('/fonts/jetbrains-mono-latin.woff2') format('woff2-variations');
+	font-weight: 400 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'IBM Plex Sans';
+	src: url('/fonts/ibm-plex-sans-latin.woff2') format('woff2-variations');
+	font-weight: 400 500;
+	font-style: normal;
+	font-display: swap;
+}
 
 :root {
 	color-scheme: light;
 
-	--accent: rgb(92, 71, 172);
-	--accent-contrast: #ffffff;
+	--font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	--font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
 
-	--bg-primary: #ffffff;
-	--bg-secondary: #f8f9fa;
-	--text-primary: rgb(53, 53, 62);
-	--text-secondary: rgb(73, 80, 87);
-	--text-muted: rgb(107, 114, 128);
-	--border-color: rgb(222, 226, 230);
-
-	--navbar-bg: rgba(255, 255, 255, 0.85);
-	--card-bg: #ffffff;
-	--surface-hover: rgba(92, 71, 172, 0.08);
-	--code-bg: rgb(248, 249, 250);
-	--link-color: rgb(92, 71, 172);
-	--link-hover: rgb(74, 57, 138);
-
-	--shadow-light: rgba(53, 53, 62, 0.1);
-	--shadow-medium: rgba(53, 53, 62, 0.15);
-	--box-shadow: 0 2px 6px var(--shadow-light), 0 8px 24px var(--shadow-medium);
+	--bg: oklch(0.98 0.003 250);
+	--text: oklch(0.24 0.008 250);
+	--muted: oklch(0.5 0.01 250);
+	--line: oklch(0.88 0.005 250);
+	--accent: oklch(0.5 0.14 155);
+	--accent-contrast: oklch(0.99 0 0);
+	--glow: oklch(0.5 0.14 155 / 0.16);
+	--code-bg: oklch(0.955 0.004 250);
 }
 
 [data-theme='dark'] {
 	color-scheme: dark;
 
-	--accent: rgb(167, 148, 255);
-	--accent-contrast: rgb(16, 16, 19);
-
-	--bg-primary: rgb(16, 16, 19);
-	--bg-secondary: rgb(28, 28, 32);
-	--text-primary: rgb(245, 245, 245);
-	--text-secondary: rgb(208, 209, 210);
-	--text-muted: rgb(170, 176, 189);
-	--border-color: rgb(60, 60, 68);
-
-	--navbar-bg: rgba(16, 16, 19, 0.85);
-	--card-bg: rgb(28, 28, 32);
-	--surface-hover: rgba(167, 148, 255, 0.12);
-	--code-bg: rgb(40, 40, 44);
-	--link-color: rgb(195, 180, 255);
-	--link-hover: rgb(217, 205, 255);
-
-	--shadow-light: rgba(0, 0, 0, 0.2);
-	--shadow-medium: rgba(0, 0, 0, 0.3);
+	--bg: oklch(0.16 0.008 250);
+	--text: oklch(0.93 0.005 250);
+	--muted: oklch(0.64 0.01 250);
+	--line: oklch(0.29 0.008 250);
+	--accent: oklch(0.72 0.15 155);
+	--accent-contrast: oklch(0.16 0.008 250);
+	--glow: oklch(0.72 0.15 155 / 0.22);
+	--code-bg: oklch(0.2 0.008 250);
 }
 
 *,
@@ -66,10 +65,8 @@ body {
 }
 
 html {
-	font-family:
-		-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-		'Helvetica Neue', sans-serif;
-	font-size: 18px;
+	font-family: var(--font-mono);
+	font-size: 16px;
 	line-height: 1.6;
 	-webkit-text-size-adjust: 100%;
 }
@@ -78,19 +75,19 @@ body {
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
+	background-color: var(--bg);
+	color: var(--text);
 	text-align: left;
-	background-color: var(--bg-primary);
-	color: var(--text-primary);
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 }
 
 main {
 	flex: 1;
-	width: 720px;
-	max-width: calc(100% - 2em);
-	margin: 3rem auto 0;
-	padding: 1em;
+	width: 100%;
+	max-width: 52rem;
+	margin: 0 auto;
+	padding: 3.5rem 2rem 0;
 }
 
 h1,
@@ -99,103 +96,157 @@ h3,
 h4,
 h5,
 h6 {
-	margin: 0 0 0.5rem 0;
-	color: var(--text-primary);
-	line-height: 1.2;
+	margin: 0 0 0.5rem;
+	color: var(--text);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	line-height: 1.25;
 	text-wrap: balance;
 }
 
 h1 {
-	font-size: 2.5rem;
+	font-size: 1.75rem;
 }
 h2 {
-	font-size: 1.953rem;
-}
-h3 {
-	font-size: 1.563rem;
-}
-h4 {
 	font-size: 1.25rem;
 }
-h5 {
-	font-size: 1.1rem;
+h3 {
+	font-size: 1.0625rem;
 }
-
-strong,
-b {
-	font-weight: 700;
+h4,
+h5,
+h6 {
+	font-size: 1rem;
 }
 
 a {
-	color: var(--link-color);
+	color: var(--accent);
 	text-decoration: none;
-	transition: color 0.2s ease;
+	transition: color 0.18s ease;
 }
 
 a:hover {
-	color: var(--link-hover);
 	text-decoration: underline;
 }
 
 p {
-	margin-bottom: 1em;
-}
-
-.prose p {
-	margin-bottom: 1.5em;
+	margin: 0 0 1rem;
 }
 
 img,
 video {
+	display: block;
 	max-width: 100%;
 	height: auto;
-	border-radius: 8px;
-	display: block;
+	border-radius: 3px;
+}
+
+hr {
+	border: none;
+	border-top: 1px solid var(--line);
+	margin: 2rem 0;
+}
+
+/* Long-form reading: the one place the mono face steps aside. */
+.prose {
+	font-family: var(--font-sans);
+	font-size: 1rem;
+	line-height: 1.8;
+}
+
+.prose p {
+	margin: 0 0 1.5rem;
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+	font-family: var(--font-mono);
+	margin: 2.5rem 0 1rem;
+}
+
+.prose ul,
+.prose ol {
+	margin: 0 0 1.5rem;
+	padding-left: 1.25rem;
+}
+
+.prose li {
+	margin-bottom: 0.5rem;
+}
+
+.prose blockquote {
+	margin: 0 0 1.5rem;
+	padding-left: 1.25rem;
+	border-left: 2px solid var(--accent);
+	color: var(--muted);
+}
+
+.prose a {
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+}
+
+code {
+	font-family: var(--font-mono);
+	font-size: 0.875em;
+	padding: 0.1em 0.35em;
+	background-color: var(--code-bg);
+	border: 1px solid var(--line);
+	border-radius: 3px;
+}
+
+pre {
+	margin: 0 0 1.5rem;
+	padding: 1.25rem;
+	background-color: var(--code-bg);
+	border: 1px solid var(--line);
+	border-radius: 3px;
+	overflow-x: auto;
+	font-size: 0.8125rem;
+	line-height: 1.7;
+}
+
+pre > code {
+	all: unset;
+	font-family: var(--font-mono);
 }
 
 table {
 	width: 100%;
 	border-collapse: collapse;
+	font-size: 0.875rem;
 }
 
-code {
-	padding: 2px 5px;
-	background-color: var(--code-bg);
-	border: 1px solid var(--border-color);
-	border-radius: 4px;
-	font-size: 0.9em;
+th,
+td {
+	padding: 0.5rem 0.75rem;
+	border-bottom: 1px solid var(--line);
+	text-align: left;
 }
 
-pre {
-	padding: 1.5em;
-	border-radius: 8px;
-	background-color: var(--code-bg);
-	border: 1px solid var(--border-color);
-	overflow-x: auto;
+/* A section label with a hairline rule running to the right edge. */
+.section-label {
+	display: flex;
+	align-items: baseline;
+	gap: 1rem;
+	font-size: 0.6875rem;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--muted);
 }
 
-pre > code {
-	all: unset;
+.section-label::after {
+	content: '';
+	flex-grow: 1;
+	height: 1px;
+	background: var(--line);
 }
 
-blockquote {
-	border-left: 4px solid var(--accent);
-	padding: 0 0 0 20px;
-	margin: 0;
-	font-size: 1.2em;
-	color: var(--text-secondary);
-}
-
-hr {
-	border: none;
-	border-top: 1px solid var(--border-color);
-}
-
-/* Visible focus ring for keyboard users on every interactive element. */
 :focus-visible {
 	outline: 2px solid var(--accent);
-	outline-offset: 2px;
-	border-radius: 4px;
+	outline-offset: 3px;
+	border-radius: 2px;
 }
 
 .skip-link {
@@ -204,9 +255,9 @@ hr {
 	top: 0;
 	z-index: 200;
 	padding: 0.75rem 1rem;
-	background: var(--bg-primary);
+	background: var(--bg);
 	border: 1px solid var(--accent);
-	border-radius: 0 0 8px 0;
+	font-size: 0.8125rem;
 }
 
 .skip-link:focus {
@@ -228,12 +279,11 @@ hr {
 
 @media (max-width: 720px) {
 	main {
-		margin-top: 2rem;
-		padding: 1em;
+		padding: 2.5rem 1.25rem 0;
 	}
 
 	h1 {
-		font-size: 2rem;
+		font-size: 1.5rem;
 	}
 }
 
