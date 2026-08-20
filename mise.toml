@@ -1,2 +1,3 @@
 [tools]
-node = "latest"
+# Pinned to match the Node version used by the GitHub Pages workflow.
+node = "22"

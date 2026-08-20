@@ -1,77 +1,113 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import DateFormatter from '../components/Date.astro';
 import { getCollection } from 'astro:content';
-import { differenceInYears } from 'date-fns';
+import Layout from '../layouts/Layout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { AUTHOR, SITE_DESCRIPTION } from '../consts';
+import { EDUCATION } from '../data/education';
+import { yearsSince, toISODate } from '../utils/date';
 
-const birthDate = new Date('2000-05-08');
-const age = differenceInYears(new Date(), birthDate);
+const age = yearsSince(new Date(AUTHOR.birthDate));
 
-const allJobsData = await getCollection('jobs');
+const jobs = (await getCollection('jobs')).sort(
+	(a, b) => b.data.date_start.getTime() - a.data.date_start.getTime(),
+);
 
-// Sort jobs by start date (newest first)
-const sortedJobs = allJobsData.sort((a, b) => {
-	const dateA = new Date(a.data.date_start);
-	const dateB = new Date(b.data.date_start);
-	return dateB.getTime() - dateA.getTime();
-});
-
-const siteTitle = "Esteban's Resume";
+// Rich structured data for the resume: every role plus the schools.
+const resumeSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'ProfilePage',
+	mainEntity: {
+		'@type': 'Person',
+		name: AUTHOR.name,
+		jobTitle: AUTHOR.jobTitle,
+		homeLocation: { '@type': 'Place', name: AUTHOR.location },
+		hasOccupation: jobs.map((job) => ({
+			'@type': 'Occupation',
+			name: job.data.role,
+			occupationLocation: { '@type': 'Organization', name: job.data.company },
+			startDate: toISODate(job.data.date_start),
+			...(job.data.date_end !== 'present' && { endDate: toISODate(job.data.date_end) }),
+		})),
+		alumniOf: EDUCATION.map((entry) => ({
+			'@type': 'EducationalOrganization',
+			name: entry.institution,
+			...(entry.url && { url: entry.url }),
+		})),
+	},
+};
 ---
 
-<Layout title={siteTitle} home={true}>
-	<section class="headingMd">
-		<p>Hello 👋, I'm <strong>Esteban</strong>, I'm a software engineer, I live in Colombia 🇨🇴.</p>
-		<p>I'm {age} years old, a Ruby/Ruby on Rails lover; Ruby is my main programming language but, I like JavaScript as well (In fact, this resume has been built with JavaScript).</p>
-		<p>I'm studying English, I enjoy reading, watching movies/series/animes. I like to have a few beers once in a while as well :) </p>
+<Layout title={`${AUTHOR.name} — ${AUTHOR.jobTitle}`} description={SITE_DESCRIPTION} home fullTitle schema={[resumeSchema]}>
+	<section class="intro">
+		<p>
+			Hello 👋, I'm <strong>Esteban</strong>, I'm a software engineer, I live in Colombia 🇨🇴.
+		</p>
+		<p>
+			I'm {age} years old, a Ruby/Ruby on Rails lover; Ruby is my main programming language but, I
+			like JavaScript as well (in fact, this resume has been built with JavaScript).
+		</p>
+		<p>
+			I'm studying English, I enjoy reading, watching movies/series/animes. I like to have a few
+			beers once in a while as well :)
+		</p>
 	</section>
 
-	<section class="headingMd padding1px">
-		<h2 class="headingLg">Experience</h2>
+	<section>
+		<h2>Experience</h2>
 		<ul class="list">
 			{
-				sortedJobs.map((job) => (
-					<li class="listItem">
-						<a href={`/jobs/${job.id}`}>{job.data.title}</a>
-						<br />
-						<small class="lightText">
-							<DateFormatter dateString={job.data.date_start}/> - <DateFormatter dateString={job.data.date_end}/>
-						</small>
+				jobs.map((job) => (
+					<li class="card">
+						<a href={`/jobs/${job.id}/`} class="card-link">
+							<span class="role">{job.data.role}</span>
+							<span class="company">{job.data.company}</span>
+						</a>
+						<p class="meta">
+							<FormattedDate date={job.data.date_start} format="short" />
+							{' — '}
+							<FormattedDate date={job.data.date_end} format="short" />
+						</p>
+						{job.data.summary && <p class="summary">{job.data.summary}</p>}
 					</li>
 				))
 			}
 		</ul>
 	</section>
 
-	<section class="headingMd padding1px">
-		<h2 class="headingLg">Education</h2>
-      <a href="https://senacertificados.co/analisis-desarrollo-de-sistemas-de-informacion/" target="_blank" rel="noopener noreferrer">Análisis y Desarrollo de Sistemas de información</a>
-		<br />
-		<small>SENA</small>
-		<br />
-		<small class="lightText">September, 2017 - September, 2019</small>
-		<br />
-		<br />
-		<a href="https://idiomasblendex.edu.co/" target="_blank" rel="noopener noreferrer">English - C1 level</a>
-		<br />
-		<small>Blendex Academy</small>
+	<section>
+		<h2>Education</h2>
+		<ul class="list">
+			{
+				EDUCATION.map((entry) => (
+					<li class="card">
+						{entry.url ? (
+							<a href={entry.url} target="_blank" rel="noopener noreferrer">
+								{entry.title}
+							</a>
+						) : (
+							<span class="role">{entry.title}</span>
+						)}
+						<p class="meta">
+							{entry.institution}
+							{entry.period && <> · {entry.period}</>}
+						</p>
+					</li>
+				))
+			}
+		</ul>
 	</section>
 </Layout>
 
-<style is:inline>
-	.headingMd {
-		font-size: 1.2rem;
-		line-height: 1.5;
+<style>
+	.intro {
+		font-size: 1.15rem;
+		line-height: 1.6;
 	}
 
-	.headingLg {
+	h2 {
 		font-size: 1.5rem;
 		line-height: 1.4;
-		margin: 1rem 0;
-	}
-
-	.padding1px {
-		padding-top: 1px;
+		margin: 2.5rem 0 1rem;
 	}
 
 	.list {
@@ -80,20 +116,55 @@ const siteTitle = "Esteban's Resume";
 		margin: 0;
 	}
 
-	.listItem {
-		margin: 0 0 1.25rem;
+	.card {
+		margin: 0 0 1rem;
+		padding: 1rem;
+		background-color: var(--card-bg);
+		border: 1px solid var(--border-color);
+		border-radius: 8px;
+		transition:
+			border-color 0.2s ease,
+			background-color 0.2s ease;
 	}
 
-	.lightText {
+	.card:hover {
+		border-color: var(--accent);
+	}
+
+	.card-link {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 0.5rem;
+	}
+
+	.role {
+		font-weight: 600;
+	}
+
+	.company {
 		color: var(--text-secondary);
 	}
 
-	a {
-		color: var(--link-color);
-		text-decoration: none;
+	.card-link:hover .company {
+		color: inherit;
 	}
 
-	a:hover {
-		text-decoration: underline;
+	.meta {
+		margin: 0.25rem 0 0;
+		font-size: 0.9rem;
+		color: var(--text-muted);
+	}
+
+	.summary {
+		margin: 0.5rem 0 0;
+		font-size: 0.95rem;
+		color: var(--text-secondary);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.card {
+			transition: none;
+		}
 	}
 </style>

@@ -1,28 +1,32 @@
 import { glob } from 'astro/loaders';
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 
 const blog = defineCollection({
-	// Load Markdown and MDX files in the `src/content/blog/` directory.
 	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
-	// Type-check frontmatter using a schema
-	schema: z.object({
-		title: z.string(),
-		description: z.string(),
-		// Transform string to Date object
-		pubDate: z.coerce.date(),
-		updatedDate: z.coerce.date().optional(),
-		heroImage: z.string().optional(),
-	}),
+	schema: ({ image }) =>
+		z.object({
+			title: z.string(),
+			description: z.string(),
+			pubDate: z.coerce.date(),
+			updatedDate: z.coerce.date().optional(),
+			// Relative path to an image next to the post; Astro optimises it at build time.
+			heroImage: image().optional(),
+			draft: z.boolean().default(false),
+		}),
 });
 
 const jobs = defineCollection({
-	// Load Markdown files in the `src/content/jobs/` directory.
 	loader: glob({ base: './src/content/jobs', pattern: '**/*.{md,mdx}' }),
-	// Type-check frontmatter using a schema
 	schema: z.object({
-		title: z.string(),
-		date_start: z.string(),
-		date_end: z.string(),
+		role: z.string(),
+		company: z.string(),
+		companyUrl: z.url().optional(),
+		/** Short one-liner used on the resume index. */
+		summary: z.string().optional(),
+		date_start: z.coerce.date(),
+		// `'present'` marks the current role; anything else is parsed as a date.
+		date_end: z.union([z.literal('present'), z.coerce.date()]),
 	}),
 });
 
