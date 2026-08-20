@@ -13,9 +13,9 @@ export const EDUCATION: Education[] = [
 		period: 'Sep 2017 — Sep 2019',
 	},
 	{
-		title: 'English',
+		title: 'English — C1 level',
 		institution: 'Blendex Academy',
 		url: 'https://idiomasblendex.edu.co/',
-		period: 'C1 certified',
+		period: 'Mar 2022 — Mar 2024',
 	},
 ];

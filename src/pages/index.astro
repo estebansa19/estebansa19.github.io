@@ -6,13 +6,14 @@ import FormattedDate from '../components/FormattedDate.astro';
 import profileImage from '../assets/profile.jpg';
 import { AUTHOR, SITE_DESCRIPTION } from '../consts';
 import { EDUCATION } from '../data/education';
-import { toISODate } from '../utils/date';
+import { toISODate, yearsSince } from '../utils/date';
 
 const jobs = (await getCollection('jobs')).sort(
 	(a, b) => b.data.date_start.getTime() - a.data.date_start.getTime(),
 );
 
 const currentJob = jobs.find((job) => job.data.date_end === 'present');
+const age = yearsSince(new Date(AUTHOR.birthDate));
 
 const resumeSchema = {
 	'@context': 'https://schema.org',
@@ -68,11 +69,17 @@ const resumeSchema = {
 		</div>
 	</header>
 
-	<p class="intro prose">
-		Ruby and Rails are where I do my best work — seven years of it, across billing, logistics and
-		search systems. I reach for JavaScript and TypeScript when the front end needs me. Outside
-		work: reading, films, and the occasional beer.
-	</p>
+	<section class="intro prose">
+		<p>Hello 👋, I'm <strong>Esteban</strong>, I'm a software engineer, I live in Colombia 🇨🇴.</p>
+		<p>
+			I'm {age} years old, a Ruby/Ruby on Rails lover; Ruby is my main programming language but, I
+			like JavaScript as well (in fact, this resume has been built with JavaScript).
+		</p>
+		<p>
+			I enjoy reading, watching movies/series/animes. I like to have a few beers once in a while as
+			well :)
+		</p>
+	</section>
 
 	<h2 class="section-label">Experience</h2>
 
@@ -124,7 +131,7 @@ const resumeSchema = {
 		{
 			EDUCATION.map((entry) => (
 				<li>
-					<span class="period">{entry.period ?? '—'}</span>
+					<span class="period">{entry.period}</span>
 					<span class="entry">
 						{entry.url ? (
 							<a href={entry.url} target="_blank" rel="noopener noreferrer">
@@ -198,6 +205,10 @@ const resumeSchema = {
 	.intro {
 		max-width: 38rem;
 		margin: 0 0 4rem;
+	}
+
+	.intro p:last-child {
+		margin-bottom: 0;
 	}
 
 	.timeline {
