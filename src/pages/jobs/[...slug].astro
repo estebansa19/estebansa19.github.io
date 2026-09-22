@@ -133,8 +133,6 @@ const schema = {
 		gap: 0.625rem;
 		margin: 0 0 0.875rem;
 		font-size: 0.75rem;
-		letter-spacing: 0.14em;
-		text-transform: uppercase;
 		color: var(--accent);
 	}
 
@@ -144,11 +142,15 @@ const schema = {
 		flex-shrink: 0;
 		border-radius: 999px;
 		background: var(--accent);
-		box-shadow: 0 0 0 4px var(--glow);
 	}
 
 	h1 {
 		margin: 0 0 0.75rem;
+	}
+
+	article,
+	.pagination {
+		max-width: var(--reading-width);
 	}
 
 	.period {
