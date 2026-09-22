@@ -55,6 +55,7 @@ const posts = await getPosts();
 		align-items: baseline;
 		justify-content: space-between;
 		gap: 1.5rem;
+		max-width: var(--reading-width);
 		margin-bottom: 0.75rem;
 	}
 
@@ -80,6 +81,7 @@ const posts = await getPosts();
 	}
 
 	.empty {
+		max-width: var(--reading-width);
 		color: var(--muted);
 		font-size: 0.875rem;
 	}
@@ -88,6 +90,7 @@ const posts = await getPosts();
 		list-style: none;
 		margin: 0;
 		padding: 0;
+		max-width: var(--reading-width);
 		border-bottom: 1px solid var(--line);
 	}
 
@@ -153,6 +156,7 @@ const posts = await getPosts();
 	}
 
 	.end {
+		max-width: var(--reading-width);
 		margin: 4rem 0 0;
 		font-size: 0.75rem;
 		color: var(--muted);

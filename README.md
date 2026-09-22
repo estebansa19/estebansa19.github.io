@@ -15,7 +15,7 @@ src/
   content/
     blog/                # Blog posts (Markdown/MDX)
     jobs/                # Resume experience entries (Markdown)
-  data/                  # Static structured data (education)
+  data/                  # Static structured data (education, skills)
   layouts/
     BaseLayout.astro     # The single <html> shell — head, header, footer
     BlogPost.astro       # Blog article layout
@@ -104,8 +104,10 @@ IBM Plex Sans, because a monospace body is tiring to read at article length.
 Both are variable fonts, latin subset, self-hosted from `public/fonts/` and preloaded — no
 request ever leaves the site for a font.
 
-Experience is a timeline: a hairline rail with a dot per role. The current role's dot is
-filled and haloed in the accent colour; past roles are hollow and fill on hover.
+The resume runs in two columns: the experience timeline on the left, a sticky sidebar with
+skills and education on the right. Experience is a hairline rail with a dot per role — the
+current role's dot is filled solid in the accent colour, past roles are hollow and fill on
+hover. One accent colour site-wide: ruby red, the same gem as the favicon.
 
 ## Theming
 
