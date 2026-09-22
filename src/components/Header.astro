@@ -33,7 +33,7 @@ const hasPosts = (await getPosts({ includeDrafts: false })).length > 0;
 		align-items: center;
 		justify-content: space-between;
 		gap: 1rem;
-		max-width: 52rem;
+		max-width: var(--page-width);
 		margin: 0 auto;
 		padding: 1.125rem 2rem;
 	}
