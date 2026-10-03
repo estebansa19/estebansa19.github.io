@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # Monthly rebuild: age, tenure and the career strip are computed at build time.
+  schedule:
+    - cron: '0 6 1 * *'
   workflow_dispatch:
 
 permissions:
