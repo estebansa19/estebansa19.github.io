@@ -3,11 +3,13 @@ import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import Irb from '../components/Irb.astro';
 import profileImage from '../assets/profile.jpg';
 import { AUTHOR, SITE_DESCRIPTION, SOCIALS } from '../consts';
 import { EDUCATION } from '../data/education';
 import { SKILLS } from '../data/skills';
-import { toISODate, yearsSince } from '../utils/date';
+import { formatSpan, monthsBetween, toISODate, yearsSince } from '../utils/date';
+import type { IrbData } from '../scripts/irb';
 
 const jobs = (await getCollection('jobs')).sort(
 	(a, b) => b.data.date_start.getTime() - a.data.date_start.getTime(),
@@ -15,6 +17,57 @@ const jobs = (await getCollection('jobs')).sort(
 
 const currentJob = jobs.find((job) => job.data.date_end === 'present');
 const age = yearsSince(new Date(AUTHOR.birthDate));
+
+// Everything time-based is computed at build; the deploy workflow rebuilds monthly.
+const now = new Date();
+const endOf = (job: (typeof jobs)[number]) => (job.data.date_end === 'present' ? now : job.data.date_end);
+const tenure = new Map(jobs.map((job) => [job.id, monthsBetween(job.data.date_start, endOf(job))]));
+
+// The career strip: every role drawn to scale between the first start date and today.
+const careerStart = jobs.at(-1)!.data.date_start;
+const careerMonths = monthsBetween(careerStart, now);
+const toPercent = (date: Date) =>
+	((date.getTime() - careerStart.getTime()) / (now.getTime() - careerStart.getTime())) * 100;
+const segments = [...jobs].reverse().map((job, index, all) => ({
+	id: job.id,
+	left: toPercent(job.data.date_start),
+	width: toPercent(endOf(job)) - toPercent(job.data.date_start),
+	// Older roles fade back; the current one is full strength.
+	strength: 0.35 + (0.65 * (index + 1)) / all.length,
+}));
+const yearTicks = Array.from(
+	{ length: now.getUTCFullYear() - careerStart.getUTCFullYear() },
+	(_, i) => careerStart.getUTCFullYear() + i + 1,
+).map((year) => ({ year, left: toPercent(new Date(Date.UTC(year, 0, 1))) }));
+
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+const irbData: IrbData = {
+	name: AUTHOR.name,
+	firstName: AUTHOR.shortName,
+	role: AUTHOR.jobTitle,
+	location: AUTHOR.location,
+	age,
+	experience: [
+		plural(Math.floor(careerMonths / 12), 'year'),
+		careerMonths % 12 && plural(careerMonths % 12, 'month'),
+	]
+		.filter(Boolean)
+		.join(', '),
+	skills: SKILLS,
+	hobbies: ['reading', 'movies', 'series', 'anime'],
+	jobs: jobs.map((job) => ({
+		role: job.data.role,
+		company: job.data.company,
+		summary: job.data.summary,
+		start: toISODate(job.data.date_start),
+		end: job.data.date_end === 'present' ? null : toISODate(job.data.date_end),
+		months: tenure.get(job.id)!,
+		span: formatSpan(tenure.get(job.id)!),
+		url: new URL(`/jobs/${job.id}/`, Astro.site).toString(),
+	})),
+	education: EDUCATION.map(({ title, institution, period }) => ({ title, institution, period })),
+	contact: Object.fromEntries(SOCIALS.map((social) => [social.label.toLowerCase(), social.href])),
+};
 
 const resumeSchema = {
 	'@context': 'https://schema.org',
@@ -68,7 +121,9 @@ const resumeSchema = {
 				)
 			}
 			<p class="meta">
-				<span>{AUTHOR.location} — UTC−5</span>
+				<span>
+					{AUTHOR.location} — <span data-local-time>UTC−5</span>
+				</span>
 				<span class="sep" aria-hidden="true">/</span>
 				{
 					SOCIALS.map((social) => (
@@ -93,16 +148,37 @@ const resumeSchema = {
 		</p>
 	</section>
 
+	<Irb data={irbData} />
+
 	<div class="columns">
 		<div class="main-col">
-			<h2 class="section-head">Experience</h2>
+			<h2 class="section-head">
+				Experience <span class="section-aside">{formatSpan(careerMonths)} and counting</span>
+			</h2>
+
+			<div class="strip" aria-hidden="true">
+				<div class="strip-bar">
+					{
+						segments.map((seg) => (
+							<span
+								class="seg"
+								data-job={seg.id}
+								style={`left:${seg.left}%;width:${seg.width}%;--strength:${seg.strength}`}
+							/>
+						))
+					}
+				</div>
+				<div class="strip-ticks">
+					{yearTicks.map((tick) => <span style={`left:${tick.left}%`}>'{String(tick.year).slice(2)}</span>)}
+				</div>
+			</div>
 
 			<ol class="timeline">
 				{
 					jobs.map((job) => {
 						const isCurrent = job.data.date_end === 'present';
 						return (
-							<li class="node">
+							<li class="node" data-job={job.id}>
 								<a href={`/jobs/${job.id}/`}>
 									<span class="rail" aria-hidden="true">
 										<span class="rail-line rail-line--top" />
@@ -114,6 +190,7 @@ const resumeSchema = {
 											<FormattedDate date={job.data.date_start} format="short" />
 											{' — '}
 											<FormattedDate date={job.data.date_end} format="short" />
+											<span class="tenure">{formatSpan(tenure.get(job.id)!)}</span>
 										</span>
 										<span class="role">{job.data.role}</span>
 										<span class="company">{job.data.company}</span>
@@ -169,6 +246,33 @@ const resumeSchema = {
 		</aside>
 	</div>
 </BaseLayout>
+
+<script>
+	// Local time in Colombia, so visitors know whether I'm likely awake.
+	const clock = document.querySelector<HTMLElement>('[data-local-time]');
+	if (clock) {
+		const format = new Intl.DateTimeFormat('en-US', {
+			hour: 'numeric',
+			minute: '2-digit',
+			timeZone: 'America/Bogota',
+		});
+		const tick = () => (clock.textContent = `${format.format(new Date())} here`);
+		tick();
+		setInterval(tick, 30_000);
+	}
+
+	// Hovering or focusing a role lights up its stretch of the career strip.
+	const strip = document.querySelector('.strip');
+	document.querySelectorAll<HTMLElement>('.node[data-job]').forEach((node) => {
+		const seg = strip?.querySelector(`.seg[data-job="${node.dataset.job}"]`);
+		const on = () => seg?.classList.add('is-active');
+		const off = () => seg?.classList.remove('is-active');
+		node.addEventListener('mouseenter', on);
+		node.addEventListener('mouseleave', off);
+		node.addEventListener('focusin', on);
+		node.addEventListener('focusout', off);
+	});
+</script>
 
 <style>
 	/*
@@ -279,8 +383,84 @@ const resumeSchema = {
 	.section-head::after {
 		content: '';
 		flex-grow: 1;
+		order: 1;
 		height: 1px;
 		background: var(--line);
+	}
+
+	.section-aside {
+		order: 2;
+		font-size: 0.75rem;
+		font-weight: 400;
+		color: var(--muted);
+	}
+
+	/* Career strip: each role as a bar drawn to scale, years ticked underneath. */
+	.strip {
+		margin: 1.25rem 0 0.75rem;
+	}
+
+	.strip-bar {
+		position: relative;
+		height: 10px;
+		border-radius: 2px;
+		background: repeating-linear-gradient(
+			-45deg,
+			transparent 0 3px,
+			color-mix(in oklch, var(--line) 70%, transparent) 3px 4px
+		);
+	}
+
+	.seg {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		/* A hairline gap between neighbouring roles. */
+		border-right: 2px solid var(--bg);
+		background: color-mix(in srgb, var(--accent) calc(var(--strength) * 100%), transparent);
+		transition:
+			background 0.18s ease,
+			transform 0.18s ease;
+	}
+
+	.seg:first-child {
+		border-radius: 2px 0 0 2px;
+	}
+
+	.seg.is-active {
+		background: var(--accent);
+		transform: scaleY(1.6);
+	}
+
+	.strip-ticks {
+		position: relative;
+		height: 1.25rem;
+		margin-top: 0.375rem;
+	}
+
+	.strip-ticks span {
+		position: absolute;
+		top: 0;
+		transform: translateX(-50%);
+		font-size: 0.625rem;
+		color: var(--muted);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.strip-ticks span::before {
+		content: '';
+		position: absolute;
+		top: -0.4rem;
+		left: 50%;
+		width: 1px;
+		height: 4px;
+		background: var(--line);
+	}
+
+	.tenure {
+		margin-left: 0.625rem;
+		padding-left: 0.625rem;
+		border-left: 1px solid var(--line);
 	}
 
 	.section-head--gap {
