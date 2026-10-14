@@ -9,59 +9,59 @@ import Footer from '../components/Footer.astro';
 import { SITE_DESCRIPTION } from '../consts';
 
 interface Props {
-	title: string;
-	description?: string;
-	image?: string;
-	type?: 'website' | 'article';
-	publishedTime?: Date;
-	modifiedTime?: Date;
-	schema?: Record<string, unknown>[];
-	fullTitle?: boolean;
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedTime?: Date;
+  modifiedTime?: Date;
+  schema?: Record<string, unknown>[];
+  fullTitle?: boolean;
 }
 
 const {
-	title,
-	description = SITE_DESCRIPTION,
-	image,
-	type,
-	publishedTime,
-	modifiedTime,
-	schema,
-	fullTitle,
+  title,
+  description = SITE_DESCRIPTION,
+  image,
+  type,
+  publishedTime,
+  modifiedTime,
+  schema,
+  fullTitle,
 } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead
-			title={title}
-			description={description}
-			image={image}
-			type={type}
-			publishedTime={publishedTime}
-			modifiedTime={modifiedTime}
-			schema={schema}
-			fullTitle={fullTitle}
-		/>
-		<slot name="head" />
-	</head>
-	<body>
-		<a href="#main" class="skip-link">Skip to content</a>
-		<Header />
-		<main id="main">
-			<slot />
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <BaseHead
+      title={title}
+      description={description}
+      image={image}
+      type={type}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      schema={schema}
+      fullTitle={fullTitle}
+    />
+    <slot name="head" />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
 </html>
 
 <script>
-	// Links are prefetched as they scroll into view — the whole site is a handful
-	// of tiny static pages, so navigation becomes effectively instant. Started
-	// here instead of through the `prefetch` config option, whose injected
-	// script Astro always ships as a separate file; this one gets inlined.
-	import { init } from 'astro/virtual-modules/prefetch.js';
+  // Links are prefetched as they scroll into view — the whole site is a handful
+  // of tiny static pages, so navigation becomes effectively instant. Started
+  // here instead of through the `prefetch` config option, whose injected
+  // script Astro always ships as a separate file; this one gets inlined.
+  import { init } from 'astro/virtual-modules/prefetch.js';
 
-	init({ prefetchAll: true, defaultStrategy: 'viewport' });
+  init({ prefetchAll: true, defaultStrategy: 'viewport' });
 </script>

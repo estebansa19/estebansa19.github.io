@@ -9,61 +9,61 @@ const hasPosts = (await getPosts({ includeDrafts: false })).length > 0;
 ---
 
 <header class="navbar">
-	<nav aria-label="Main">
-		<a href="/" class="wordmark">{AUTHOR.shortName}</a>
-		<div class="nav-right">
-			<HeaderLink href="/">resume</HeaderLink>
-			{hasPosts && <HeaderLink href="/blog">blog</HeaderLink>}
-			<ThemeToggle />
-		</div>
-	</nav>
+  <nav aria-label="Main">
+    <a href="/" class="wordmark">{AUTHOR.shortName}</a>
+    <div class="nav-right">
+      <HeaderLink href="/">resume</HeaderLink>
+      {hasPosts && <HeaderLink href="/blog">blog</HeaderLink>}
+      <ThemeToggle />
+    </div>
+  </nav>
 </header>
 
 <style>
-	.navbar {
-		position: sticky;
-		top: 0;
-		z-index: 100;
-		background: var(--bg);
-		border-bottom: 1px solid var(--line);
-	}
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
 
-	nav {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
-		max-width: var(--page-width);
-		margin: 0 auto;
-		padding: 1.125rem 2rem;
-	}
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding: 1.125rem 2rem;
+  }
 
-	.wordmark {
-		font-size: 0.75rem;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-		color: var(--muted);
-		text-decoration: none;
-	}
+  .wordmark {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+  }
 
-	.wordmark:hover {
-		color: var(--text);
-		text-decoration: none;
-	}
+  .wordmark:hover {
+    color: var(--text);
+    text-decoration: none;
+  }
 
-	.nav-right {
-		display: flex;
-		align-items: center;
-		gap: 1.5rem;
-	}
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
 
-	@media (max-width: 720px) {
-		nav {
-			padding: 1rem 1.25rem;
-		}
+  @media (max-width: 720px) {
+    nav {
+      padding: 1rem 1.25rem;
+    }
 
-		.nav-right {
-			gap: 1.25rem;
-		}
-	}
+    .nav-right {
+      gap: 1.25rem;
+    }
+  }
 </style>
