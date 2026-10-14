@@ -12,7 +12,7 @@ import { formatSpan, monthsBetween, toISODate, yearsSince } from '../utils/date'
 import type { IrbData } from '../scripts/irb';
 
 const jobs = (await getCollection('jobs')).sort(
-	(a, b) => b.data.date_start.getTime() - a.data.date_start.getTime(),
+  (a, b) => b.data.date_start.getTime() - a.data.date_start.getTime(),
 );
 
 const currentJob = jobs.find((job) => job.data.date_end === 'present');
@@ -27,632 +27,632 @@ const tenure = new Map(jobs.map((job) => [job.id, monthsBetween(job.data.date_st
 const careerStart = jobs.at(-1)!.data.date_start;
 const careerMonths = monthsBetween(careerStart, now);
 const toPercent = (date: Date) =>
-	((date.getTime() - careerStart.getTime()) / (now.getTime() - careerStart.getTime())) * 100;
+  ((date.getTime() - careerStart.getTime()) / (now.getTime() - careerStart.getTime())) * 100;
 const segments = [...jobs].reverse().map((job, index, all) => ({
-	id: job.id,
-	left: toPercent(job.data.date_start),
-	width: toPercent(endOf(job)) - toPercent(job.data.date_start),
-	// Older roles fade back; the current one is full strength.
-	strength: 0.35 + (0.65 * (index + 1)) / all.length,
+  id: job.id,
+  left: toPercent(job.data.date_start),
+  width: toPercent(endOf(job)) - toPercent(job.data.date_start),
+  // Older roles fade back; the current one is full strength.
+  strength: 0.35 + (0.65 * (index + 1)) / all.length,
 }));
 const yearTicks = Array.from(
-	{ length: now.getUTCFullYear() - careerStart.getUTCFullYear() },
-	(_, i) => careerStart.getUTCFullYear() + i + 1,
+  { length: now.getUTCFullYear() - careerStart.getUTCFullYear() },
+  (_, i) => careerStart.getUTCFullYear() + i + 1,
 ).map((year) => ({ year, left: toPercent(new Date(Date.UTC(year, 0, 1))) }));
 
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
 const irbData: IrbData = {
-	name: AUTHOR.name,
-	firstName: AUTHOR.shortName,
-	role: AUTHOR.jobTitle,
-	location: AUTHOR.location,
-	age,
-	experience: [
-		plural(Math.floor(careerMonths / 12), 'year'),
-		careerMonths % 12 && plural(careerMonths % 12, 'month'),
-	]
-		.filter(Boolean)
-		.join(', '),
-	skills: SKILLS,
-	hobbies: ['reading', 'movies', 'series', 'anime'],
-	jobs: jobs.map((job) => ({
-		role: job.data.role,
-		company: job.data.company,
-		summary: job.data.summary,
-		start: toISODate(job.data.date_start),
-		end: job.data.date_end === 'present' ? null : toISODate(job.data.date_end),
-		months: tenure.get(job.id)!,
-		span: formatSpan(tenure.get(job.id)!),
-		url: new URL(`/jobs/${job.id}/`, Astro.site).toString(),
-	})),
-	education: EDUCATION.map(({ title, institution, period }) => ({ title, institution, period })),
-	contact: Object.fromEntries(SOCIALS.map((social) => [social.label.toLowerCase(), social.href])),
+  name: AUTHOR.name,
+  firstName: AUTHOR.shortName,
+  role: AUTHOR.jobTitle,
+  location: AUTHOR.location,
+  age,
+  experience: [
+    plural(Math.floor(careerMonths / 12), 'year'),
+    careerMonths % 12 && plural(careerMonths % 12, 'month'),
+  ]
+    .filter(Boolean)
+    .join(', '),
+  skills: SKILLS,
+  hobbies: ['reading', 'movies', 'series', 'anime'],
+  jobs: jobs.map((job) => ({
+    role: job.data.role,
+    company: job.data.company,
+    summary: job.data.summary,
+    start: toISODate(job.data.date_start),
+    end: job.data.date_end === 'present' ? null : toISODate(job.data.date_end),
+    months: tenure.get(job.id)!,
+    span: formatSpan(tenure.get(job.id)!),
+    url: new URL(`/jobs/${job.id}/`, Astro.site).toString(),
+  })),
+  education: EDUCATION.map(({ title, institution, period }) => ({ title, institution, period })),
+  contact: Object.fromEntries(SOCIALS.map((social) => [social.label.toLowerCase(), social.href])),
 };
 
 const resumeSchema = {
-	'@context': 'https://schema.org',
-	'@type': 'ProfilePage',
-	mainEntity: {
-		'@type': 'Person',
-		name: AUTHOR.name,
-		jobTitle: AUTHOR.jobTitle,
-		homeLocation: { '@type': 'Place', name: AUTHOR.location },
-		knowsAbout: SKILLS,
-		hasOccupation: jobs.map((job) => ({
-			'@type': 'Occupation',
-			name: job.data.role,
-			occupationLocation: { '@type': 'Organization', name: job.data.company },
-			startDate: toISODate(job.data.date_start),
-			...(job.data.date_end !== 'present' && { endDate: toISODate(job.data.date_end) }),
-		})),
-		alumniOf: EDUCATION.map((entry) => ({
-			'@type': 'EducationalOrganization',
-			name: entry.institution,
-			...(entry.url && { url: entry.url }),
-		})),
-	},
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  mainEntity: {
+    '@type': 'Person',
+    name: AUTHOR.name,
+    jobTitle: AUTHOR.jobTitle,
+    homeLocation: { '@type': 'Place', name: AUTHOR.location },
+    knowsAbout: SKILLS,
+    hasOccupation: jobs.map((job) => ({
+      '@type': 'Occupation',
+      name: job.data.role,
+      occupationLocation: { '@type': 'Organization', name: job.data.company },
+      startDate: toISODate(job.data.date_start),
+      ...(job.data.date_end !== 'present' && { endDate: toISODate(job.data.date_end) }),
+    })),
+    alumniOf: EDUCATION.map((entry) => ({
+      '@type': 'EducationalOrganization',
+      name: entry.institution,
+      ...(entry.url && { url: entry.url }),
+    })),
+  },
 };
 ---
 
 <BaseLayout
-	title={`${AUTHOR.name} — ${AUTHOR.jobTitle}`}
-	description={SITE_DESCRIPTION}
-	fullTitle
-	schema={[resumeSchema]}
+  title={`${AUTHOR.name} — ${AUTHOR.jobTitle}`}
+  description={SITE_DESCRIPTION}
+  fullTitle
+  schema={[resumeSchema]}
 >
-	<header class="hero">
-		<Image
-			src={profileImage}
-			alt={`Portrait of ${AUTHOR.name}`}
-			class="portrait"
-			loading="eager"
-			fetchpriority="high"
-			widths={[120, 240]}
-			sizes="120px"
-		/>
-		<div class="identity">
-			<h1>{AUTHOR.name}</h1>
-			{
-				currentJob && (
-					<p class="status">
-						<span class="status-dot" aria-hidden="true" />
-						{currentJob.data.role} · {currentJob.data.company}
-					</p>
-				)
-			}
-			<p class="meta">
-				<span>
-					{AUTHOR.location} — <span data-local-time>UTC−5</span>
-				</span>
-				<span class="sep" aria-hidden="true">/</span>
-				{
-					SOCIALS.map((social) => (
-						<a href={social.href} target="_blank" rel="me noopener noreferrer">
-							{social.label.toLowerCase()}
-						</a>
-					))
-				}
-			</p>
-		</div>
-	</header>
+  <header class="hero">
+    <Image
+      src={profileImage}
+      alt={`Portrait of ${AUTHOR.name}`}
+      class="portrait"
+      loading="eager"
+      fetchpriority="high"
+      widths={[120, 240]}
+      sizes="120px"
+    />
+    <div class="identity">
+      <h1>{AUTHOR.name}</h1>
+      {
+        currentJob && (
+          <p class="status">
+            <span class="status-dot" aria-hidden="true" />
+            {currentJob.data.role} · {currentJob.data.company}
+          </p>
+        )
+      }
+      <p class="meta">
+        <span>
+          {AUTHOR.location} — <span data-local-time>UTC−5</span>
+        </span>
+        <span class="sep" aria-hidden="true">/</span>
+        {
+          SOCIALS.map((social) => (
+            <a href={social.href} target="_blank" rel="me noopener noreferrer">
+              {social.label.toLowerCase()}
+            </a>
+          ))
+        }
+      </p>
+    </div>
+  </header>
 
-	<section class="intro prose">
-		<p>Hello 👋, I'm <strong>Esteban</strong>, I'm a software engineer, I live in Colombia 🇨🇴.</p>
-		<p>
-			I'm {age} years old, a Ruby/Ruby on Rails lover; Ruby is my main programming language but, I
-			like JavaScript as well (in fact, this resume has been built with JavaScript).
-		</p>
-		<p>
-			I enjoy reading, watching movies/series/animes. I like to have a few beers once in a while as
-			well :)
-		</p>
-	</section>
+  <section class="intro prose">
+    <p>Hello 👋, I'm <strong>Esteban</strong>, I'm a software engineer, I live in Colombia 🇨🇴.</p>
+    <p>
+      I'm {age} years old, a Ruby/Ruby on Rails lover; Ruby is my main programming language but, I
+      like JavaScript as well (in fact, this resume has been built with JavaScript).
+    </p>
+    <p>
+      I enjoy reading, watching movies/series/animes. I like to have a few beers once in a while as
+      well :)
+    </p>
+  </section>
 
-	<Irb data={irbData} />
+  <Irb data={irbData} />
 
-	<div class="columns">
-		<div class="main-col">
-			<h2 class="section-head">
-				Experience <span class="section-aside">{formatSpan(careerMonths)} and counting</span>
-			</h2>
+  <div class="columns">
+    <div class="main-col">
+      <h2 class="section-head">
+        Experience <span class="section-aside">{formatSpan(careerMonths)} and counting</span>
+      </h2>
 
-			<div class="strip" aria-hidden="true">
-				<div class="strip-bar">
-					{
-						segments.map((seg) => (
-							<span
-								class="seg"
-								data-job={seg.id}
-								style={`left:${seg.left}%;width:${seg.width}%;--strength:${seg.strength}`}
-							/>
-						))
-					}
-				</div>
-				<div class="strip-ticks">
-					{yearTicks.map((tick) => <span style={`left:${tick.left}%`}>'{String(tick.year).slice(2)}</span>)}
-				</div>
-			</div>
+      <div class="strip" aria-hidden="true">
+        <div class="strip-bar">
+          {
+            segments.map((seg) => (
+              <span
+                class="seg"
+                data-job={seg.id}
+                style={`left:${seg.left}%;width:${seg.width}%;--strength:${seg.strength}`}
+              />
+            ))
+          }
+        </div>
+        <div class="strip-ticks">
+          {yearTicks.map((tick) => <span style={`left:${tick.left}%`}>'{String(tick.year).slice(2)}</span>)}
+        </div>
+      </div>
 
-			<ol class="timeline">
-				{
-					jobs.map((job) => {
-						const isCurrent = job.data.date_end === 'present';
-						return (
-							<li class="node" data-job={job.id}>
-								<a href={`/jobs/${job.id}/`}>
-									<span class="rail" aria-hidden="true">
-										<span class="rail-line rail-line--top" />
-										<span class:list={['dot', { 'dot--current': isCurrent }]} />
-										<span class="rail-line rail-line--bottom" />
-									</span>
-									<span class="entry">
-										<span class="period">
-											<FormattedDate date={job.data.date_start} format="short" />
-											{' — '}
-											<FormattedDate date={job.data.date_end} format="short" />
-											<span class="tenure">{formatSpan(tenure.get(job.id)!)}</span>
-										</span>
-										<span class="role">{job.data.role}</span>
-										<span class="company">{job.data.company}</span>
-									</span>
-									<svg
-										class="arrow"
-										width="14"
-										height="14"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										aria-hidden="true"
-									>
-										<path d="M5 12h14M13 6l6 6-6 6" />
-									</svg>
-								</a>
-							</li>
-						);
-					})
-				}
-			</ol>
-		</div>
+      <ol class="timeline">
+        {
+          jobs.map((job) => {
+            const isCurrent = job.data.date_end === 'present';
+            return (
+              <li class="node" data-job={job.id}>
+                <a href={`/jobs/${job.id}/`}>
+                  <span class="rail" aria-hidden="true">
+                    <span class="rail-line rail-line--top" />
+                    <span class:list={['dot', { 'dot--current': isCurrent }]} />
+                    <span class="rail-line rail-line--bottom" />
+                  </span>
+                  <span class="entry">
+                    <span class="period">
+                      <FormattedDate date={job.data.date_start} format="short" />
+                      {' — '}
+                      <FormattedDate date={job.data.date_end} format="short" />
+                      <span class="tenure">{formatSpan(tenure.get(job.id)!)}</span>
+                    </span>
+                    <span class="role">{job.data.role}</span>
+                    <span class="company">{job.data.company}</span>
+                  </span>
+                  <svg
+                    class="arrow"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </a>
+              </li>
+            );
+          })
+        }
+      </ol>
+    </div>
 
-		<aside class="side">
-			<h2 class="section-head">Skills</h2>
-			<ul class="chips">
-				{SKILLS.map((skill) => <li>{skill}</li>)}
-			</ul>
+    <aside class="side">
+      <h2 class="section-head">Skills</h2>
+      <ul class="chips">
+        {SKILLS.map((skill) => <li>{skill}</li>)}
+      </ul>
 
-			<h2 class="section-head section-head--gap">Education</h2>
-			<ul class="education">
-				{
-					EDUCATION.map((entry) => (
-						<li>
-							<span class="period">{entry.period}</span>
-							<span class="degree">
-								{entry.url ? (
-									<a href={entry.url} target="_blank" rel="noopener noreferrer">
-										{entry.title}
-									</a>
-								) : (
-									entry.title
-								)}
-							</span>
-							<span class="institution">{entry.institution}</span>
-						</li>
-					))
-				}
-			</ul>
-		</aside>
-	</div>
+      <h2 class="section-head section-head--gap">Education</h2>
+      <ul class="education">
+        {
+          EDUCATION.map((entry) => (
+            <li>
+              <span class="period">{entry.period}</span>
+              <span class="degree">
+                {entry.url ? (
+                  <a href={entry.url} target="_blank" rel="noopener noreferrer">
+                    {entry.title}
+                  </a>
+                ) : (
+                  entry.title
+                )}
+              </span>
+              <span class="institution">{entry.institution}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </aside>
+  </div>
 </BaseLayout>
 
 <script>
-	// Local time in Colombia, so visitors know whether I'm likely awake.
-	const clock = document.querySelector<HTMLElement>('[data-local-time]');
-	if (clock) {
-		const format = new Intl.DateTimeFormat('en-US', {
-			hour: 'numeric',
-			minute: '2-digit',
-			timeZone: 'America/Bogota',
-		});
-		const tick = () => (clock.textContent = `${format.format(new Date())} here`);
-		tick();
-		setInterval(tick, 30_000);
-	}
+  // Local time in Colombia, so visitors know whether I'm likely awake.
+  const clock = document.querySelector<HTMLElement>('[data-local-time]');
+  if (clock) {
+    const format = new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZone: 'America/Bogota',
+    });
+    const tick = () => (clock.textContent = `${format.format(new Date())} here`);
+    tick();
+    setInterval(tick, 30_000);
+  }
 
-	// Hovering or focusing a role lights up its stretch of the career strip.
-	const strip = document.querySelector('.strip');
-	document.querySelectorAll<HTMLElement>('.node[data-job]').forEach((node) => {
-		const seg = strip?.querySelector(`.seg[data-job="${node.dataset.job}"]`);
-		const on = () => seg?.classList.add('is-active');
-		const off = () => seg?.classList.remove('is-active');
-		node.addEventListener('mouseenter', on);
-		node.addEventListener('mouseleave', off);
-		node.addEventListener('focusin', on);
-		node.addEventListener('focusout', off);
-	});
+  // Hovering or focusing a role lights up its stretch of the career strip.
+  const strip = document.querySelector('.strip');
+  document.querySelectorAll<HTMLElement>('.node[data-job]').forEach((node) => {
+    const seg = strip?.querySelector(`.seg[data-job="${node.dataset.job}"]`);
+    const on = () => seg?.classList.add('is-active');
+    const off = () => seg?.classList.remove('is-active');
+    node.addEventListener('mouseenter', on);
+    node.addEventListener('mouseleave', off);
+    node.addEventListener('focusin', on);
+    node.addEventListener('focusout', off);
+  });
 </script>
 
 <style>
-	/*
-		Resume shell: a display-scale name over a two-column grid — experience
-		timeline on the left, skills and education in a sticky sidebar. Section
-		heads are sentence-case with a hairline, never wide-tracked eyebrows.
-	*/
-	.hero {
-		display: flex;
-		align-items: flex-start;
-		gap: 1.75rem;
-		margin-bottom: 3rem;
-	}
+  /*
+    Resume shell: a display-scale name over a two-column grid — experience
+    timeline on the left, skills and education in a sticky sidebar. Section
+    heads are sentence-case with a hairline, never wide-tracked eyebrows.
+  */
+  .hero {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.75rem;
+    margin-bottom: 3rem;
+  }
 
-	.portrait {
-		width: 120px;
-		height: 120px;
-		flex-shrink: 0;
-		object-fit: cover;
-		object-position: center top;
-		border-radius: 2px;
-		border: 1px solid var(--line);
-		filter: grayscale(1) contrast(1.05);
-	}
+  .portrait {
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 2px;
+    border: 1px solid var(--line);
+    filter: grayscale(1) contrast(1.05);
+  }
 
-	.identity {
-		display: flex;
-		flex-direction: column;
-		gap: 0.625rem;
-		padding-top: 0.125rem;
-		min-width: 0;
-	}
+  .identity {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    padding-top: 0.125rem;
+    min-width: 0;
+  }
 
-	.identity h1 {
-		margin: 0;
-		font-size: clamp(1.75rem, 4vw, 2.75rem);
-		letter-spacing: -0.03em;
-		line-height: 1.1;
-	}
+  .identity h1 {
+    margin: 0;
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
 
-	.status {
-		display: flex;
-		align-items: center;
-		gap: 0.5625rem;
-		margin: 0;
-		font-size: 0.875rem;
-		color: var(--text);
-	}
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 0.5625rem;
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text);
+  }
 
-	.status-dot {
-		width: 7px;
-		height: 7px;
-		flex-shrink: 0;
-		border-radius: 999px;
-		background: var(--accent);
-	}
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: var(--accent);
+  }
 
-	.meta {
-		display: flex;
-		align-items: center;
-		gap: 0.625rem;
-		flex-wrap: wrap;
-		margin: 0;
-		font-size: 0.8125rem;
-		color: var(--muted);
-	}
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
 
-	.meta a {
-		color: var(--muted);
-		text-decoration: none;
-	}
+  .meta a {
+    color: var(--muted);
+    text-decoration: none;
+  }
 
-	.meta a:hover {
-		color: var(--accent);
-	}
+  .meta a:hover {
+    color: var(--accent);
+  }
 
-	.sep {
-		color: var(--line);
-	}
+  .sep {
+    color: var(--line);
+  }
 
-	.intro {
-		max-width: 38rem;
-		margin: 0 0 3.5rem;
-	}
+  .intro {
+    max-width: 38rem;
+    margin: 0 0 3.5rem;
+  }
 
-	.intro p:last-child {
-		margin-bottom: 0;
-	}
+  .intro p:last-child {
+    margin-bottom: 0;
+  }
 
-	.columns {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) 15rem;
-		gap: 3.5rem;
-		align-items: start;
-	}
+  .columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 15rem;
+    gap: 3.5rem;
+    align-items: start;
+  }
 
-	.section-head {
-		display: flex;
-		align-items: baseline;
-		gap: 1rem;
-		margin: 0 0 0.5rem;
-		font-size: 0.9375rem;
-		font-weight: 600;
-		letter-spacing: -0.01em;
-		color: var(--text);
-	}
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin: 0 0 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
 
-	.section-head::after {
-		content: '';
-		flex-grow: 1;
-		order: 1;
-		height: 1px;
-		background: var(--line);
-	}
+  .section-head::after {
+    content: '';
+    flex-grow: 1;
+    order: 1;
+    height: 1px;
+    background: var(--line);
+  }
 
-	.section-aside {
-		order: 2;
-		font-size: 0.75rem;
-		font-weight: 400;
-		color: var(--muted);
-	}
+  .section-aside {
+    order: 2;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--muted);
+  }
 
-	/* Career strip: each role as a bar drawn to scale, years ticked underneath. */
-	.strip {
-		margin: 1.25rem 0 0.75rem;
-	}
+  /* Career strip: each role as a bar drawn to scale, years ticked underneath. */
+  .strip {
+    margin: 1.25rem 0 0.75rem;
+  }
 
-	.strip-bar {
-		position: relative;
-		height: 10px;
-		border-radius: 2px;
-		background: repeating-linear-gradient(
-			-45deg,
-			transparent 0 3px,
-			color-mix(in oklch, var(--line) 70%, transparent) 3px 4px
-		);
-	}
+  .strip-bar {
+    position: relative;
+    height: 10px;
+    border-radius: 2px;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent 0 3px,
+      color-mix(in oklch, var(--line) 70%, transparent) 3px 4px
+    );
+  }
 
-	.seg {
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		/* A hairline gap between neighbouring roles. */
-		border-right: 2px solid var(--bg);
-		background: color-mix(in srgb, var(--accent) calc(var(--strength) * 100%), transparent);
-		transition:
-			background 0.18s ease,
-			transform 0.18s ease;
-	}
+  .seg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    /* A hairline gap between neighbouring roles. */
+    border-right: 2px solid var(--bg);
+    background: color-mix(in srgb, var(--accent) calc(var(--strength) * 100%), transparent);
+    transition:
+      background 0.18s ease,
+      transform 0.18s ease;
+  }
 
-	.seg:first-child {
-		border-radius: 2px 0 0 2px;
-	}
+  .seg:first-child {
+    border-radius: 2px 0 0 2px;
+  }
 
-	.seg.is-active {
-		background: var(--accent);
-		transform: scaleY(1.6);
-	}
+  .seg.is-active {
+    background: var(--accent);
+    transform: scaleY(1.6);
+  }
 
-	.strip-ticks {
-		position: relative;
-		height: 1.25rem;
-		margin-top: 0.375rem;
-	}
+  .strip-ticks {
+    position: relative;
+    height: 1.25rem;
+    margin-top: 0.375rem;
+  }
 
-	.strip-ticks span {
-		position: absolute;
-		top: 0;
-		transform: translateX(-50%);
-		font-size: 0.625rem;
-		color: var(--muted);
-		font-variant-numeric: tabular-nums;
-	}
+  .strip-ticks span {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    font-size: 0.625rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
 
-	.strip-ticks span::before {
-		content: '';
-		position: absolute;
-		top: -0.4rem;
-		left: 50%;
-		width: 1px;
-		height: 4px;
-		background: var(--line);
-	}
+  .strip-ticks span::before {
+    content: '';
+    position: absolute;
+    top: -0.4rem;
+    left: 50%;
+    width: 1px;
+    height: 4px;
+    background: var(--line);
+  }
 
-	.tenure {
-		margin-left: 0.625rem;
-		padding-left: 0.625rem;
-		border-left: 1px solid var(--line);
-	}
+  .tenure {
+    margin-left: 0.625rem;
+    padding-left: 0.625rem;
+    border-left: 1px solid var(--line);
+  }
 
-	.section-head--gap {
-		margin-top: 2.5rem;
-	}
+  .section-head--gap {
+    margin-top: 2.5rem;
+  }
 
-	.timeline {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 
-	.node a {
-		display: flex;
-		gap: 1.25rem;
-		align-items: stretch;
-		color: inherit;
-		text-decoration: none;
-	}
+  .node a {
+    display: flex;
+    gap: 1.25rem;
+    align-items: stretch;
+    color: inherit;
+    text-decoration: none;
+  }
 
-	.rail {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		width: 12px;
-		flex-shrink: 0;
-	}
+  .rail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 12px;
+    flex-shrink: 0;
+  }
 
-	.rail-line {
-		width: 1px;
-		background: var(--line);
-	}
+  .rail-line {
+    width: 1px;
+    background: var(--line);
+  }
 
-	.rail-line--top {
-		height: 1.5rem;
-	}
+  .rail-line--top {
+    height: 1.5rem;
+  }
 
-	.rail-line--bottom {
-		flex-grow: 1;
-	}
+  .rail-line--bottom {
+    flex-grow: 1;
+  }
 
-	/* The first node has no line above it and the last none below. */
-	.node:first-child .rail-line--top,
-	.node:last-child .rail-line--bottom {
-		background: transparent;
-	}
+  /* The first node has no line above it and the last none below. */
+  .node:first-child .rail-line--top,
+  .node:last-child .rail-line--bottom {
+    background: transparent;
+  }
 
-	.dot {
-		width: 9px;
-		height: 9px;
-		flex-shrink: 0;
-		border-radius: 999px;
-		background: var(--line);
-		/* Breaks the rail behind the dot so it reads as a marker, not a bead. */
-		outline: 3px solid var(--bg);
-		transition: background 0.18s ease;
-	}
+  .dot {
+    width: 9px;
+    height: 9px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: var(--line);
+    /* Breaks the rail behind the dot so it reads as a marker, not a bead. */
+    outline: 3px solid var(--bg);
+    transition: background 0.18s ease;
+  }
 
-	.dot--current {
-		background: var(--accent);
-	}
+  .dot--current {
+    background: var(--accent);
+  }
 
-	.entry {
-		display: flex;
-		flex-direction: column;
-		flex-grow: 1;
-		padding: 1rem 0 1.625rem;
-	}
+  .entry {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 1rem 0 1.625rem;
+  }
 
-	.period {
-		font-size: 0.75rem;
-		color: var(--muted);
-		font-variant-numeric: tabular-nums;
-		margin-bottom: 0.4375rem;
-	}
+  .period {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 0.4375rem;
+  }
 
-	.role {
-		font-size: 0.9375rem;
-		font-weight: 500;
-		margin-bottom: 0.25rem;
-		transition: color 0.18s ease;
-	}
+  .role {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    transition: color 0.18s ease;
+  }
 
-	.company {
-		font-size: 0.8125rem;
-		color: var(--muted);
-	}
+  .company {
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
 
-	.arrow {
-		align-self: center;
-		flex-shrink: 0;
-		color: var(--accent);
-		opacity: 0;
-		transform: translateX(-4px);
-		transition:
-			opacity 0.18s ease,
-			transform 0.18s ease;
-	}
+  .arrow {
+    align-self: center;
+    flex-shrink: 0;
+    color: var(--accent);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition:
+      opacity 0.18s ease,
+      transform 0.18s ease;
+  }
 
-	.node a:hover .dot {
-		background: var(--accent);
-	}
+  .node a:hover .dot {
+    background: var(--accent);
+  }
 
-	.node a:hover .role {
-		color: var(--accent);
-	}
+  .node a:hover .role {
+    color: var(--accent);
+  }
 
-	.node a:hover .arrow {
-		opacity: 1;
-		transform: translateX(0);
-	}
+  .node a:hover .arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
 
-	.chips {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 
-	.chips li {
-		font-size: 0.75rem;
-		line-height: 1;
-		padding: 0.4rem 0.55rem;
-		border: 1px solid var(--line);
-		border-radius: 2px;
-		color: var(--text);
-	}
+  .chips li {
+    font-size: 0.75rem;
+    line-height: 1;
+    padding: 0.4rem 0.55rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    color: var(--text);
+  }
 
-	.education {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
+  .education {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 
-	.education li {
-		display: flex;
-		flex-direction: column;
-		gap: 0.1875rem;
-		padding: 0.875rem 0;
-		border-bottom: 1px solid var(--line);
-	}
+  .education li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1875rem;
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--line);
+  }
 
-	.education li:first-child {
-		border-top: 1px solid var(--line);
-	}
+  .education li:first-child {
+    border-top: 1px solid var(--line);
+  }
 
-	.education .period {
-		margin-bottom: 0.125rem;
-	}
+  .education .period {
+    margin-bottom: 0.125rem;
+  }
 
-	.degree {
-		font-size: 0.8125rem;
-		font-weight: 500;
-	}
+  .degree {
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
 
-	.degree a {
-		color: inherit;
-		text-decoration: none;
-		transition: color 0.18s ease;
-	}
+  .degree a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.18s ease;
+  }
 
-	.degree a:hover {
-		color: var(--accent);
-	}
+  .degree a:hover {
+    color: var(--accent);
+  }
 
-	.institution {
-		font-size: 0.75rem;
-		color: var(--muted);
-	}
+  .institution {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
 
-	@media (min-width: 721px) {
-		.side {
-			position: sticky;
-			top: 5.5rem;
-		}
-	}
+  @media (min-width: 721px) {
+    .side {
+      position: sticky;
+      top: 5.5rem;
+    }
+  }
 
-	@media (max-width: 720px) {
-		.hero {
-			gap: 1.25rem;
-		}
+  @media (max-width: 720px) {
+    .hero {
+      gap: 1.25rem;
+    }
 
-		.portrait {
-			width: 88px;
-			height: 88px;
-		}
+    .portrait {
+      width: 88px;
+      height: 88px;
+    }
 
-		.columns {
-			grid-template-columns: 1fr;
-			gap: 2.75rem;
-		}
-	}
+    .columns {
+      grid-template-columns: 1fr;
+      gap: 2.75rem;
+    }
+  }
 </style>
