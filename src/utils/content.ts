@@ -7,8 +7,8 @@ import { getCollection, type CollectionEntry } from 'astro:content';
  * excluded from anything that ships: the built pages, the nav link and the feed.
  */
 export async function getPosts({ includeDrafts = import.meta.env.DEV } = {}): Promise<
-	CollectionEntry<'blog'>[]
+  CollectionEntry<'blog'>[]
 > {
-	const posts = await getCollection('blog', ({ data }) => includeDrafts || !data.draft);
-	return posts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+  const posts = await getCollection('blog', ({ data }) => includeDrafts || !data.draft);
+  return posts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 }
