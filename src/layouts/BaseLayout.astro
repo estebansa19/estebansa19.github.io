@@ -55,3 +55,13 @@ const {
 		<Footer />
 	</body>
 </html>
+
+<script>
+	// Links are prefetched as they scroll into view — the whole site is a handful
+	// of tiny static pages, so navigation becomes effectively instant. Started
+	// here instead of through the `prefetch` config option, whose injected
+	// script Astro always ships as a separate file; this one gets inlined.
+	import { init } from 'astro/virtual-modules/prefetch.js';
+
+	init({ prefetchAll: true, defaultStrategy: 'viewport' });
+</script>
