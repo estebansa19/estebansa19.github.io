@@ -13,16 +13,17 @@ export default defineConfig({
 		}),
 	],
 	compressHTML: true,
-	// Links are prefetched as they scroll into view — the whole site is a handful
-	// of tiny static pages, so navigation becomes effectively instant.
-	prefetch: {
-		prefetchAll: true,
-		defaultStrategy: 'viewport',
-	},
+	// CSS and JS are inlined into each page. They are only a few KB gzipped, and
+	// GitHub Pages caches every file for just 10 minutes, so separate files
+	// mostly add requests to the critical path rather than saving bytes.
 	build: {
-		// 'auto' inlines only small stylesheets; the shared bundle stays an external
-		// file so it is cached once instead of re-sent with every page.
-		inlineStylesheets: 'auto',
+		inlineStylesheets: 'always',
+	},
+	vite: {
+		build: {
+			// Applies to scripts only; other assets keep Vite's default limit.
+			assetsInlineLimit: (filePath) => (filePath.endsWith('.js') ? true : undefined),
+		},
 	},
 	trailingSlash: 'ignore',
 });
