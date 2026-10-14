@@ -8,89 +8,89 @@
 
 /* Variable fonts, latin subset, self-hosted so no third party is contacted. */
 @font-face {
-	font-family: 'JetBrains Mono';
-	src: url('/fonts/jetbrains-mono-latin.woff2') format('woff2-variations');
-	font-weight: 400 700;
-	font-style: normal;
-	font-display: swap;
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-latin.woff2') format('woff2-variations');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-	font-family: 'IBM Plex Sans';
-	src: url('/fonts/ibm-plex-sans-latin.woff2') format('woff2-variations');
-	font-weight: 400 500;
-	font-style: normal;
-	font-display: swap;
+  font-family: 'IBM Plex Sans';
+  src: url('/fonts/ibm-plex-sans-latin.woff2') format('woff2-variations');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
 }
 
 :root {
-	color-scheme: light;
+  color-scheme: light;
 
-	--font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-	--font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
 
-	/* Layout measures, shared by main, header and footer so their edges align. */
-	--page-width: 64rem;
-	--reading-width: 45rem;
+  /* Layout measures, shared by main, header and footer so their edges align. */
+  --page-width: 64rem;
+  --reading-width: 45rem;
 
-	--bg: oklch(0.98 0.003 250);
-	--text: oklch(0.24 0.008 250);
-	--muted: oklch(0.5 0.01 250);
-	--line: oklch(0.88 0.005 250);
-	/* Ruby red — the same gem the favicon draws. */
-	--accent: oklch(0.52 0.19 25);
-	--accent-contrast: oklch(0.99 0 0);
-	--code-bg: oklch(0.955 0.004 250);
+  --bg: oklch(0.98 0.003 250);
+  --text: oklch(0.24 0.008 250);
+  --muted: oklch(0.5 0.01 250);
+  --line: oklch(0.88 0.005 250);
+  /* Ruby red — the same gem the favicon draws. */
+  --accent: oklch(0.52 0.19 25);
+  --accent-contrast: oklch(0.99 0 0);
+  --code-bg: oklch(0.955 0.004 250);
 }
 
 [data-theme='dark'] {
-	color-scheme: dark;
+  color-scheme: dark;
 
-	--bg: oklch(0.16 0.008 250);
-	--text: oklch(0.93 0.005 250);
-	--muted: oklch(0.64 0.01 250);
-	--line: oklch(0.29 0.008 250);
-	--accent: oklch(0.7 0.15 25);
-	--accent-contrast: oklch(0.16 0.008 250);
-	--code-bg: oklch(0.2 0.008 250);
+  --bg: oklch(0.16 0.008 250);
+  --text: oklch(0.93 0.005 250);
+  --muted: oklch(0.64 0.01 250);
+  --line: oklch(0.29 0.008 250);
+  --accent: oklch(0.7 0.15 25);
+  --accent-contrast: oklch(0.16 0.008 250);
+  --code-bg: oklch(0.2 0.008 250);
 }
 
 *,
 *::before,
 *::after {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html,
 body {
-	padding: 0;
-	margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
 html {
-	font-family: var(--font-mono);
-	font-size: 16px;
-	line-height: 1.6;
-	-webkit-text-size-adjust: 100%;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-	display: flex;
-	flex-direction: column;
-	min-height: 100vh;
-	background-color: var(--bg);
-	color: var(--text);
-	text-align: left;
-	word-wrap: break-word;
-	overflow-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--text);
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 main {
-	flex: 1;
-	width: 100%;
-	max-width: var(--page-width);
-	margin: 0 auto;
-	padding: 3.5rem 2rem 0;
+  flex: 1;
+  width: 100%;
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 3.5rem 2rem 0;
 }
 
 h1,
@@ -99,186 +99,186 @@ h3,
 h4,
 h5,
 h6 {
-	margin: 0 0 0.5rem;
-	color: var(--text);
-	font-weight: 700;
-	letter-spacing: -0.02em;
-	line-height: 1.25;
-	text-wrap: balance;
+  margin: 0 0 0.5rem;
+  color: var(--text);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  text-wrap: balance;
 }
 
 h1 {
-	font-size: 1.75rem;
+  font-size: 1.75rem;
 }
 h2 {
-	font-size: 1.25rem;
+  font-size: 1.25rem;
 }
 h3 {
-	font-size: 1.0625rem;
+  font-size: 1.0625rem;
 }
 h4,
 h5,
 h6 {
-	font-size: 1rem;
+  font-size: 1rem;
 }
 
 a {
-	color: var(--accent);
-	text-decoration: none;
-	transition: color 0.18s ease;
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.18s ease;
 }
 
 a:hover {
-	text-decoration: underline;
+  text-decoration: underline;
 }
 
 p {
-	margin: 0 0 1rem;
+  margin: 0 0 1rem;
 }
 
 img,
 video {
-	display: block;
-	max-width: 100%;
-	height: auto;
-	border-radius: 3px;
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 3px;
 }
 
 hr {
-	border: none;
-	border-top: 1px solid var(--line);
-	margin: 2rem 0;
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 2rem 0;
 }
 
 /* Long-form reading: the one place the mono face steps aside. */
 .prose {
-	font-family: var(--font-sans);
-	font-size: 1rem;
-	line-height: 1.8;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.8;
 }
 
 .prose p {
-	margin: 0 0 1.5rem;
+  margin: 0 0 1.5rem;
 }
 
 .prose h2,
 .prose h3,
 .prose h4 {
-	font-family: var(--font-mono);
-	margin: 2.5rem 0 1rem;
+  font-family: var(--font-mono);
+  margin: 2.5rem 0 1rem;
 }
 
 .prose ul,
 .prose ol {
-	margin: 0 0 1.5rem;
-	padding-left: 1.25rem;
+  margin: 0 0 1.5rem;
+  padding-left: 1.25rem;
 }
 
 .prose li {
-	margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .prose blockquote {
-	margin: 0 0 1.5rem;
-	padding-left: 1.25rem;
-	border-left: 2px solid var(--accent);
-	color: var(--muted);
+  margin: 0 0 1.5rem;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--accent);
+  color: var(--muted);
 }
 
 .prose a {
-	text-decoration: underline;
-	text-underline-offset: 0.2em;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 code {
-	font-family: var(--font-mono);
-	font-size: 0.875em;
-	padding: 0.1em 0.35em;
-	background-color: var(--code-bg);
-	border: 1px solid var(--line);
-	border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+  background-color: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: 3px;
 }
 
 pre {
-	margin: 0 0 1.5rem;
-	padding: 1.25rem;
-	background-color: var(--code-bg);
-	border: 1px solid var(--line);
-	border-radius: 3px;
-	overflow-x: auto;
-	font-size: 0.8125rem;
-	line-height: 1.7;
+  margin: 0 0 1.5rem;
+  padding: 1.25rem;
+  background-color: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  overflow-x: auto;
+  font-size: 0.8125rem;
+  line-height: 1.7;
 }
 
 pre > code {
-	all: unset;
-	font-family: var(--font-mono);
+  all: unset;
+  font-family: var(--font-mono);
 }
 
 table {
-	width: 100%;
-	border-collapse: collapse;
-	font-size: 0.875rem;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
 }
 
 th,
 td {
-	padding: 0.5rem 0.75rem;
-	border-bottom: 1px solid var(--line);
-	text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
 }
 
 :focus-visible {
-	outline: 2px solid var(--accent);
-	outline-offset: 3px;
-	border-radius: 2px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 .skip-link {
-	position: absolute;
-	left: -9999px;
-	top: 0;
-	z-index: 200;
-	padding: 0.75rem 1rem;
-	background: var(--bg);
-	border: 1px solid var(--accent);
-	font-size: 0.8125rem;
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 200;
+  padding: 0.75rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  font-size: 0.8125rem;
 }
 
 .skip-link:focus {
-	left: 0;
+  left: 0;
 }
 
 .sr-only {
-	position: absolute !important;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: 0;
-	border: 0;
-	overflow: hidden;
-	clip: rect(1px, 1px, 1px, 1px);
-	clip-path: inset(50%);
-	white-space: nowrap;
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @media (max-width: 720px) {
-	main {
-		padding: 2.5rem 1.25rem 0;
-	}
+  main {
+    padding: 2.5rem 1.25rem 0;
+  }
 
-	h1 {
-		font-size: 1.5rem;
-	}
+  h1 {
+    font-size: 1.5rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-	*,
-	*::before,
-	*::after {
-		animation-duration: 0.01ms !important;
-		animation-iteration-count: 1 !important;
-		transition-duration: 0.01ms !important;
-		scroll-behavior: auto !important;
-	}
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

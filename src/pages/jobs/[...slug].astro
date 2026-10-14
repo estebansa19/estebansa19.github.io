@@ -6,19 +6,19 @@ import { AUTHOR } from '../../consts';
 import { toISODate } from '../../utils/date';
 
 export async function getStaticPaths() {
-	const jobs = (await getCollection('jobs')).sort(
-		(a, b) => b.data.date_start.getTime() - a.data.date_start.getTime(),
-	);
+  const jobs = (await getCollection('jobs')).sort(
+    (a, b) => b.data.date_start.getTime() - a.data.date_start.getTime(),
+  );
 
-	return jobs.map((job, index) => ({
-		params: { slug: job.id },
-		props: { job, previous: jobs[index + 1] },
-	}));
+  return jobs.map((job, index) => ({
+    params: { slug: job.id },
+    props: { job, previous: jobs[index + 1] },
+  }));
 }
 
 type Props = {
-	job: CollectionEntry<'jobs'>;
-	previous?: CollectionEntry<'jobs'>;
+  job: CollectionEntry<'jobs'>;
+  previous?: CollectionEntry<'jobs'>;
 };
 
 const { job, previous } = Astro.props;
@@ -29,177 +29,177 @@ const isCurrent = date_end === 'present';
 const heading = `${role} at ${company}`;
 
 const schema = {
-	'@context': 'https://schema.org',
-	'@type': 'Occupation',
-	name: role,
-	occupationLocation: {
-		'@type': 'Organization',
-		name: company,
-		...(companyUrl && { url: companyUrl }),
-	},
-	startDate: toISODate(date_start),
-	...(date_end !== 'present' && { endDate: toISODate(date_end) }),
-	description: summary,
-	mainEntityOfPage: { '@type': 'Person', name: AUTHOR.name },
+  '@context': 'https://schema.org',
+  '@type': 'Occupation',
+  name: role,
+  occupationLocation: {
+    '@type': 'Organization',
+    name: company,
+    ...(companyUrl && { url: companyUrl }),
+  },
+  startDate: toISODate(date_start),
+  ...(date_end !== 'present' && { endDate: toISODate(date_end) }),
+  description: summary,
+  mainEntityOfPage: { '@type': 'Person', name: AUTHOR.name },
 };
 ---
 
 <BaseLayout
-	title={heading}
-	description={summary ?? `${role} at ${company} — part of ${AUTHOR.name}'s resume.`}
-	schema={[schema]}
+  title={heading}
+  description={summary ?? `${role} at ${company} — part of ${AUTHOR.name}'s resume.`}
+  schema={[schema]}
 >
-	<a href="/" class="back">
-		<svg
-			width="13"
-			height="13"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			aria-hidden="true"
-		>
-			<path d="M19 12H5M11 18l-6-6 6-6"></path>
-		</svg>
-		back to resume
-	</a>
+  <a href="/" class="back">
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M19 12H5M11 18l-6-6 6-6"></path>
+    </svg>
+    back to resume
+  </a>
 
-	<article>
-		{
-			isCurrent && (
-				<p class="badge">
-					<span class="badge-dot" aria-hidden="true" />
-					current role
-				</p>
-			)
-		}
+  <article>
+    {
+      isCurrent && (
+        <p class="badge">
+          <span class="badge-dot" aria-hidden="true" />
+          current role
+        </p>
+      )
+    }
 
-		<h1>{role}<br />at {company}</h1>
+    <h1>{role}<br />at {company}</h1>
 
-		<p class="period">
-			<FormattedDate date={date_start} format="short" />
-			{' — '}
-			<FormattedDate date={date_end} format="short" />
-		</p>
+    <p class="period">
+      <FormattedDate date={date_start} format="short" />
+      {' — '}
+      <FormattedDate date={date_end} format="short" />
+    </p>
 
-		<hr />
+    <hr />
 
-		<div class="prose">
-			<Content />
-		</div>
-	</article>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
 
-	{
-		previous && (
-			<footer class="pagination">
-				<a href={`/jobs/${previous.id}/`}>
-					← {previous.data.role}, {previous.data.company}
-				</a>
-				<span>previous role</span>
-			</footer>
-		)
-	}
+  {
+    previous && (
+      <footer class="pagination">
+        <a href={`/jobs/${previous.id}/`}>
+          ← {previous.data.role}, {previous.data.company}
+        </a>
+        <span>previous role</span>
+      </footer>
+    )
+  }
 </BaseLayout>
 
 <style>
-	.back {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-		font-size: 0.75rem;
-		color: var(--muted);
-		text-decoration: none;
-		margin-bottom: 3rem;
-	}
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-decoration: none;
+    margin-bottom: 3rem;
+  }
 
-	.back:hover {
-		color: var(--accent);
-		text-decoration: none;
-	}
+  .back:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
 
-	.back svg {
-		transition: transform 0.18s ease;
-	}
+  .back svg {
+    transition: transform 0.18s ease;
+  }
 
-	.back:hover svg {
-		transform: translateX(-3px);
-	}
+  .back:hover svg {
+    transform: translateX(-3px);
+  }
 
-	.badge {
-		display: flex;
-		align-items: center;
-		gap: 0.625rem;
-		margin: 0 0 0.875rem;
-		font-size: 0.75rem;
-		color: var(--accent);
-	}
+  .badge {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin: 0 0 0.875rem;
+    font-size: 0.75rem;
+    color: var(--accent);
+  }
 
-	.badge-dot {
-		width: 7px;
-		height: 7px;
-		flex-shrink: 0;
-		border-radius: 999px;
-		background: var(--accent);
-	}
+  .badge-dot {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: var(--accent);
+  }
 
-	h1 {
-		margin: 0 0 0.75rem;
-	}
+  h1 {
+    margin: 0 0 0.75rem;
+  }
 
-	article,
-	.pagination {
-		max-width: var(--reading-width);
-	}
+  article,
+  .pagination {
+    max-width: var(--reading-width);
+  }
 
-	.period {
-		margin: 0;
-		font-size: 0.8125rem;
-		color: var(--muted);
-		font-variant-numeric: tabular-nums;
-	}
+  .period {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
 
-	hr {
-		margin: 2.5rem 0;
-	}
+  hr {
+    margin: 2.5rem 0;
+  }
 
-	/* Job bullets read as a dashed list rather than discs. */
-	.prose :global(ul) {
-		list-style: none;
-		padding: 0;
-		margin: 0;
-	}
+  /* Job bullets read as a dashed list rather than discs. */
+  .prose :global(ul) {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
 
-	.prose :global(li) {
-		position: relative;
-		padding-left: 1.75rem;
-		margin-bottom: 0.875rem;
-	}
+  .prose :global(li) {
+    position: relative;
+    padding-left: 1.75rem;
+    margin-bottom: 0.875rem;
+  }
 
-	.prose :global(li)::before {
-		content: '—';
-		position: absolute;
-		left: 0;
-		font-family: var(--font-mono);
-		font-size: 0.75rem;
-		color: var(--accent);
-	}
+  .prose :global(li)::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+  }
 
-	.pagination {
-		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
-		gap: 1.5rem;
-		margin-top: 3rem;
-		padding-top: 1.5rem;
-		border-top: 1px solid var(--line);
-		font-size: 0.8125rem;
-	}
+  .pagination {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.8125rem;
+  }
 
-	.pagination span {
-		color: var(--muted);
-		font-size: 0.75rem;
-		white-space: nowrap;
-	}
+  .pagination span {
+    color: var(--muted);
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
 </style>
