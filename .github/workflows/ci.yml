@@ -27,6 +27,9 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      # The build prints /cv to a PDF with headless Chromium (integrations/cv-pdf.mjs).
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium-headless-shell
       - name: Type check
         run: npm run check
       - name: Build

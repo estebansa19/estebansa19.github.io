@@ -13,6 +13,7 @@ const hasPosts = (await getPosts({ includeDrafts: false })).length > 0;
     <a href="/" class="wordmark">{AUTHOR.shortName}</a>
     <div class="nav-right">
       <HeaderLink href="/">resume</HeaderLink>
+      <HeaderLink href="/cv">cv</HeaderLink>
       {hasPosts && <HeaderLink href="/blog">blog</HeaderLink>}
       <ThemeToggle />
     </div>
