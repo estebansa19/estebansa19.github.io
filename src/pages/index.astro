@@ -137,7 +137,13 @@ const resumeSchema = {
   </header>
 
   <section class="intro prose">
-    <p>Hello 👋, I'm <strong>Esteban</strong>, I'm a software engineer, I live in Colombia 🇨🇴.</p>
+    <p>
+      Hello 👋, I'm <strong>Esteban</strong>, a senior software engineer living in Colombia 🇨🇴. I've
+      spent {Math.floor(careerMonths / 12)}+ years building products with Ruby on Rails: from one of
+      the first 4 engineers (and later tech lead) at a startup that grew to ~30 engineers, to fintech
+      platforms for retirement plans and subscription billing. These days I also build AI tooling
+      (MCP servers, agents, Claude Code skills) into how I ship software.
+    </p>
     <p>
       I'm {age} years old, a Ruby/Ruby on Rails lover; Ruby is my main programming language but, I
       like JavaScript as well (in fact, this resume has been built with JavaScript).
@@ -194,6 +200,7 @@ const resumeSchema = {
                     </span>
                     <span class="role">{job.data.role}</span>
                     <span class="company">{job.data.company}</span>
+                    {job.data.summary && <span class="summary">{job.data.summary}</span>}
                   </span>
                   <svg
                     class="arrow"
@@ -547,6 +554,15 @@ const resumeSchema = {
   .company {
     font-size: 0.8125rem;
     color: var(--muted);
+  }
+
+  /* The one-line impact summary, so the timeline reads without clicking into each role. */
+  .summary {
+    margin-top: 0.625rem;
+    max-width: 34rem;
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--text);
   }
 
   .arrow {
