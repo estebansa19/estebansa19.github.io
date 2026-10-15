@@ -154,8 +154,6 @@ const resumeSchema = {
     </p>
   </section>
 
-  <Irb data={irbData} />
-
   <div class="columns">
     <div class="main-col">
       <h2 class="section-head">
@@ -252,6 +250,12 @@ const resumeSchema = {
       </ul>
     </aside>
   </div>
+
+  <!-- The console is a treat for the curious, so it sits after the resume rather than before it. -->
+  <section class="console">
+    <h2 class="section-head">Console <span class="section-aside">for the curious</span></h2>
+    <Irb data={irbData} />
+  </section>
 </BaseLayout>
 
 <script>
@@ -472,6 +476,18 @@ const resumeSchema = {
 
   .section-head--gap {
     margin-top: 2.5rem;
+  }
+
+  .console {
+    margin-top: 3.5rem;
+  }
+
+  .console .section-head {
+    margin-bottom: 1.25rem;
+  }
+
+  .console :global(.irb) {
+    margin-bottom: 0;
   }
 
   .timeline {

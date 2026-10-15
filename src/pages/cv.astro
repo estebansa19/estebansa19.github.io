@@ -1,0 +1,317 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { AUTHOR, CV_PDF, SOCIALS } from '../consts';
+import { EDUCATION } from '../data/education';
+import { SKILL_GROUPS } from '../data/skills';
+import { monthsBetween } from '../utils/date';
+
+/*
+  The CV is built for applicant tracking systems first: one column, plain
+  section names, contact details in the body, text links spelled out, dates as
+  "Mon YYYY – Mon YYYY". The same page is printed to a PDF at build time.
+*/
+
+const jobs = (await getCollection('jobs')).sort(
+  (a, b) => b.data.date_start.getTime() - a.data.date_start.getTime(),
+);
+const roles = await Promise.all(jobs.map(async (job) => ({ job, Content: (await render(job)).Content })));
+const years = Math.floor(monthsBetween(jobs.at(-1)!.data.date_start, new Date()) / 12);
+
+const monthYear = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+const period = (start: Date, end: Date | 'present') =>
+  `${monthYear.format(start)} – ${end === 'present' ? 'Present' : monthYear.format(end)}`;
+
+// Parsers read the visible text, not the href, so links show their address.
+const bare = (href: string) => href.replace(/^(https?:\/\/(www\.)?|mailto:)/, '').replace(/\/$/, '');
+const contact = [`mailto:${AUTHOR.email}`, ...SOCIALS.map((social) => social.href), Astro.site!.href];
+const education = EDUCATION.filter((entry) => entry.cvTitle);
+---
+
+<BaseLayout
+  title={`${AUTHOR.name} — CV`}
+  description={`One-page CV of ${AUTHOR.name}, ${AUTHOR.jobTitle}.`}
+  fullTitle
+>
+  <div class="toolbar">
+    <p>The resume as a one-page CV, formatted for job applications.</p>
+    <a class="download" href={CV_PDF} download>Download PDF</a>
+  </div>
+
+  <article class="sheet">
+    <header class="head">
+      <h1>{AUTHOR.name}</h1>
+      <p class="headline">{AUTHOR.jobTitle} · Ruby on Rails · AI Agents & MCP</p>
+      <p class="contact">{AUTHOR.city} · Open to relocation</p>
+      <p class="contact">
+        {
+          contact.map((href, index) => (
+            <>
+              {index > 0 && ' · '}
+              <a href={href}>{bare(href)}</a>
+            </>
+          ))
+        }
+      </p>
+    </header>
+
+    <section>
+      <h2>Summary</h2>
+      <p>
+        Senior Software Engineer with {years}+ years building Ruby on Rails products in hospitality,
+        logistics and fintech: from one of the first 4 engineers to Backend Tech Lead at a startup
+        that scaled to nearly 500 hotels, to rebuilding a legacy 401(k) platform and billing at
+        Recurly. Builds AI tooling (MCP servers, agents, Claude Code skills) into everyday development.
+      </p>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+      {
+        roles.map(({ job, Content }) => (
+          <div class="role">
+            <div class="role-head">
+              <h3>
+                {job.data.role}, <span class="company">{job.data.company}</span>
+              </h3>
+              <span class="dates">{period(job.data.date_start, job.data.date_end)}</span>
+            </div>
+            <div class="bullets">
+              <Content />
+            </div>
+          </div>
+        ))
+      }
+    </section>
+
+    <section>
+      <h2>Skills</h2>
+      <ul class="plain">
+        {
+          SKILL_GROUPS.map((group) => (
+            <li>
+              <strong>{group.label}:</strong> {group.items.join(', ')}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section>
+      <h2>Education</h2>
+      {
+        education.map((entry) => (
+          <div class="role-head">
+            <h3>
+              {entry.cvTitle}, <span class="company">{entry.institution}</span>
+            </h3>
+            {/* The resume's em dash becomes the en dash parsers expect in a range. */}
+            <span class="dates">{entry.period?.replace('—', '–')}</span>
+          </div>
+        ))
+      }
+      <p class="languages"><strong>Languages:</strong> Spanish (native), English (C1)</p>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  /*
+    A sheet of paper in both themes: the CV is a printed document, so it keeps
+    print colours on screen and is the only thing that survives into the PDF.
+  */
+  @page {
+    size: Letter;
+    margin: 0.4in 0.55in;
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    max-width: 8.5in;
+    margin: 0 auto 1.5rem;
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .toolbar p {
+    margin: 0;
+  }
+
+  .download {
+    flex-shrink: 0;
+    padding: 0.55rem 0.9rem;
+    border-radius: 2px;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-size: 0.8125rem;
+  }
+
+  .download:hover {
+    text-decoration: none;
+    filter: brightness(1.08);
+  }
+
+  .sheet {
+    --ink: #1b1d21;
+    --ink-muted: #4d525a;
+    --rule: #c9ccd1;
+
+    max-width: 8.5in;
+    margin: 0 auto;
+    padding: 0.45in 0.55in;
+    background: #fff;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    font-family: var(--font-sans);
+    font-size: 9.5pt;
+    line-height: 1.3;
+    /* Some parsers split "fi" and "fl" ligature glyphs into unknown characters. */
+    font-variant-ligatures: none;
+  }
+
+  .sheet a {
+    color: inherit;
+  }
+
+  .head {
+    margin-bottom: 0.7em;
+  }
+
+  h1 {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 19pt;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .headline {
+    margin: 0.1em 0 0.35em;
+    font-size: 10.5pt;
+    color: var(--ink);
+  }
+
+  .contact {
+    margin: 0;
+    color: var(--ink-muted);
+  }
+
+  section {
+    margin-top: 0.75em;
+  }
+
+  h2 {
+    margin: 0 0 0.4em;
+    padding-bottom: 0.15em;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--font-sans);
+    font-size: 9.5pt;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  section p {
+    margin: 0;
+  }
+
+  .role + .role {
+    margin-top: 0.5em;
+  }
+
+  .role-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1em;
+  }
+
+  h3 {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 10pt;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--ink);
+  }
+
+  .company {
+    font-weight: 400;
+  }
+
+  .dates {
+    flex-shrink: 0;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .bullets :global(ul) {
+    margin: 0.2em 0 0;
+    padding-left: 1.1em;
+  }
+
+  .bullets :global(li) {
+    margin: 0 0 0.08em;
+  }
+
+  .languages {
+    margin-top: 0.3em;
+  }
+
+  .plain {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  strong {
+    font-weight: 500;
+  }
+
+  @media (max-width: 720px) {
+    .toolbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .sheet {
+      padding: 1.25rem;
+    }
+
+    .role-head {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+
+  @media print {
+    :global(.navbar),
+    :global(body > footer),
+    :global(.skip-link),
+    .toolbar {
+      display: none !important;
+    }
+
+    :global(html),
+    :global(body) {
+      background: #fff !important;
+    }
+
+    :global(main) {
+      max-width: none;
+      padding: 0;
+    }
+
+    .sheet {
+      max-width: none;
+      padding: 0;
+      border: 0;
+    }
+  }
+</style>
