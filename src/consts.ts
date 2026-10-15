@@ -9,8 +9,13 @@ export const AUTHOR = {
   shortName: 'Esteban',
   jobTitle: 'Senior Software Engineer',
   location: 'Colombia',
+  city: 'Medellín, Colombia',
+  email: 'estebansa@outlook.com',
   birthDate: '2000-05-08',
 } as const;
+
+/** The CV PDF, printed from `/cv` at build time by `integrations/cv-pdf.mjs`. */
+export const CV_PDF = '/Esteban-Saldarriaga-CV.pdf';
 
 export const SOCIALS = [
   { label: 'GitHub', href: 'https://github.com/estebansa19' },
