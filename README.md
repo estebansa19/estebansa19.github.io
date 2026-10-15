@@ -31,6 +31,7 @@ Every page renders through `BaseLayout.astro`, so `<head>`, the header and the f
 
 ```sh
 npm install
+npx playwright install chromium-headless-shell   # once; the build prints the CV PDF with it
 npm run dev      # http://localhost:4321
 ```
 
@@ -80,12 +81,21 @@ companyUrl: 'https://example.com'  # optional
 summary: 'One line shown on the resume index'  # optional
 date_start: 'YYYY-MM-DD'
 date_end: 'YYYY-MM-DD'  # or 'present' for the current role
+stack: ['Ruby on Rails', 'PostgreSQL']  # optional, shown as chips on the job page
 ---
 
 Bullet points describing responsibilities and impact.
 ```
 
 Entries sort themselves by start date, newest first.
+
+### CV
+
+`/cv` renders the same jobs, skills and education as a one-page CV laid out for applicant
+tracking systems: one column, standard section names, contact details in the body, and dates as
+`Mon YYYY – Mon YYYY`. After every build, `integrations/cv-pdf.mjs` prints that page with
+headless Chromium to `dist/Esteban-Saldarriaga-CV.pdf`, which the page's download button links
+to. The build log reports the PDF's page count and warns when the CV spills onto a second page.
 
 ## SEO & metadata
 
