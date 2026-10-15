@@ -27,6 +27,8 @@ const jobs = defineCollection({
     date_start: z.coerce.date(),
     // `'present'` marks the current role; anything else is parsed as a date.
     date_end: z.union([z.literal('present'), z.coerce.date()]),
+    /** Technologies used in the role, shown as chips on the job page. */
+    stack: z.array(z.string()).optional(),
   }),
 });
 
