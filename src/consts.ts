@@ -16,7 +16,7 @@ export const SOCIALS = [
   { label: 'GitHub', href: 'https://github.com/estebansa19' },
   {
     label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/esteban-saldarriaga-alzate-77a076177',
+    href: 'https://www.linkedin.com/in/estebansaldarriaga',
   },
 ] as const;
 
