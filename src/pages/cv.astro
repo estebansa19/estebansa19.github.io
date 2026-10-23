@@ -34,7 +34,6 @@ const education = EDUCATION.filter((entry) => entry.cvTitle);
   fullTitle
 >
   <div class="toolbar">
-    <p>The resume as a one-page CV, formatted for job applications.</p>
     <a class="download" href={CV_PDF} download>Download PDF</a>
   </div>
 
@@ -127,21 +126,12 @@ const education = EDUCATION.filter((entry) => entry.cvTitle);
 
   .toolbar {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
+    justify-content: flex-end;
     max-width: 8.5in;
     margin: 0 auto 1.5rem;
-    font-size: 0.8125rem;
-    color: var(--muted);
-  }
-
-  .toolbar p {
-    margin: 0;
   }
 
   .download {
-    flex-shrink: 0;
     padding: 0.55rem 0.9rem;
     border-radius: 2px;
     background: var(--accent);
@@ -274,12 +264,6 @@ const education = EDUCATION.filter((entry) => entry.cvTitle);
   }
 
   @media (max-width: 720px) {
-    .toolbar {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.75rem;
-    }
-
     .sheet {
       padding: 1.25rem;
     }
