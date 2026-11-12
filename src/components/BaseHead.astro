@@ -58,7 +58,7 @@ const website = {
 const jsonLd = [person, website, ...schema];
 ---
 
-<!-- Global Metadata -->
+{/* Global Metadata */}
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -66,10 +66,10 @@ const jsonLd = [person, website, ...schema];
 <meta name="robots" content="index, follow" />
 <meta name="theme-color" content="#f7f9fa" />
 
-<!--
+{/*
   Resolve the theme before first paint so the page never flashes the wrong
   one. Falls back to the OS preference when the visitor has no stored choice.
--->
+*/}
 <script is:inline>
   (() => {
     let stored = null;
@@ -91,7 +91,7 @@ const jsonLd = [person, website, ...schema];
   })();
 </script>
 
-<!-- Self-hosted variable fonts, both used above the fold -->
+{/* Self-hosted variable fonts, both used above the fold */}
 <link
   rel="preload"
   href="/fonts/jetbrains-mono-latin.woff2"
@@ -105,15 +105,15 @@ const jsonLd = [person, website, ...schema];
 {hasPosts && <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href={new URL('rss.xml', Astro.site)} />}
 <meta name="generator" content={Astro.generator} />
 
-<!-- Canonical URL -->
+{/* Canonical URL */}
 <link rel="canonical" href={canonicalURL} />
 
-<!-- Primary Meta Tags -->
+{/* Primary Meta Tags */}
 <title>{documentTitle}</title>
 <meta name="description" content={description} />
 <meta name="author" content={AUTHOR.name} />
 
-<!-- Open Graph / Facebook -->
+{/* Open Graph / Facebook */}
 <meta property="og:type" content={type} />
 <meta property="og:url" content={canonicalURL} />
 <meta property="og:title" content={documentTitle} />
@@ -134,13 +134,13 @@ const jsonLd = [person, website, ...schema];
 {modifiedTime && <meta property="article:modified_time" content={modifiedTime.toISOString()} />}
 {type === 'article' && <meta property="article:author" content={AUTHOR.name} />}
 
-<!-- Twitter -->
+{/* Twitter */}
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={documentTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={absoluteImageUrl} />
 
-<!-- Structured Data -->
+{/* Structured Data */}
 {
   jsonLd.map((doc) => (
     <script type="application/ld+json" is:inline set:html={JSON.stringify(doc)} />
