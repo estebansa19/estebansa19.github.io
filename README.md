@@ -29,6 +29,8 @@ Every page renders through `BaseLayout.astro`, so `<head>`, the header and the f
 
 ## Local development
 
+Needs Node 24 or newer (`engines` in `package.json`); CI builds with Node 24.
+
 ```sh
 npm install
 npx playwright install chromium-headless-shell   # once; the build prints the CV PDF with it
