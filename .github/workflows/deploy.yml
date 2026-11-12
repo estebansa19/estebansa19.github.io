@@ -4,8 +4,7 @@ on:
   push:
     branches: [main]
   # Monthly rebuild: age, tenure and the career strip are computed at build time.
-  # GitHub disables schedules after 60 days without repository activity. The
-  # monthly Dependabot PRs normally count; if not: gh workflow enable deploy.yml
+  # GitHub pauses schedules after 60 idle days; re-enable with: gh workflow enable deploy.yml
   schedule:
     - cron: '0 6 1 * *'
   workflow_dispatch:
@@ -33,7 +32,7 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      # The build prints the CV PDF and the social card with headless Chromium (integrations/snapshots.mjs).
+      # For integrations/snapshots.mjs (CV PDF and social card).
       - name: Install Chromium
         run: npx playwright install --with-deps chromium-headless-shell
       - name: Type check

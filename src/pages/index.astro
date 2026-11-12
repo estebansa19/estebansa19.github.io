@@ -22,7 +22,7 @@ const careerStart = jobs.at(-1)!.data.date_start;
 const careerMonths = monthsBetween(careerStart, new Date());
 const careerYears = yearsSince(careerStart);
 
-// Contact rows show the handle, not the whole address, so they fit the sidebar.
+// Handles, not full URLs, so the rows fit the sidebar.
 const contact = [
   { label: 'email', href: `mailto:${AUTHOR.email}`, text: AUTHOR.email },
   ...SOCIALS.map((social) => ({
@@ -400,7 +400,7 @@ const resumeSchema = {
     transition: opacity 0.18s ease;
   }
 
-  /* Roles that didn't use the skill picked in the skill list. */
+  /* Set by SkillTrace. */
   .node.is-dimmed {
     opacity: 0.35;
   }
