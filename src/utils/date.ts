@@ -14,10 +14,7 @@ export function toISODate(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
 
-/**
- * Calendar months from `from`'s month to `to`'s, so "Dec 2018 — Apr 2021" is 28.
- * Minimum 1, so a role that started this month still shows.
- */
+/** Calendar months between the dates' months; at least 1, so a role started this month shows. */
 export function monthsBetween(from: Date, to: Date): number {
   const months = (to.getUTCFullYear() - from.getUTCFullYear()) * 12 + to.getUTCMonth() - from.getUTCMonth();
   return Math.max(1, months);

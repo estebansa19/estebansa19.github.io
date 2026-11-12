@@ -5,9 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import { readdirSync, readFileSync } from 'node:fs';
 import snapshots from './integrations/snapshots.mjs';
 
-// The blog index joins the sitemap with its first published post. The config
-// can't query content collections, so this reads the files: "published" means
-// no `draft: true`, the same rule as getPosts() in src/utils/content.ts.
+// The config can't query collections, so this mirrors getPosts()'s draft rule on the files.
 const blogDir = new URL('./src/content/blog/', import.meta.url);
 const hasPublishedPosts = readdirSync(blogDir, { recursive: true, encoding: 'utf8' })
   .filter((file) => /\.mdx?$/.test(file))
@@ -25,7 +23,6 @@ export default defineConfig({
     // Keep each `output` in sync with `CV_PDF` and `SOCIAL_CARD` in src/consts.ts.
     snapshots([
       { page: '/cv/', output: 'Esteban-Saldarriaga-CV.pdf', maxPages: 1 },
-      // The card's page exists only to be captured, so it is dropped from the site.
       { page: '/social-card/', output: 'social-card.png', viewport: { width: 1200, height: 630 }, removePage: true },
     ]),
   ],

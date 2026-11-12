@@ -1,7 +1,4 @@
-/**
- * The one skill vocabulary: grouped for the CV, flattened for the resume, and
- * the only values a job's `stack` may use (enforced in src/content.config.ts).
- */
+/** The only values a job's `stack` may use; src/content.config.ts enforces it. */
 export const SKILL_GROUPS = [
   {
     label: 'Languages & frameworks',

@@ -1,9 +1,5 @@
 ---
-/**
- * Every role drawn to scale between the first start date and today, with year
- * ticks underneath. Each segment carries the role's `data-job`, so scripts on
- * the page can light it up from the timeline or the skill list.
- */
+/** Each segment carries its role's `data-job`, so page scripts can light it up. */
 import { endOf, type Job } from '../utils/career';
 
 interface Props {

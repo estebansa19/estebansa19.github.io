@@ -1,8 +1,5 @@
 ---
-/**
- * The skill list as toggles: picking one dims every role on the page that
- * didn't use it (anything with a `data-job`) and says how long I've used it.
- */
+/** Picking a skill dims every `data-job` element on the page whose role didn't use it. */
 import { SKILLS } from '../data/skills';
 import { type Job, tenureOf } from '../utils/career';
 import { formatSpan } from '../utils/date';
@@ -40,7 +37,7 @@ const skills = SKILLS.map((skill) => {
       ))
     }
   </ul>
-  <!-- Revealed by the script, so it never promises an interaction that can't happen. -->
+  {/* Hidden until the script runs, so it never offers a dead control. */}
   <p class="readout" data-readout aria-live="polite" hidden>
     <span data-readout-text>Pick a skill to see where I've used it, and for how long.</span>
     <button type="button" class="clear" data-readout-clear hidden>clear</button>
@@ -55,7 +52,6 @@ const skills = SKILLS.map((skill) => {
 
   if (readout && text && clear) {
     const hint = text.textContent ?? '';
-    // Career strip segments and timeline roles.
     const roles = document.querySelectorAll<HTMLElement>('[data-job]');
     let current: HTMLButtonElement | null = null;
 

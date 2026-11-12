@@ -4,7 +4,6 @@ updates:
     directory: /
     schedule:
       interval: monthly
-    # One PR for every minor and patch bump; majors still arrive one per PR.
     groups:
       minor-and-patch:
         update-types: [minor, patch]

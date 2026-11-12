@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from 'astro/types';
 
 type Props = HTMLAttributes<'a'> & {
-  /** Other top-level sections that belong to this link, e.g. `jobs` for the resume. */
+  /** Extra top-level sections that mark this link active, e.g. `jobs`. */
   sections?: string[];
 };
 
