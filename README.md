@@ -8,7 +8,8 @@ Personal resume and blog for Esteban Saldarriaga Alzate. Built with Astro, conte
 ## Project structure
 
 ```text
-public/                  # Static assets served as-is (favicon, fonts, manifest, robots, OG image)
+integrations/            # Build steps: snapshots.mjs prints the CV PDF and the social card
+public/                  # Static assets served as-is (favicon, fonts, manifest, robots, profile photo)
 src/
   assets/                # Images processed & optimised by Astro at build time
   components/            # Reusable UI components
@@ -99,7 +100,7 @@ isn't in it fails the build.
 
 `/cv` renders the same jobs, skills and education as a one-page CV laid out for applicant
 tracking systems: one column, standard section names, contact details in the body, and dates as
-`Mon YYYY – Mon YYYY`. After every build, `integrations/cv-pdf.mjs` prints that page with
+`Mon YYYY – Mon YYYY`. After every build, `integrations/snapshots.mjs` prints that page with
 headless Chromium to `dist/Esteban-Saldarriaga-CV.pdf`, which the page's download button links
 to. The build log reports the PDF's page count, and the build fails if the CV spills onto a
 second page.
@@ -111,6 +112,9 @@ second page.
   their role, and both point at the same `Person` by `@id`. Each role is a dated `Role` wrapping an
   `Occupation`, as schema.org asks for past professions. Posts add `BlogPosting`.
 - Page titles use the `Page — Esteban` template; the home page supplies its own full title.
+- Link previews use `social-card.png`, 1200×630. The same integration screenshots
+  `src/pages/social-card.astro` after each build, so the card always shows the current role and
+  career strip, and then removes that page from the output. Blog posts with a hero image use it instead.
 - `sitemap-index.xml` and `rss.xml` are generated at build time. The 404 page is excluded from the sitemap.
 
 ## Design

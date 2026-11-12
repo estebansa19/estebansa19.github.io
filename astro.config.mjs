@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { readdirSync, readFileSync } from 'node:fs';
-import cvPdf from './integrations/cv-pdf.mjs';
+import snapshots from './integrations/snapshots.mjs';
 
 // The blog index joins the sitemap with its first published post. The config
 // can't query content collections, so this reads the files: "published" means
@@ -19,10 +19,15 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      filter: (page) => !page.includes('/404') && (hasPublishedPosts || !page.endsWith('/blog/')),
+      filter: (page) =>
+        !page.includes('/404') && !page.includes('/social-card') && (hasPublishedPosts || !page.endsWith('/blog/')),
     }),
-    // Keep `output` in sync with `CV_PDF` in src/consts.ts.
-    cvPdf({ page: '/cv/', output: 'Esteban-Saldarriaga-CV.pdf' }),
+    // Keep each `output` in sync with `CV_PDF` and `SOCIAL_CARD` in src/consts.ts.
+    snapshots([
+      { page: '/cv/', output: 'Esteban-Saldarriaga-CV.pdf', maxPages: 1 },
+      // The card's page exists only to be captured, so it is dropped from the site.
+      { page: '/social-card/', output: 'social-card.png', viewport: { width: 1200, height: 630 }, removePage: true },
+    ]),
   ],
   compressHTML: true,
   // CSS and JS are inlined into each page. They are only a few KB gzipped, and
