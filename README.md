@@ -1,152 +1,48 @@
-# Esteban's Resume & Blog
+# Resume & blog
 
-Personal resume and blog for Esteban Saldarriaga Alzate. Built with Astro, content collections, and minimal, accessible styling.
+My resume, one-page CV and blog, live at https://estebansa19.github.io/.
 
-- **Live site**: https://estebansa19.github.io/
-- **Tech**: Astro 7, MDX, RSS, Sitemap, TypeScript
+Built with Astro and deployed to GitHub Pages on every push to `main`. It also rebuilds on the
+1st of each month, so my age and tenure stay current.
 
-## Project structure
+## Run it
 
-```text
-integrations/            # Build steps: snapshots.mjs prints the CV PDF and the social card
-public/                  # Static assets served as-is (favicon, fonts, manifest, robots, profile photo)
-src/
-  assets/                # Images processed & optimised by Astro at build time
-  components/            # Reusable UI components
-  content/
-    blog/                # Blog posts (Markdown/MDX)
-    jobs/                # Resume experience entries (Markdown)
-  data/                  # Static structured data (education, skills)
-  layouts/
-    BaseLayout.astro     # The single <html> shell — head, header, footer
-    BlogPost.astro       # Blog article layout
-  pages/                 # Routed pages
-  styles/global.css      # Design tokens + base element styles
-  utils/                 # Small shared helpers
-astro.config.mjs
-```
-
-Every page renders through `BaseLayout.astro`, so `<head>`, the header and the footer are defined in exactly one place.
-
-## Local development
-
-Needs Node 24 or newer (`engines` in `package.json`); CI builds with Node 24.
+Needs Node 24+.
 
 ```sh
 npm install
-npx playwright install chromium-headless-shell   # once; the build prints the CV PDF with it
-npm run dev      # http://localhost:4321
+npx playwright install chromium-headless-shell  # once; the build prints the CV PDF with it
+npm run dev                                      # http://localhost:4321
 ```
 
-| Command           | Action                                        |
-| ----------------- | --------------------------------------------- |
-| `npm run dev`     | Start the dev server                          |
-| `npm run build`   | Build the production site to `dist/`          |
-| `npm run preview` | Serve the production build locally            |
-| `npm run check`   | Type-check Astro, TypeScript and content data |
+`npm run check` type-checks and `npm run build` builds to `dist/`. CI runs both on every PR.
 
-`npm run check` also runs in CI before the build, so a type error fails the deploy rather than shipping.
+## Update it
 
-## Content authoring
+- **New job:** add a Markdown file to `src/content/jobs/`, with the bullets as the body.
 
-### Blog posts
+  ```md
+  ---
+  role: 'Senior Software Engineer'
+  company: 'Company'
+  companyUrl: 'https://example.com'
+  summary: 'One line for the timeline'
+  date_start: '2026-01-01'
+  date_end: 'present'
+  stack: ['Ruby on Rails', 'PostgreSQL']
+  ---
+  ```
 
-Add a Markdown or MDX file under `src/content/blog/`. `src/content/blog/hello-world.md` is a
-draft template — copy it to start a new post. The filename becomes the URL.
+- **Skills:** `src/data/skills.ts`. A job's `stack` can only use skills from this list, and
+  every skill needs at least one job, or the build fails.
+- **Education:** `src/data/education.ts`. Entries with a `cvTitle` also go on the CV.
+- **Title, headline and contact details:** `src/consts.ts`.
+- **Blog post:** copy `src/content/blog/hello-world.md`. `draft: true` keeps a post off the live
+  site but visible in `npm run dev`. The blog link appears once a post is published.
 
-```md
----
-title: 'Post title'
-description: 'Short description, used for meta tags and the RSS feed'
-pubDate: 'YYYY-MM-DD'
-updatedDate: 'YYYY-MM-DD' # optional
-heroImage: './cover.jpg'  # optional, path relative to the post file
-draft: false              # true keeps it out of the build
----
-```
+## Generated at build time
 
-Hero images are referenced **relative to the post file**, not from `public/`, so Astro can
-resize them and emit modern formats. Drop the original in next to the post — no manual resizing.
+`integrations/snapshots.mjs` renders two files from the built site:
 
-Drafts are visible with `npm run dev` but are excluded from the built pages, the RSS feed and
-the nav link. While the blog has no published posts, its nav link, the feed links and its sitemap
-entry are left out automatically.
-
-### Jobs (experience)
-
-Add a Markdown file under `src/content/jobs/`:
-
-```md
----
-role: 'Senior Software Engineer'
-company: 'Company name'
-companyUrl: 'https://example.com'  # optional
-summary: 'One line shown on the resume index'  # optional
-date_start: 'YYYY-MM-DD'
-date_end: 'YYYY-MM-DD'  # or 'present' for the current role
-stack: ['Ruby on Rails', 'PostgreSQL']  # optional; only skills listed in src/data/skills.ts
----
-
-Bullet points describing responsibilities and impact.
-```
-
-Entries sort themselves by start date, newest first. Tenure counts calendar months, so it
-matches the `Mon YYYY — Mon YYYY` label next to it.
-
-`src/data/skills.ts` is the one skill list: the resume and CV show it, and a `stack` value that
-isn't in it fails the build.
-
-### CV
-
-`/cv` renders the same jobs, skills and education as a one-page CV laid out for applicant
-tracking systems: one column, standard section names, contact details in the body, and dates as
-`Mon YYYY – Mon YYYY`. After every build, `integrations/snapshots.mjs` prints that page with
-headless Chromium to `dist/Esteban-Saldarriaga-CV.pdf`, which the page's download button links
-to. The build log reports the PDF's page count, and the build fails if the CV spills onto a
-second page.
-
-## SEO & metadata
-
-- Site-wide metadata lives in `src/consts.ts` and is rendered by `src/components/BaseHead.astro`.
-- Every page emits `Person` and `WebSite` JSON-LD. The resume adds `ProfilePage`, job pages add
-  their role, and both point at the same `Person` by `@id`. Each role is a dated `Role` wrapping an
-  `Occupation`, as schema.org asks for past professions. Posts add `BlogPosting`.
-- Page titles use the `Page — Esteban` template; the home page supplies its own full title.
-- Link previews use `social-card.png`, 1200×630. The same integration screenshots
-  `src/pages/social-card.astro` after each build, so the card always shows the current role and
-  career strip, and then removes that page from the output. Blog posts with a hero image use it instead.
-- `sitemap-index.xml` and `rss.xml` are generated at build time. The 404 page is excluded from the sitemap.
-
-## Design
-
-The site is monospace throughout — headings, dates, labels, navigation and code are set in
-JetBrains Mono. The one exception is long-form prose (anything inside `.prose`), which uses
-IBM Plex Sans, because a monospace body is tiring to read at article length.
-
-Both are variable fonts, latin subset, self-hosted from `public/fonts/` and preloaded — no
-request ever leaves the site for a font.
-
-The resume runs in two columns: skills and the experience timeline on the left, a sticky
-sidebar with education and contact details on the right. Each skill is a toggle: picking one
-dims every role that didn't use it, in both the career strip and the timeline, and a line under
-the list says how long it was used, summed from those roles. Every skill must appear in at least
-one job's `stack`, or the build fails.
-
-Experience is a hairline rail with a dot per role — the
-current role's dot is filled solid in the accent colour, past roles are hollow and fill on
-hover. One accent colour site-wide: ruby red, the same gem as the favicon.
-
-## Theming
-
-Light and dark are driven by `data-theme` on `<html>`. The visitor's OS preference is used
-until they pick a theme with the header toggle, after which the choice is stored in
-`localStorage`. An inline script in `<head>` resolves the theme before first paint, so the
-page never flashes the wrong one.
-
-Colours are CSS custom properties defined once in `src/styles/global.css` — change them there
-and both themes follow.
-
-## Deployment
-
-Pushing to `main` runs `.github/workflows/deploy.yml`, which type-checks, builds, and publishes
-`dist/` to GitHub Pages.
+- `Esteban-Saldarriaga-CV.pdf`, printed from `/cv`. The build fails if it runs past one page.
+- `social-card.png`, the 1200×630 image link previews show.
