@@ -1,0 +1,116 @@
+---
+/**
+ * Every role drawn to scale between the first start date and today, with year
+ * ticks underneath. Each segment carries the role's `data-job`, so scripts on
+ * the page can light it up from the timeline or the skill list.
+ */
+import { endOf, type Job } from '../utils/career';
+
+interface Props {
+  /** Newest first, as `getJobs()` returns them. */
+  jobs: Job[];
+}
+
+const { jobs } = Astro.props;
+const now = new Date();
+const careerStart = jobs.at(-1)!.data.date_start;
+const toPercent = (date: Date) =>
+  ((date.getTime() - careerStart.getTime()) / (now.getTime() - careerStart.getTime())) * 100;
+
+const segments = [...jobs].reverse().map((job, index, all) => ({
+  id: job.id,
+  left: toPercent(job.data.date_start),
+  width: toPercent(endOf(job)) - toPercent(job.data.date_start),
+  // Older roles fade back; the current one is full strength.
+  strength: 0.35 + (0.65 * (index + 1)) / all.length,
+}));
+const yearTicks = Array.from(
+  { length: now.getUTCFullYear() - careerStart.getUTCFullYear() },
+  (_, i) => careerStart.getUTCFullYear() + i + 1,
+).map((year) => ({ year, left: toPercent(new Date(Date.UTC(year, 0, 1))) }));
+---
+
+<div class="strip" aria-hidden="true">
+  <div class="strip-bar">
+    {
+      segments.map((seg) => (
+        <span
+          class="seg"
+          data-job={seg.id}
+          style={`left:${seg.left}%;width:${seg.width}%;--strength:${seg.strength}`}
+        />
+      ))
+    }
+  </div>
+  <div class="strip-ticks">
+    {yearTicks.map((tick) => <span style={`left:${tick.left}%`}>'{String(tick.year).slice(2)}</span>)}
+  </div>
+</div>
+
+<style>
+  .strip-bar {
+    position: relative;
+    height: var(--strip-height, 10px);
+    border-radius: 2px;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent 0 3px,
+      color-mix(in oklch, var(--line) 70%, transparent) 3px 4px
+    );
+  }
+
+  .seg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    /* A hairline gap between neighbouring roles. */
+    border-right: 2px solid var(--bg);
+    background: color-mix(in srgb, var(--accent) calc(var(--strength) * 100%), transparent);
+    transition:
+      background 0.18s ease,
+      opacity 0.18s ease,
+      transform 0.18s ease;
+  }
+
+  .seg:first-child {
+    border-radius: 2px 0 0 2px;
+  }
+
+  .seg.is-active,
+  .seg.is-traced {
+    background: var(--accent);
+  }
+
+  .seg.is-active {
+    transform: scaleY(1.6);
+  }
+
+  .seg.is-dimmed {
+    opacity: 0.2;
+  }
+
+  .strip-ticks {
+    position: relative;
+    height: 1.25rem;
+    margin-top: 0.375rem;
+  }
+
+  .strip-ticks span {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    font-size: var(--strip-tick-size, 0.625rem);
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .strip-ticks span::before {
+    content: '';
+    position: absolute;
+    top: -0.4rem;
+    left: 50%;
+    width: 1px;
+    height: 4px;
+    background: var(--line);
+  }
+</style>

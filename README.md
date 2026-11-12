@@ -121,8 +121,13 @@ IBM Plex Sans, because a monospace body is tiring to read at article length.
 Both are variable fonts, latin subset, self-hosted from `public/fonts/` and preloaded — no
 request ever leaves the site for a font.
 
-The resume runs in two columns: the experience timeline on the left, a sticky sidebar with
-skills and education on the right. Experience is a hairline rail with a dot per role — the
+The resume runs in two columns: skills and the experience timeline on the left, a sticky
+sidebar with education and contact details on the right. Each skill is a toggle: picking one
+dims every role that didn't use it, in both the career strip and the timeline, and a line under
+the list says how long it was used, summed from those roles. Every skill must appear in at least
+one job's `stack`, or the build fails.
+
+Experience is a hairline rail with a dot per role — the
 current role's dot is filled solid in the accent colour, past roles are hollow and fill on
 hover. One accent colour site-wide: ruby red, the same gem as the favicon.
 
