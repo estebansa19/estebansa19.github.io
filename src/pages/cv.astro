@@ -1,10 +1,11 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { AUTHOR, CV_PDF, SOCIALS } from '../consts';
 import { EDUCATION } from '../data/education';
 import { SKILL_GROUPS } from '../data/skills';
-import { monthsBetween } from '../utils/date';
+import { getJobs } from '../utils/career';
+import { yearsSince } from '../utils/date';
 
 /*
   The CV is built for applicant tracking systems first: one column, plain
@@ -12,11 +13,9 @@ import { monthsBetween } from '../utils/date';
   "Mon YYYY – Mon YYYY". The same page is printed to a PDF at build time.
 */
 
-const jobs = (await getCollection('jobs')).sort(
-  (a, b) => b.data.date_start.getTime() - a.data.date_start.getTime(),
-);
+const jobs = await getJobs();
 const roles = await Promise.all(jobs.map(async (job) => ({ job, Content: (await render(job)).Content })));
-const years = Math.floor(monthsBetween(jobs.at(-1)!.data.date_start, new Date()) / 12);
+const years = yearsSince(jobs.at(-1)!.data.date_start);
 
 const monthYear = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 const period = (start: Date, end: Date | 'present') =>

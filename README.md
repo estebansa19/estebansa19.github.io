@@ -83,13 +83,17 @@ companyUrl: 'https://example.com'  # optional
 summary: 'One line shown on the resume index'  # optional
 date_start: 'YYYY-MM-DD'
 date_end: 'YYYY-MM-DD'  # or 'present' for the current role
-stack: ['Ruby on Rails', 'PostgreSQL']  # optional, shown as chips on the job page
+stack: ['Ruby on Rails', 'PostgreSQL']  # optional; only skills listed in src/data/skills.ts
 ---
 
 Bullet points describing responsibilities and impact.
 ```
 
-Entries sort themselves by start date, newest first.
+Entries sort themselves by start date, newest first. Tenure counts calendar months, so it
+matches the `Mon YYYY — Mon YYYY` label next to it.
+
+`src/data/skills.ts` is the one skill list: the resume and CV show it, and a `stack` value that
+isn't in it fails the build.
 
 ### CV
 

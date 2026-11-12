@@ -1,5 +1,4 @@
 ---
-import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
@@ -8,24 +7,23 @@ import profileImage from '../assets/profile.jpg';
 import { AUTHOR, SITE_DESCRIPTION, SOCIALS } from '../consts';
 import { EDUCATION } from '../data/education';
 import { SKILLS } from '../data/skills';
+import { endOf, getJobs, tenureOf } from '../utils/career';
 import { formatSpan, monthsBetween, toISODate, yearsSince } from '../utils/date';
 import type { IrbData } from '../scripts/irb';
 
-const jobs = (await getCollection('jobs')).sort(
-  (a, b) => b.data.date_start.getTime() - a.data.date_start.getTime(),
-);
+const jobs = await getJobs();
 
 const currentJob = jobs.find((job) => job.data.date_end === 'present');
-const age = yearsSince(new Date(AUTHOR.birthDate));
+const age = yearsSince(new Date(AUTHOR.birthMonth));
 
 // Everything time-based is computed at build; the deploy workflow rebuilds monthly.
 const now = new Date();
-const endOf = (job: (typeof jobs)[number]) => (job.data.date_end === 'present' ? now : job.data.date_end);
-const tenure = new Map(jobs.map((job) => [job.id, monthsBetween(job.data.date_start, endOf(job))]));
+const tenure = new Map(jobs.map((job) => [job.id, tenureOf(job)]));
 
 // The career strip: every role drawn to scale between the first start date and today.
 const careerStart = jobs.at(-1)!.data.date_start;
 const careerMonths = monthsBetween(careerStart, now);
+const careerYears = yearsSince(careerStart);
 const toPercent = (date: Date) =>
   ((date.getTime() - careerStart.getTime()) / (now.getTime() - careerStart.getTime())) * 100;
 const segments = [...jobs].reverse().map((job, index, all) => ({
@@ -139,7 +137,7 @@ const resumeSchema = {
   <section class="intro prose">
     <p>
       Hello 👋, I'm <strong>Esteban</strong>, a senior software engineer living in Colombia 🇨🇴. I've
-      spent {Math.floor(careerMonths / 12)}+ years building products with Ruby on Rails: from one of
+      spent {careerYears}+ years building products with Ruby on Rails: from one of
       the first 4 engineers (and later tech lead) at a startup that grew to ~30 engineers, to fintech
       platforms for retirement plans and subscription billing. These days I also build AI tooling
       (MCP servers, agents, Claude Code skills) into how I ship software.

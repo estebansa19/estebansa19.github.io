@@ -11,7 +11,8 @@ export const AUTHOR = {
   location: 'Colombia',
   city: 'Medellín, Colombia',
   email: 'estebansa@outlook.com',
-  birthDate: '2000-05-08',
+  /** Year and month only: enough for the age on the resume. */
+  birthMonth: '2000-05',
 } as const;
 
 /** The CV PDF, printed from `/cv` at build time by `integrations/cv-pdf.mjs`. */
