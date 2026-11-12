@@ -14,11 +14,13 @@ export function toISODate(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
 
-const MS_PER_MONTH = (365.25 / 12) * 24 * 60 * 60 * 1000;
-
-/** Months between two dates, rounded to the nearest whole month (minimum 1). */
+/**
+ * Calendar months from `from`'s month to `to`'s, so "Dec 2018 — Apr 2021" is 28.
+ * Minimum 1, so a role that started this month still shows.
+ */
 export function monthsBetween(from: Date, to: Date): number {
-  return Math.max(1, Math.round((to.getTime() - from.getTime()) / MS_PER_MONTH));
+  const months = (to.getUTCFullYear() - from.getUTCFullYear()) * 12 + to.getUTCMonth() - from.getUTCMonth();
+  return Math.max(1, months);
 }
 
 /** Compact tenure, LinkedIn-style: `2y 3m`, `8m`, `1y`. */

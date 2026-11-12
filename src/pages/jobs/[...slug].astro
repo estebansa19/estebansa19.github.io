@@ -1,14 +1,13 @@
 ---
-import { type CollectionEntry, getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { AUTHOR } from '../../consts';
+import { getJobs, type Job } from '../../utils/career';
 import { toISODate } from '../../utils/date';
 
 export async function getStaticPaths() {
-  const jobs = (await getCollection('jobs')).sort(
-    (a, b) => b.data.date_start.getTime() - a.data.date_start.getTime(),
-  );
+  const jobs = await getJobs();
 
   return jobs.map((job, index) => ({
     params: { slug: job.id },
@@ -17,8 +16,8 @@ export async function getStaticPaths() {
 }
 
 type Props = {
-  job: CollectionEntry<'jobs'>;
-  previous?: CollectionEntry<'jobs'>;
+  job: Job;
+  previous?: Job;
 };
 
 const { job, previous } = Astro.props;

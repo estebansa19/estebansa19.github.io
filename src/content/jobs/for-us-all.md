@@ -6,16 +6,18 @@ summary: 'Rebuilt a legacy 401(k) platform into a clean Rails application, and c
 date_start: '2024-06-01'
 date_end: '2025-09-30'
 stack:
+  - 'Ruby'
   - 'Ruby on Rails'
   - 'ViewComponent'
   - 'PostgreSQL'
   - 'Elasticsearch'
   - 'Sidekiq'
+  - 'Redis'
   - 'RSpec'
   - 'AWS'
   - 'Docker'
   - 'React'
-  - 'Claude'
+  - 'JavaScript'
   - 'Cursor'
 ---
 

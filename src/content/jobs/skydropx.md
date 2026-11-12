@@ -6,13 +6,16 @@ summary: 'Integrations and billing features for a multi-carrier shipping platfor
 date_start: '2021-12-09'
 date_end: '2024-05-30'
 stack:
+  - 'Ruby'
   - 'Ruby on Rails'
   - 'MySQL'
   - 'Sidekiq'
+  - 'Redis'
   - 'RSpec'
   - 'Google Cloud'
   - 'Docker'
   - 'React'
+  - 'JavaScript'
   - 'Next.js'
   - 'TypeScript'
 ---
