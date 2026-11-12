@@ -97,7 +97,8 @@ Entries sort themselves by start date, newest first.
 tracking systems: one column, standard section names, contact details in the body, and dates as
 `Mon YYYY – Mon YYYY`. After every build, `integrations/cv-pdf.mjs` prints that page with
 headless Chromium to `dist/Esteban-Saldarriaga-CV.pdf`, which the page's download button links
-to. The build log reports the PDF's page count and warns when the CV spills onto a second page.
+to. The build log reports the PDF's page count, and the build fails if the CV spills onto a
+second page.
 
 ## SEO & metadata
 

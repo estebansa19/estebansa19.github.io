@@ -48,7 +48,8 @@ export default function cvPdf({ page, output }) {
           const size = `${(pdf.length / 1024).toFixed(0)} KB`;
           const time = `${Math.round(performance.now() - started)}ms`;
           logger.info(`${output} (${pages} ${pages === 1 ? 'page' : 'pages'}, ${size}) in ${time}`);
-          if (pages > 1) logger.warn('The CV no longer fits on one page.');
+          // A CV that spills onto a second page should never ship.
+          if (pages > 1) throw new Error(`${output} is ${pages} pages; the CV must fit on one.`);
         } finally {
           await browser.close();
         }
