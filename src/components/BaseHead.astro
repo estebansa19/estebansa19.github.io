@@ -1,7 +1,7 @@
 ---
 // Imported here so global.css is included on every page that renders <BaseHead />.
 import '../styles/global.css';
-import { SITE_TITLE, AUTHOR, SOCIALS, titleTemplate } from '../consts';
+import { SITE_TITLE, AUTHOR, SOCIAL_CARD, SOCIALS, titleTemplate } from '../consts';
 import { hasPublishedPosts } from '../utils/content';
 import { personId } from '../utils/schema';
 
@@ -22,7 +22,7 @@ interface Props {
 const {
   title,
   description,
-  image = '/images/profile.jpg',
+  image = SOCIAL_CARD.src,
   type = 'website',
   publishedTime,
   modifiedTime,
@@ -119,6 +119,15 @@ const jsonLd = [person, website, ...schema];
 <meta property="og:title" content={documentTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={absoluteImageUrl} />
+{
+  image === SOCIAL_CARD.src && (
+    <>
+      <meta property="og:image:width" content={String(SOCIAL_CARD.width)} />
+      <meta property="og:image:height" content={String(SOCIAL_CARD.height)} />
+      <meta property="og:image:alt" content={SOCIAL_CARD.alt} />
+    </>
+  )
+}
 <meta property="og:site_name" content={SITE_TITLE} />
 <meta property="og:locale" content="en_US" />
 {publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
