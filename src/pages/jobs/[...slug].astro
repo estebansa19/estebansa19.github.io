@@ -4,7 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { AUTHOR } from '../../consts';
 import { getJobs, type Job } from '../../utils/career';
-import { toISODate } from '../../utils/date';
+import { occupationRole, personId } from '../../utils/schema';
 
 export async function getStaticPaths() {
   const jobs = await getJobs();
@@ -22,24 +22,17 @@ type Props = {
 
 const { job, previous } = Astro.props;
 const { Content } = await render(job);
-const { role, company, companyUrl, summary, date_start, date_end, stack } = job.data;
+const { role, company, summary, date_start, date_end, stack } = job.data;
 
 const isCurrent = date_end === 'present';
 const heading = `${role} at ${company}`;
 
 const schema = {
   '@context': 'https://schema.org',
-  '@type': 'Occupation',
-  name: role,
-  occupationLocation: {
-    '@type': 'Organization',
-    name: company,
-    ...(companyUrl && { url: companyUrl }),
-  },
-  startDate: toISODate(date_start),
-  ...(date_end !== 'present' && { endDate: toISODate(date_end) }),
-  description: summary,
-  mainEntityOfPage: { '@type': 'Person', name: AUTHOR.name },
+  '@type': 'Person',
+  '@id': personId(Astro.site!),
+  name: AUTHOR.name,
+  hasOccupation: occupationRole(job),
 };
 ---
 

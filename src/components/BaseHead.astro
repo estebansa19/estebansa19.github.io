@@ -1,7 +1,9 @@
 ---
 // Imported here so global.css is included on every page that renders <BaseHead />.
 import '../styles/global.css';
-import { SITE_TITLE, AUTHOR, titleTemplate } from '../consts';
+import { SITE_TITLE, AUTHOR, SOCIALS, titleTemplate } from '../consts';
+import { hasPublishedPosts } from '../utils/content';
+import { personId } from '../utils/schema';
 
 interface Props {
   title: string;
@@ -29,20 +31,19 @@ const {
 } = Astro.props;
 
 const documentTitle = fullTitle ? title : titleTemplate(title);
+const hasPosts = await hasPublishedPosts();
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const absoluteImageUrl = new URL(image, Astro.site);
 
 const person = {
   '@context': 'https://schema.org',
   '@type': 'Person',
+  '@id': personId(Astro.site!),
   name: AUTHOR.name,
   givenName: AUTHOR.shortName,
   jobTitle: AUTHOR.jobTitle,
   url: Astro.site?.toString(),
-  sameAs: [
-    'https://github.com/estebansa19',
-    'https://www.linkedin.com/in/estebansaldarriaga',
-  ],
+  sameAs: SOCIALS.map((social) => social.href),
   image: new URL('/images/profile.jpg', Astro.site).toString(),
 };
 
@@ -101,12 +102,7 @@ const jsonLd = [person, website, ...schema];
 <link rel="preload" href="/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
 
 <link rel="sitemap" href="/sitemap-index.xml" />
-<link
-  rel="alternate"
-  type="application/rss+xml"
-  title={SITE_TITLE}
-  href={new URL('rss.xml', Astro.site)}
-/>
+{hasPosts && <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href={new URL('rss.xml', Astro.site)} />}
 <meta name="generator" content={Astro.generator} />
 
 <!-- Canonical URL -->

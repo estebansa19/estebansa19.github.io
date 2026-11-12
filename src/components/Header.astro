@@ -2,10 +2,10 @@
 import HeaderLink from './HeaderLink.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import { AUTHOR } from '../consts';
-import { getPosts } from '../utils/content';
+import { hasPublishedPosts } from '../utils/content';
 
 // The blog only appears in the nav once there is something to read.
-const hasPosts = (await getPosts({ includeDrafts: false })).length > 0;
+const hasPosts = await hasPublishedPosts();
 ---
 
 <header class="navbar">
