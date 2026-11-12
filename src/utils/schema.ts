@@ -4,7 +4,7 @@ import { toISODate } from './date';
 /** The `@id` that ties every page's JSON-LD to the same Person. */
 export const personId = (site: URL): string => new URL('/#person', site).href;
 
-/** A dated role, the way schema.org asks for past professions: a Role wrapping the Occupation. */
+/** schema.org puts a past profession's dates on a Role wrapping the Occupation. */
 export const occupationRole = (job: Job) => ({
   '@type': 'Role',
   name: `${job.data.role} at ${job.data.company}`,

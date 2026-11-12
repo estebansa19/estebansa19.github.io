@@ -1,9 +1,5 @@
 ---
-/**
- * The 1200×630 image link previews show. It is a page only so the build can
- * screenshot it with the site's own fonts and data: integrations/snapshots.mjs
- * saves it as SOCIAL_CARD and then removes this page from the output.
- */
+/** Exists only to be screenshotted into SOCIAL_CARD; integrations/snapshots.mjs then removes it. */
 import '../styles/global.css';
 import CareerStrip from '../components/CareerStrip.astro';
 import { AUTHOR } from '../consts';

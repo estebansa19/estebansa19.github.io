@@ -5,22 +5,17 @@ import { fileURLToPath } from 'node:url';
 
 /**
  * @typedef {object} Snapshot
- * @property {string} page Built page to open, e.g. `/cv/`.
- * @property {string} output File written next to the site; `.pdf` is printed, anything else is a PNG screenshot.
- * @property {number} [maxPages] For a PDF: fail the build when it runs longer.
- * @property {{ width: number; height: number }} [viewport] For a screenshot: the image size.
- * @property {boolean} [removePage] Drop the page from the output once captured.
+ * @property {string} page
+ * @property {string} output `.pdf` is printed; anything else is a PNG screenshot.
+ * @property {number} [maxPages]
+ * @property {{ width: number; height: number }} [viewport]
+ * @property {boolean} [removePage]
  */
 
 const ORIGIN = 'http://snapshot.local';
 
 /**
- * Once the site is built, opens built pages in headless Chromium and saves them
- * as files, so each one is always generated from the same content as the site.
- *
- * Nothing is served over the network: Chromium requests a made-up origin and
- * every request is answered straight from the build output.
- *
+ * Saves built pages as files, served straight from dist/, so they always match the site.
  * @param {Snapshot[]} snapshots
  * @returns {import('astro').AstroIntegration}
  */

@@ -12,14 +12,14 @@ export const AUTHOR = {
   location: 'Colombia',
   city: 'Medellín, Colombia',
   email: 'estebansa@outlook.com',
-  /** Year and month only: enough for the age on the resume. */
+  /** Year and month only, for privacy. */
   birthMonth: '2000-05',
 } as const;
 
 /** The CV PDF, printed from `/cv` at build time by `integrations/snapshots.mjs`. */
 export const CV_PDF = '/Esteban-Saldarriaga-CV.pdf';
 
-/** The link-preview image, captured from `/social-card/` at build time by the same integration. */
+/** The link-preview image, screenshotted from `/social-card/` at build time. */
 export const SOCIAL_CARD = {
   src: '/social-card.png',
   width: 1200,
