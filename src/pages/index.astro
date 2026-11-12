@@ -9,7 +9,8 @@ import { AUTHOR, CV_PDF, SITE_DESCRIPTION, SOCIALS } from '../consts';
 import { EDUCATION } from '../data/education';
 import { SKILLS } from '../data/skills';
 import { getJobs, tenureOf } from '../utils/career';
-import { formatSpan, monthsBetween, toISODate, yearsSince } from '../utils/date';
+import { formatSpan, monthsBetween, yearsSince } from '../utils/date';
+import { occupationRole, personId } from '../utils/schema';
 
 const jobs = await getJobs();
 
@@ -36,17 +37,19 @@ const resumeSchema = {
   '@type': 'ProfilePage',
   mainEntity: {
     '@type': 'Person',
+    '@id': personId(Astro.site!),
     name: AUTHOR.name,
     jobTitle: AUTHOR.jobTitle,
     homeLocation: { '@type': 'Place', name: AUTHOR.location },
     knowsAbout: SKILLS,
-    hasOccupation: jobs.map((job) => ({
-      '@type': 'Occupation',
-      name: job.data.role,
-      occupationLocation: { '@type': 'Organization', name: job.data.company },
-      startDate: toISODate(job.data.date_start),
-      ...(job.data.date_end !== 'present' && { endDate: toISODate(job.data.date_end) }),
-    })),
+    hasOccupation: jobs.map(occupationRole),
+    ...(currentJob && {
+      worksFor: {
+        '@type': 'Organization',
+        name: currentJob.data.company,
+        ...(currentJob.data.companyUrl && { url: currentJob.data.companyUrl }),
+      },
+    }),
     alumniOf: EDUCATION.map((entry) => ({
       '@type': 'EducationalOrganization',
       name: entry.institution,

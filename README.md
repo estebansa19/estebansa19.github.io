@@ -68,8 +68,8 @@ Hero images are referenced **relative to the post file**, not from `public/`, so
 resize them and emit modern formats. Drop the original in next to the post — no manual resizing.
 
 Drafts are visible with `npm run dev` but are excluded from the built pages, the RSS feed and
-the nav link. While the blog has no published posts, the Blog link is hidden from the header
-automatically.
+the nav link. While the blog has no published posts, its nav link, the feed links and its sitemap
+entry are left out automatically.
 
 ### Jobs (experience)
 
@@ -107,8 +107,9 @@ second page.
 ## SEO & metadata
 
 - Site-wide metadata lives in `src/consts.ts` and is rendered by `src/components/BaseHead.astro`.
-- Every page emits `Person` and `WebSite` JSON-LD; the resume adds `ProfilePage` with one
-  `Occupation` per job, and posts add `BlogPosting`.
+- Every page emits `Person` and `WebSite` JSON-LD. The resume adds `ProfilePage`, job pages add
+  their role, and both point at the same `Person` by `@id`. Each role is a dated `Role` wrapping an
+  `Occupation`, as schema.org asks for past professions. Posts add `BlogPosting`.
 - Page titles use the `Page — Esteban` template; the home page supplies its own full title.
 - `sitemap-index.xml` and `rss.xml` are generated at build time. The 404 page is excluded from the sitemap.
 

@@ -1,9 +1,9 @@
 ---
 import { SOCIALS, AUTHOR } from '../consts';
-import { getPosts } from '../utils/content';
+import { hasPublishedPosts } from '../utils/content';
 
 const year = new Date().getFullYear();
-const hasPosts = (await getPosts({ includeDrafts: false })).length > 0;
+const hasPosts = await hasPublishedPosts();
 ---
 
 <footer>
