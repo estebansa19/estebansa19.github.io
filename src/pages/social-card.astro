@@ -1,0 +1,148 @@
+---
+/**
+ * The 1200×630 image link previews show. It is a page only so the build can
+ * screenshot it with the site's own fonts and data: integrations/snapshots.mjs
+ * saves it as SOCIAL_CARD and then removes this page from the output.
+ */
+import '../styles/global.css';
+import CareerStrip from '../components/CareerStrip.astro';
+import { AUTHOR } from '../consts';
+import { getJobs } from '../utils/career';
+import { formatSpan, monthsBetween } from '../utils/date';
+
+const jobs = await getJobs();
+const currentJob = jobs.find((job) => job.data.date_end === 'present');
+const careerMonths = monthsBetween(jobs.at(-1)!.data.date_start, new Date());
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>Social card</title>
+  </head>
+  <body>
+    <main class="card">
+      <header class="who">
+        <img class="portrait" src="/images/profile.jpg" alt="" width="152" height="152" />
+        <div>
+          <h1>{AUTHOR.name}</h1>
+          {
+            currentJob && (
+              <p class="status">
+                <span class="dot" />
+                {currentJob.data.role} · {currentJob.data.company}
+              </p>
+            )
+          }
+          <p class="focus">{AUTHOR.focus}</p>
+        </div>
+      </header>
+
+      <section class="career">
+        <p class="label">
+          <span>Experience</span>
+          <span class="aside">{formatSpan(careerMonths)} and counting</span>
+        </p>
+        <CareerStrip jobs={jobs} />
+      </section>
+
+      <footer class="site">
+        <img src="/favicon.svg" alt="" width="30" height="30" />
+        {new URL(Astro.site!).host}
+      </footer>
+    </main>
+  </body>
+</html>
+
+<style>
+  body {
+    display: block;
+    min-height: 0;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 1200px;
+    height: 630px;
+    max-width: none;
+    padding: 72px 80px 56px;
+    border-top: 8px solid var(--accent);
+  }
+
+  .who {
+    display: flex;
+    align-items: center;
+    gap: 44px;
+  }
+
+  .portrait {
+    width: 152px;
+    height: 152px;
+    object-fit: cover;
+    object-position: center top;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    filter: grayscale(1) contrast(1.05);
+  }
+
+  h1 {
+    margin: 0 0 18px;
+    font-size: 50px;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    white-space: nowrap;
+  }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 10px;
+    font-size: 24px;
+  }
+
+  .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 999px;
+    background: var(--accent);
+  }
+
+  .focus {
+    margin: 0;
+    font-size: 21px;
+    color: var(--muted);
+  }
+
+  .career {
+    --strip-height: 18px;
+    --strip-tick-size: 15px;
+  }
+
+  .label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 0 0 16px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .aside {
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  .site {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 20px;
+    color: var(--muted);
+  }
+</style>

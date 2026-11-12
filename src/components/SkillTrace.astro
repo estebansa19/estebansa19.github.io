@@ -1,0 +1,164 @@
+---
+/**
+ * The skill list as toggles: picking one dims every role on the page that
+ * didn't use it (anything with a `data-job`) and says how long I've used it.
+ */
+import { SKILLS } from '../data/skills';
+import { type Job, tenureOf } from '../utils/career';
+import { formatSpan } from '../utils/date';
+
+interface Props {
+  /** Newest first, as `getJobs()` returns them. */
+  jobs: Job[];
+}
+
+const { jobs } = Astro.props;
+const monthYear = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+
+const skills = SKILLS.map((skill) => {
+  const roles = jobs.filter((job) => job.data.stack?.includes(skill));
+  if (!roles.length) throw new Error(`"${skill}" is in src/data/skills.ts but in no job's stack.`);
+
+  const span = formatSpan(roles.reduce((months, job) => months + tenureOf(job), 0));
+  const where =
+    roles.length === 1 ? 'in one role' : roles.length === jobs.length ? `across all ${roles.length} roles` : `across ${roles.length} roles`;
+  const { date_end } = roles[0].data;
+  const when = date_end === 'present' ? 'and still using it' : `last in ${monthYear.format(date_end)}`;
+  return { skill, jobs: roles.map((job) => job.id).join(' '), summary: `${span} ${where}, ${when}.` };
+});
+---
+
+<div class="skill-trace">
+  <ul class="chips">
+    {
+      skills.map(({ skill, jobs, summary }) => (
+        <li>
+          <button type="button" class="chip" data-skill={skill} data-jobs={jobs} data-summary={summary}>
+            {skill}
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+  <!-- Revealed by the script, so it never promises an interaction that can't happen. -->
+  <p class="readout" data-readout aria-live="polite" hidden>
+    <span data-readout-text>Pick a skill to see where I've used it, and for how long.</span>
+    <button type="button" class="clear" data-readout-clear hidden>clear</button>
+  </p>
+</div>
+
+<script>
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-skill]')];
+  const readout = document.querySelector<HTMLElement>('[data-readout]');
+  const text = readout?.querySelector<HTMLElement>('[data-readout-text]');
+  const clear = readout?.querySelector<HTMLButtonElement>('[data-readout-clear]');
+
+  if (readout && text && clear) {
+    const hint = text.textContent ?? '';
+    // Career strip segments and timeline roles.
+    const roles = document.querySelectorAll<HTMLElement>('[data-job]');
+    let current: HTMLButtonElement | null = null;
+
+    const trace = (chip: HTMLButtonElement | null) => {
+      current = chip;
+      const used = chip?.dataset.jobs?.split(' ');
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+      roles.forEach((role) => {
+        const isUsed = used?.includes(role.dataset.job ?? '') ?? false;
+        role.classList.toggle('is-traced', Boolean(used) && isUsed);
+        role.classList.toggle('is-dimmed', Boolean(used) && !isUsed);
+      });
+      if (chip) {
+        const name = document.createElement('strong');
+        name.textContent = chip.dataset.skill ?? '';
+        text.replaceChildren(name, `: ${chip.dataset.summary}`);
+      } else {
+        text.replaceChildren(hint);
+      }
+      clear.hidden = !chip;
+    };
+
+    chips.forEach((chip) => chip.addEventListener('click', () => trace(chip === current ? null : chip)));
+    clear.addEventListener('click', () => {
+      current?.focus();
+      trace(null);
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && current) trace(null);
+    });
+    trace(null);
+    readout.hidden = false;
+  }
+</script>
+
+<style>
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .chip {
+    padding: 0.4rem 0.55rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    background: none;
+    color: var(--text);
+    font: inherit;
+    font-size: 0.75rem;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      border-color 0.18s ease,
+      color 0.18s ease,
+      background 0.18s ease;
+  }
+
+  .chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .chip[aria-pressed='true'] {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-contrast);
+  }
+
+  .readout {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+    margin: 0.875rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .readout[hidden],
+  .clear[hidden] {
+    display: none;
+  }
+
+  .readout :global(strong) {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .clear {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--accent);
+    font: inherit;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+
+  .clear:hover {
+    text-decoration: underline;
+  }
+</style>

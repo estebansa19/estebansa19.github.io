@@ -15,11 +15,14 @@
     "@astrojs/mdx": "^7.0.7",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
-    "astro": "^7.3.8"
+    "astro": "^7.4.11"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.10",
+    "@astrojs/check": "^0.9.12",
     "playwright": "1.63.0",
     "typescript": "^6.0.3"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }

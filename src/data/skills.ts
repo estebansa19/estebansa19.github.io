@@ -1,10 +1,11 @@
 /**
- * Tech stack, grouped for the CV. The resume shows the same list flattened.
+ * The one skill vocabulary: grouped for the CV, flattened for the resume, and
+ * the only values a job's `stack` may use (enforced in src/content.config.ts).
  */
-export const SKILL_GROUPS: { label: string; items: string[] }[] = [
+export const SKILL_GROUPS = [
   {
     label: 'Languages & frameworks',
-    items: ['Ruby', 'Ruby on Rails', 'RSpec', 'ViewComponent', 'TypeScript', 'JavaScript', 'React'],
+    items: ['Ruby', 'Ruby on Rails', 'RSpec', 'ViewComponent', 'TypeScript', 'JavaScript', 'React', 'Next.js'],
   },
   {
     label: 'Data & infrastructure',
@@ -12,8 +13,10 @@ export const SKILL_GROUPS: { label: string; items: string[] }[] = [
   },
   {
     label: 'AI tooling',
-    items: ['Claude Code', 'MCP', 'AI Agents'],
+    items: ['Claude Code', 'Cursor', 'MCP', 'AI Agents'],
   },
-];
+] as const;
 
-export const SKILLS: string[] = SKILL_GROUPS.flatMap((group) => group.items);
+export type Skill = (typeof SKILL_GROUPS)[number]['items'][number];
+
+export const SKILLS: Skill[] = SKILL_GROUPS.flatMap((group) => group.items);

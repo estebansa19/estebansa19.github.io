@@ -8,14 +8,24 @@ export const AUTHOR = {
   name: 'Esteban Saldarriaga Alzate',
   shortName: 'Esteban',
   jobTitle: 'Senior Software Engineer',
+  focus: 'Ruby on Rails · AI Agents & MCP',
   location: 'Colombia',
   city: 'Medellín, Colombia',
   email: 'estebansa@outlook.com',
-  birthDate: '2000-05-08',
+  /** Year and month only: enough for the age on the resume. */
+  birthMonth: '2000-05',
 } as const;
 
-/** The CV PDF, printed from `/cv` at build time by `integrations/cv-pdf.mjs`. */
+/** The CV PDF, printed from `/cv` at build time by `integrations/snapshots.mjs`. */
 export const CV_PDF = '/Esteban-Saldarriaga-CV.pdf';
+
+/** The link-preview image, captured from `/social-card/` at build time by the same integration. */
+export const SOCIAL_CARD = {
+  src: '/social-card.png',
+  width: 1200,
+  height: 630,
+  alt: `${AUTHOR.name}, ${AUTHOR.jobTitle}, with every role drawn to scale on a timeline`,
+};
 
 export const SOCIALS = [
   { label: 'GitHub', href: 'https://github.com/estebansa19' },

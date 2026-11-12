@@ -2,19 +2,19 @@
 import HeaderLink from './HeaderLink.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import { AUTHOR } from '../consts';
-import { getPosts } from '../utils/content';
+import { hasPublishedPosts } from '../utils/content';
 
 // The blog only appears in the nav once there is something to read.
-const hasPosts = (await getPosts({ includeDrafts: false })).length > 0;
+const hasPosts = await hasPublishedPosts();
 ---
 
 <header class="navbar">
   <nav aria-label="Main">
     <a href="/" class="wordmark">{AUTHOR.shortName}</a>
     <div class="nav-right">
-      <HeaderLink href="/">resume</HeaderLink>
-      <HeaderLink href="/cv">cv</HeaderLink>
-      {hasPosts && <HeaderLink href="/blog">blog</HeaderLink>}
+      <HeaderLink href="/" sections={['jobs']}>resume</HeaderLink>
+      <HeaderLink href="/cv/">cv</HeaderLink>
+      {hasPosts && <HeaderLink href="/blog/">blog</HeaderLink>}
       <ThemeToggle />
     </div>
   </nav>
