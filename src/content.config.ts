@@ -1,6 +1,7 @@
 import { glob } from 'astro/loaders';
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
+import { SKILLS } from './data/skills';
 
 const blog = defineCollection({
   loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
@@ -27,8 +28,8 @@ const jobs = defineCollection({
     date_start: z.coerce.date(),
     // `'present'` marks the current role; anything else is parsed as a date.
     date_end: z.union([z.literal('present'), z.coerce.date()]),
-    /** Technologies used in the role, shown as chips on the job page. */
-    stack: z.array(z.string()).optional(),
+    /** Technologies used in the role, from the skill list in src/data/skills.ts. */
+    stack: z.array(z.enum(SKILLS)).optional(),
   }),
 });
 

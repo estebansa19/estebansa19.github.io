@@ -6,16 +6,20 @@ summary: 'Billing features for a subscription platform used by thousands of bran
 date_start: '2025-10-01'
 date_end: 'present'
 stack:
+  - 'Ruby'
   - 'Ruby on Rails'
   - 'React'
+  - 'JavaScript'
   - 'TypeScript'
   - 'PostgreSQL'
   - 'Elasticsearch'
   - 'Sidekiq'
+  - 'Redis'
   - 'RSpec'
   - 'Docker'
   - 'Claude Code'
   - 'MCP'
+  - 'AI Agents'
 ---
 
 * Build and maintain billing features in Ruby on Rails, React and TypeScript that merchants rely on to charge customers and collect recurring revenue.

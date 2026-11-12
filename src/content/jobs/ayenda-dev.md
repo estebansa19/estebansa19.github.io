@@ -6,12 +6,15 @@ summary: 'One of the first 4 engineers, building the platform behind a hotel cha
 date_start: '2018-12-26'
 date_end: '2021-04-01'
 stack:
+  - 'Ruby'
   - 'Ruby on Rails'
   - 'PostgreSQL'
   - 'MySQL'
   - 'Sidekiq'
+  - 'Redis'
   - 'RSpec'
   - 'React'
+  - 'JavaScript'
 ---
 
 * Joined as one of the first 4 engineers and built the booking and hotel-operations backend as the chain scaled from ~10 hotels to nearly 500 across Colombia, Peru and Mexico.

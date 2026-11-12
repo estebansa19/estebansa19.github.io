@@ -6,12 +6,15 @@ summary: 'Promoted to lead a team of 5 backend engineers, owning architecture de
 date_start: '2021-04-05'
 date_end: '2021-12-06'
 stack:
+  - 'Ruby'
   - 'Ruby on Rails'
   - 'PostgreSQL'
   - 'MySQL'
   - 'Sidekiq'
+  - 'Redis'
   - 'RSpec'
   - 'React'
+  - 'JavaScript'
 ---
 
 * Promoted from Backend Engineer to lead a team of 5 engineers, working side by side with the product owner to decide and prioritize what we built.

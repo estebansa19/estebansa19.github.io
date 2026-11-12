@@ -8,7 +8,8 @@ Personal resume and blog for Esteban Saldarriaga Alzate. Built with Astro, conte
 ## Project structure
 
 ```text
-public/                  # Static assets served as-is (favicon, fonts, manifest, robots, OG image)
+integrations/            # Build steps: snapshots.mjs prints the CV PDF and the social card
+public/                  # Static assets served as-is (favicon, fonts, manifest, robots, profile photo)
 src/
   assets/                # Images processed & optimised by Astro at build time
   components/            # Reusable UI components
@@ -28,6 +29,8 @@ astro.config.mjs
 Every page renders through `BaseLayout.astro`, so `<head>`, the header and the footer are defined in exactly one place.
 
 ## Local development
+
+Needs Node 24 or newer (`engines` in `package.json`); CI builds with Node 24.
 
 ```sh
 npm install
@@ -66,8 +69,8 @@ Hero images are referenced **relative to the post file**, not from `public/`, so
 resize them and emit modern formats. Drop the original in next to the post — no manual resizing.
 
 Drafts are visible with `npm run dev` but are excluded from the built pages, the RSS feed and
-the nav link. While the blog has no published posts, the Blog link is hidden from the header
-automatically.
+the nav link. While the blog has no published posts, its nav link, the feed links and its sitemap
+entry are left out automatically.
 
 ### Jobs (experience)
 
@@ -81,28 +84,37 @@ companyUrl: 'https://example.com'  # optional
 summary: 'One line shown on the resume index'  # optional
 date_start: 'YYYY-MM-DD'
 date_end: 'YYYY-MM-DD'  # or 'present' for the current role
-stack: ['Ruby on Rails', 'PostgreSQL']  # optional, shown as chips on the job page
+stack: ['Ruby on Rails', 'PostgreSQL']  # optional; only skills listed in src/data/skills.ts
 ---
 
 Bullet points describing responsibilities and impact.
 ```
 
-Entries sort themselves by start date, newest first.
+Entries sort themselves by start date, newest first. Tenure counts calendar months, so it
+matches the `Mon YYYY — Mon YYYY` label next to it.
+
+`src/data/skills.ts` is the one skill list: the resume and CV show it, and a `stack` value that
+isn't in it fails the build.
 
 ### CV
 
 `/cv` renders the same jobs, skills and education as a one-page CV laid out for applicant
 tracking systems: one column, standard section names, contact details in the body, and dates as
-`Mon YYYY – Mon YYYY`. After every build, `integrations/cv-pdf.mjs` prints that page with
+`Mon YYYY – Mon YYYY`. After every build, `integrations/snapshots.mjs` prints that page with
 headless Chromium to `dist/Esteban-Saldarriaga-CV.pdf`, which the page's download button links
-to. The build log reports the PDF's page count and warns when the CV spills onto a second page.
+to. The build log reports the PDF's page count, and the build fails if the CV spills onto a
+second page.
 
 ## SEO & metadata
 
 - Site-wide metadata lives in `src/consts.ts` and is rendered by `src/components/BaseHead.astro`.
-- Every page emits `Person` and `WebSite` JSON-LD; the resume adds `ProfilePage` with one
-  `Occupation` per job, and posts add `BlogPosting`.
+- Every page emits `Person` and `WebSite` JSON-LD. The resume adds `ProfilePage`, job pages add
+  their role, and both point at the same `Person` by `@id`. Each role is a dated `Role` wrapping an
+  `Occupation`, as schema.org asks for past professions. Posts add `BlogPosting`.
 - Page titles use the `Page — Esteban` template; the home page supplies its own full title.
+- Link previews use `social-card.png`, 1200×630. The same integration screenshots
+  `src/pages/social-card.astro` after each build, so the card always shows the current role and
+  career strip, and then removes that page from the output. Blog posts with a hero image use it instead.
 - `sitemap-index.xml` and `rss.xml` are generated at build time. The 404 page is excluded from the sitemap.
 
 ## Design
@@ -114,8 +126,13 @@ IBM Plex Sans, because a monospace body is tiring to read at article length.
 Both are variable fonts, latin subset, self-hosted from `public/fonts/` and preloaded — no
 request ever leaves the site for a font.
 
-The resume runs in two columns: the experience timeline on the left, a sticky sidebar with
-skills and education on the right. Experience is a hairline rail with a dot per role — the
+The resume runs in two columns: skills and the experience timeline on the left, a sticky
+sidebar with education and contact details on the right. Each skill is a toggle: picking one
+dims every role that didn't use it, in both the career strip and the timeline, and a line under
+the list says how long it was used, summed from those roles. Every skill must appear in at least
+one job's `stack`, or the build fails.
+
+Experience is a hairline rail with a dot per role — the
 current role's dot is filled solid in the accent colour, past roles are hollow and fill on
 hover. One accent colour site-wide: ruby red, the same gem as the favicon.
 
