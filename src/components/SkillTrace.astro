@@ -13,7 +13,7 @@ const { jobs } = Astro.props;
 const monthYear = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 
 const skills = SKILLS.map((skill) => {
-  const roles = jobs.filter((job) => job.data.stack?.includes(skill));
+  const roles = jobs.filter((job) => job.data.stack.includes(skill));
   if (!roles.length) throw new Error(`"${skill}" is in src/data/skills.ts but in no job's stack.`);
 
   const span = formatSpan(roles.reduce((months, job) => months + tenureOf(job), 0));
