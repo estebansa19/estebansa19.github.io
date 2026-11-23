@@ -2,7 +2,7 @@
 /** Picking a skill dims every `data-job` element on the page whose role didn't use it. */
 import { SKILLS } from '../data/skills';
 import { type Job, tenureOf } from '../utils/career';
-import { formatSpan } from '../utils/date';
+import { formatSpan, monthYear } from '../utils/date';
 
 interface Props {
   /** Newest first, as `getJobs()` returns them. */
@@ -10,7 +10,6 @@ interface Props {
 }
 
 const { jobs } = Astro.props;
-const monthYear = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 
 const skills = SKILLS.map((skill) => {
   const roles = jobs.filter((job) => job.data.stack.includes(skill));

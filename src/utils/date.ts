@@ -9,6 +9,9 @@ export function yearsSince(date: Date): number {
   return years;
 }
 
+/** `Jan 2025`; UTC so a first-of-month date never slips into the previous month. */
+export const monthYear = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+
 /** ISO `YYYY-MM-DD`, the format schema.org and <time datetime> expect. */
 export function toISODate(date: Date): string {
   return date.toISOString().slice(0, 10);
