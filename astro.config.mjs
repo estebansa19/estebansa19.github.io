@@ -39,5 +39,4 @@ export default defineConfig({
       assetsInlineLimit: (filePath) => (filePath.endsWith('.js') ? true : undefined),
     },
   },
-  trailingSlash: 'ignore',
 });
