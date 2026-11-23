@@ -13,7 +13,6 @@ import { occupationRole, personId } from '../utils/schema';
 const jobs = await getJobs();
 
 const currentJob = jobs.find((job) => job.data.date_end === 'present');
-const age = yearsSince(new Date(AUTHOR.birthMonth));
 
 // Everything time-based is computed at build; the deploy workflow rebuilds monthly.
 const careerStart = jobs.at(-1)!.data.date_start;
@@ -104,14 +103,6 @@ const resumeSchema = {
       engineers (and later tech lead) at a startup that grew to ~30 engineers, to fintech platforms
       for retirement plans and subscription billing. These days I also build AI tooling (MCP
       servers, agents, Claude Code skills) into how I ship software.
-    </p>
-    <p>
-      I'm {age} years old, a Ruby/Ruby on Rails lover; Ruby is my main programming language, but I
-      like JavaScript as well (in fact, this resume has been built with JavaScript).
-    </p>
-    <p>
-      I enjoy reading and watching movies, series and anime. I like to have a few beers once in a
-      while as well :)
     </p>
   </section>
 

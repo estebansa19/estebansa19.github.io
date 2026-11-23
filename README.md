@@ -3,7 +3,7 @@
 My resume, one-page CV and blog, live at https://estebansa19.github.io/.
 
 Built with Astro and deployed to GitHub Pages on every push to `main`. It also rebuilds on the
-1st of each month, so my age and tenure stay current.
+1st of each month, so my tenure stays current.
 
 ## Run it
 

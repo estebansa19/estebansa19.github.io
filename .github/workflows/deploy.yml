@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-  # Monthly rebuild: age, tenure and the career strip are computed at build time.
+  # Monthly rebuild: tenure and the career strip are computed at build time.
   # GitHub pauses schedules after 60 idle days; re-enable with: gh workflow enable deploy.yml
   schedule:
     - cron: '0 6 1 * *'

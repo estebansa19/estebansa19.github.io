@@ -12,8 +12,6 @@ export const AUTHOR = {
   location: 'Colombia',
   city: 'Medellín, Colombia',
   email: 'estebansa@outlook.com',
-  /** Year and month only, for privacy. */
-  birthMonth: '2000-05',
 } as const;
 
 /** The CV PDF, printed from `/cv` at build time by `integrations/snapshots.mjs`. */
