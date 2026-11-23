@@ -13,7 +13,6 @@ import { occupationRole, personId } from '../utils/schema';
 const jobs = await getJobs();
 
 const currentJob = jobs.find((job) => job.data.date_end === 'present');
-const age = yearsSince(new Date(AUTHOR.birthMonth));
 
 // Everything time-based is computed at build; the deploy workflow rebuilds monthly.
 const careerStart = jobs.at(-1)!.data.date_start;
@@ -86,13 +85,7 @@ const resumeSchema = {
           {AUTHOR.location} — <span data-local-time>UTC−5</span>
         </span>
         <span class="sep" aria-hidden="true">/</span>
-        {
-          SOCIALS.map((social) => (
-            <a href={social.href} target="_blank" rel="me noopener noreferrer">
-              {social.label}
-            </a>
-          ))
-        }
+        <a href={`mailto:${AUTHOR.email}`}>{AUTHOR.email}</a>
       </p>
     </div>
   </header>
@@ -106,10 +99,6 @@ const resumeSchema = {
       servers, agents, Claude Code skills) into how I ship software.
     </p>
     <p>
-      I'm {age} years old, a Ruby/Ruby on Rails lover; Ruby is my main programming language, but I
-      like JavaScript as well (in fact, this resume has been built with JavaScript).
-    </p>
-    <p>
       I enjoy reading and watching movies, series and anime. I like to have a few beers once in a
       while as well :)
     </p>
@@ -117,10 +106,7 @@ const resumeSchema = {
 
   <div class="columns">
     <div class="main-col">
-      <h2 class="section-head">Skills</h2>
-      <SkillTrace jobs={jobs} />
-
-      <h2 class="section-head section-head--gap">
+      <h2 class="section-head">
         Experience <span class="section-aside">{formatSpan(careerMonths)} and counting</span>
       </h2>
 
@@ -171,6 +157,9 @@ const resumeSchema = {
           })
         }
       </ol>
+
+      <h2 class="section-head section-head--gap">Skills</h2>
+      <SkillTrace jobs={jobs} />
     </div>
 
     <aside class="side">
@@ -253,8 +242,8 @@ const resumeSchema = {
 
 <style>
   /*
-    Resume shell: a display-scale name over a two-column grid — skills and the
-    experience timeline on the left, education and contact in a sticky sidebar.
+    Resume shell: a display-scale name over a two-column grid — the experience
+    timeline and skills on the left, education and contact in a sticky sidebar.
     Section heads are sentence-case with a hairline, never wide-tracked eyebrows.
   */
   .hero {
@@ -593,6 +582,16 @@ const resumeSchema = {
     .portrait {
       width: 88px;
       height: 88px;
+    }
+
+    .meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+
+    .sep {
+      display: none;
     }
 
     .columns {

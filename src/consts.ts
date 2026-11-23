@@ -1,6 +1,5 @@
 // Global site configuration. Imported anywhere via `import { ... } from '../consts'`.
 
-export const SITE_TITLE = "Esteban's Website";
 export const SITE_DESCRIPTION =
   'Software engineer resume and blog by Esteban Saldarriaga Alzate.';
 
@@ -12,8 +11,6 @@ export const AUTHOR = {
   location: 'Colombia',
   city: 'Medellín, Colombia',
   email: 'estebansa@outlook.com',
-  /** Year and month only, for privacy. */
-  birthMonth: '2000-05',
 } as const;
 
 /** The CV PDF, printed from `/cv` at build time by `integrations/snapshots.mjs`. */
