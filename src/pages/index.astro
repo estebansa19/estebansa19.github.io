@@ -1,10 +1,8 @@
 ---
-import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CareerStrip from '../components/CareerStrip.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import SkillTrace from '../components/SkillTrace.astro';
-import profileImage from '../assets/profile.jpg';
 import { AUTHOR, CV_PDF, SITE_DESCRIPTION, SOCIALS } from '../consts';
 import { EDUCATION } from '../data/education';
 import { SKILLS } from '../data/skills';
@@ -66,14 +64,13 @@ const resumeSchema = {
   schema={[resumeSchema]}
 >
   <header class="hero">
-    <Image
-      src={profileImage}
+    <img
+      src="/images/profile.jpg"
       alt={`Portrait of ${AUTHOR.name}`}
       class="portrait"
-      loading="eager"
+      width="120"
+      height="120"
       fetchpriority="high"
-      widths={[120, 240]}
-      sizes="120px"
     />
     <div class="identity">
       <h1>{AUTHOR.name}</h1>
