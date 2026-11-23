@@ -1,6 +1,5 @@
 // Global site configuration. Imported anywhere via `import { ... } from '../consts'`.
 
-export const SITE_TITLE = "Esteban's Website";
 export const SITE_DESCRIPTION =
   'Software engineer resume and blog by Esteban Saldarriaga Alzate.';
 
