@@ -28,12 +28,9 @@ export const SOCIAL_CARD = {
 };
 
 export const SOCIALS = [
-  { label: 'GitHub', href: 'https://github.com/estebansa19' },
+  { label: 'github', href: 'https://github.com/estebansa19' },
   {
-    label: 'LinkedIn',
+    label: 'linkedin',
     href: 'https://www.linkedin.com/in/estebansaldarriaga',
   },
 ] as const;
-
-/** `<title>` for every page except the home page, which uses its own full title. */
-export const titleTemplate = (title: string) => `${title} — ${AUTHOR.shortName}`;

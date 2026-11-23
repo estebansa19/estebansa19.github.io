@@ -38,7 +38,7 @@ const schema = {
 
 <BaseLayout
   title={heading}
-  description={summary ?? `${role} at ${company} — part of ${AUTHOR.name}'s resume.`}
+  description={summary}
   schema={[schema]}
 >
   <a href="/" class="back">
@@ -72,7 +72,7 @@ const schema = {
 
     <p class="period">
       <FormattedDate date={date_start} format="short" />
-      {' — '}
+      {' – '}
       <FormattedDate date={date_end} format="short" />
     </p>
 
@@ -82,16 +82,12 @@ const schema = {
       <Content />
     </div>
 
-    {
-      stack && stack.length > 0 && (
-        <section class="stack" aria-label="Stack">
-          <p class="stack-label">Stack</p>
-          <ul class="chips">
-            {stack.map((tech) => <li>{tech}</li>)}
-          </ul>
-        </section>
-      )
-    }
+    <section class="stack" aria-label="Stack">
+      <p class="stack-label">Stack</p>
+      <ul class="chips">
+        {stack.map((tech) => <li>{tech}</li>)}
+      </ul>
+    </section>
   </article>
 
   {

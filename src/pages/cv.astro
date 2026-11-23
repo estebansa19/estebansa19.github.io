@@ -5,7 +5,7 @@ import { AUTHOR, CV_PDF, SOCIALS } from '../consts';
 import { EDUCATION } from '../data/education';
 import { SKILL_GROUPS } from '../data/skills';
 import { getJobs } from '../utils/career';
-import { yearsSince } from '../utils/date';
+import { monthYear, yearsSince } from '../utils/date';
 
 /*
   The CV is built for applicant tracking systems first: one column, plain
@@ -17,7 +17,6 @@ const jobs = await getJobs();
 const roles = await Promise.all(jobs.map(async (job) => ({ job, Content: (await render(job)).Content })));
 const years = yearsSince(jobs.at(-1)!.data.date_start);
 
-const monthYear = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 const period = (start: Date, end: Date | 'present') =>
   `${monthYear.format(start)} – ${end === 'present' ? 'Present' : monthYear.format(end)}`;
 
@@ -103,8 +102,7 @@ const education = EDUCATION.filter((entry) => entry.cvTitle);
             <h3>
               {entry.cvTitle}, <span class="company">{entry.institution}</span>
             </h3>
-            {/* The resume's em dash becomes the en dash parsers expect in a range. */}
-            <span class="dates">{entry.period?.replace('—', '–')}</span>
+            <span class="dates">{entry.period}</span>
           </div>
         ))
       }

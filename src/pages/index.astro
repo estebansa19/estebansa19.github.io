@@ -1,11 +1,9 @@
 ---
-import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CareerStrip from '../components/CareerStrip.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import SkillTrace from '../components/SkillTrace.astro';
-import profileImage from '../assets/profile.jpg';
-import { AUTHOR, CV_PDF, SITE_DESCRIPTION, SOCIALS } from '../consts';
+import { AUTHOR, CV_PDF, SOCIALS } from '../consts';
 import { EDUCATION } from '../data/education';
 import { SKILLS } from '../data/skills';
 import { getJobs, tenureOf } from '../utils/career';
@@ -26,7 +24,7 @@ const careerYears = yearsSince(careerStart);
 const contact = [
   { label: 'email', href: `mailto:${AUTHOR.email}`, text: AUTHOR.email },
   ...SOCIALS.map((social) => ({
-    label: social.label.toLowerCase(),
+    label: social.label,
     href: social.href,
     text: new URL(social.href).pathname.slice(1),
   })),
@@ -61,19 +59,17 @@ const resumeSchema = {
 
 <BaseLayout
   title={`${AUTHOR.name} — ${AUTHOR.jobTitle}`}
-  description={SITE_DESCRIPTION}
   fullTitle
   schema={[resumeSchema]}
 >
   <header class="hero">
-    <Image
-      src={profileImage}
+    <img
+      src="/images/profile.jpg"
       alt={`Portrait of ${AUTHOR.name}`}
       class="portrait"
-      loading="eager"
+      width="120"
+      height="120"
       fetchpriority="high"
-      widths={[120, 240]}
-      sizes="120px"
     />
     <div class="identity">
       <h1>{AUTHOR.name}</h1>
@@ -93,7 +89,7 @@ const resumeSchema = {
         {
           SOCIALS.map((social) => (
             <a href={social.href} target="_blank" rel="me noopener noreferrer">
-              {social.label.toLowerCase()}
+              {social.label}
             </a>
           ))
         }
@@ -147,13 +143,13 @@ const resumeSchema = {
                   <span class="entry">
                     <span class="period">
                       <FormattedDate date={job.data.date_start} format="short" />
-                      {' — '}
+                      {' – '}
                       <FormattedDate date={job.data.date_end} format="short" />
                       <span class="tenure">{formatSpan(tenureOf(job))}</span>
                     </span>
                     <span class="role">{job.data.role}</span>
                     <span class="company">{job.data.company}</span>
-                    {job.data.summary && <span class="summary">{job.data.summary}</span>}
+                    <span class="summary">{job.data.summary}</span>
                   </span>
                   <svg
                     class="arrow"

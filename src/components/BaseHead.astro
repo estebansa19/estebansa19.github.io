@@ -1,13 +1,13 @@
 ---
 // Imported here so global.css is included on every page that renders <BaseHead />.
 import '../styles/global.css';
-import { SITE_TITLE, AUTHOR, SOCIAL_CARD, SOCIALS, titleTemplate } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, AUTHOR, SOCIAL_CARD, SOCIALS } from '../consts';
 import { hasPublishedPosts } from '../utils/content';
 import { personId } from '../utils/schema';
 
 interface Props {
   title: string;
-  description: string;
+  description?: string;
   /** Site-relative or absolute URL used for og:image / twitter:image. */
   image?: string;
   type?: 'website' | 'article';
@@ -21,7 +21,7 @@ interface Props {
 
 const {
   title,
-  description,
+  description = SITE_DESCRIPTION,
   image = SOCIAL_CARD.src,
   type = 'website',
   publishedTime,
@@ -30,7 +30,7 @@ const {
   fullTitle = false,
 } = Astro.props;
 
-const documentTitle = fullTitle ? title : titleTemplate(title);
+const documentTitle = fullTitle ? title : `${title} — ${AUTHOR.shortName}`;
 const hasPosts = await hasPublishedPosts();
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const absoluteImageUrl = new URL(image, Astro.site);
@@ -63,7 +63,6 @@ const jsonLd = [person, website, ...schema];
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="manifest" href="/site.webmanifest" />
-<meta name="robots" content="index, follow" />
 <meta name="theme-color" content="#f7f9fa" />
 
 {/*

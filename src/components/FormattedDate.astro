@@ -3,6 +3,8 @@
  * Renders a date as a machine-readable <time>. Accepts the literal `'present'`
  * used by the current job, which has no end date to mark up.
  */
+import { monthYear, toISODate } from '../utils/date';
+
 interface Props {
   date: Date | 'present';
   /** `long` → "January 5, 2025"; `short` → "Jan 2025". */
@@ -18,7 +20,7 @@ const FORMATTERS = {
     day: 'numeric',
     timeZone: 'UTC',
   }),
-  short: new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', timeZone: 'UTC' }),
+  short: monthYear,
 };
 ---
 
@@ -26,6 +28,6 @@ const FORMATTERS = {
   date === 'present' ? (
     <span>Present</span>
   ) : (
-    <time datetime={date.toISOString().slice(0, 10)}>{FORMATTERS[format].format(date)}</time>
+    <time datetime={toISODate(date)}>{FORMATTERS[format].format(date)}</time>
   )
 }

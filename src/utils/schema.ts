@@ -13,6 +13,6 @@ export const occupationRole = (job: Job) => ({
   hasOccupation: {
     '@type': 'Occupation',
     name: job.data.role,
-    ...(job.data.summary && { description: job.data.summary }),
+    description: job.data.summary,
   },
 });

@@ -24,12 +24,12 @@ const jobs = defineCollection({
     company: z.string(),
     companyUrl: z.url().optional(),
     /** Short one-liner used on the resume index. */
-    summary: z.string().optional(),
+    summary: z.string(),
     date_start: z.coerce.date(),
     // `'present'` marks the current role; anything else is parsed as a date.
     date_end: z.union([z.literal('present'), z.coerce.date()]),
     /** Technologies used in the role, shown as chips on the job page. */
-    stack: z.array(z.enum(SKILLS)).optional(),
+    stack: z.array(z.enum(SKILLS)),
   }),
 });
 

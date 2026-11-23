@@ -1,24 +1,22 @@
 ---
-import type { HTMLAttributes } from 'astro/types';
-
-type Props = HTMLAttributes<'a'> & {
+interface Props {
+  href: string;
   /** Extra top-level sections that mark this link active, e.g. `jobs`. */
   sections?: string[];
-};
+}
 
-const { href, sections = [], class: className, ...props } = Astro.props;
-const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '/').replace(/\/{2,}/g, '/');
+const { href, sections = [] } = Astro.props;
+const { pathname } = Astro.url;
 const [section = ''] = pathname.match(/[^\/]+/g) ?? [];
-const ownSection = String(href).replace(/^\/|\/$/g, '');
+const ownSection = href.replace(/^\/|\/$/g, '');
 const isCurrentPage = href === pathname;
 const isActive = isCurrentPage || ownSection === section || sections.includes(section);
 ---
 
 <a
   href={href}
-  class:list={[className, { active: isActive }]}
+  class:list={{ active: isActive }}
   aria-current={isCurrentPage ? 'page' : isActive ? 'true' : undefined}
-  {...props}
 >
   <slot />
 </a>

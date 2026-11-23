@@ -12,7 +12,7 @@ const hasPosts = await hasPublishedPosts();
       {
         SOCIALS.map((social) => (
           <a href={social.href} target="_blank" rel="me noopener noreferrer">
-            {social.label.toLowerCase()}
+            {social.label}
           </a>
         ))
       }
