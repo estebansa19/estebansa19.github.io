@@ -108,10 +108,7 @@ const resumeSchema = {
 
   <div class="columns">
     <div class="main-col">
-      <h2 class="section-head">Skills</h2>
-      <SkillTrace jobs={jobs} />
-
-      <h2 class="section-head section-head--gap">
+      <h2 class="section-head">
         Experience <span class="section-aside">{formatSpan(careerMonths)} and counting</span>
       </h2>
 
@@ -162,6 +159,9 @@ const resumeSchema = {
           })
         }
       </ol>
+
+      <h2 class="section-head section-head--gap">Skills</h2>
+      <SkillTrace jobs={jobs} />
     </div>
 
     <aside class="side">
@@ -244,8 +244,8 @@ const resumeSchema = {
 
 <style>
   /*
-    Resume shell: a display-scale name over a two-column grid — skills and the
-    experience timeline on the left, education and contact in a sticky sidebar.
+    Resume shell: a display-scale name over a two-column grid — the experience
+    timeline and skills on the left, education and contact in a sticky sidebar.
     Section heads are sentence-case with a hairline, never wide-tracked eyebrows.
   */
   .hero {
