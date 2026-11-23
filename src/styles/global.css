@@ -80,8 +80,6 @@ body {
   min-height: 100vh;
   background-color: var(--bg);
   color: var(--text);
-  text-align: left;
-  word-wrap: break-word;
   overflow-wrap: break-word;
 }
 
@@ -247,19 +245,6 @@ td {
 
 .skip-link:focus {
   left: 0;
-}
-
-.sr-only {
-  position: absolute !important;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: 0;
-  border: 0;
-  overflow: hidden;
-  clip: rect(1px, 1px, 1px, 1px);
-  clip-path: inset(50%);
-  white-space: nowrap;
 }
 
 @media (max-width: 720px) {
