@@ -102,8 +102,7 @@ const education = EDUCATION.filter((entry) => entry.cvTitle);
             <h3>
               {entry.cvTitle}, <span class="company">{entry.institution}</span>
             </h3>
-            {/* The resume's em dash becomes the en dash parsers expect in a range. */}
-            <span class="dates">{entry.period?.replace('—', '–')}</span>
+            <span class="dates">{entry.period}</span>
           </div>
         ))
       }
