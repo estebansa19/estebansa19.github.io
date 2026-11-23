@@ -28,9 +28,9 @@ export const SOCIAL_CARD = {
 };
 
 export const SOCIALS = [
-  { label: 'GitHub', href: 'https://github.com/estebansa19' },
+  { label: 'github', href: 'https://github.com/estebansa19' },
   {
-    label: 'LinkedIn',
+    label: 'linkedin',
     href: 'https://www.linkedin.com/in/estebansaldarriaga',
   },
 ] as const;

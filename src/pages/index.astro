@@ -24,7 +24,7 @@ const careerYears = yearsSince(careerStart);
 const contact = [
   { label: 'email', href: `mailto:${AUTHOR.email}`, text: AUTHOR.email },
   ...SOCIALS.map((social) => ({
-    label: social.label.toLowerCase(),
+    label: social.label,
     href: social.href,
     text: new URL(social.href).pathname.slice(1),
   })),
@@ -89,7 +89,7 @@ const resumeSchema = {
         {
           SOCIALS.map((social) => (
             <a href={social.href} target="_blank" rel="me noopener noreferrer">
-              {social.label.toLowerCase()}
+              {social.label}
             </a>
           ))
         }
