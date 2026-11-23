@@ -1,7 +1,7 @@
 ---
 // Imported here so global.css is included on every page that renders <BaseHead />.
 import '../styles/global.css';
-import { SITE_TITLE, SITE_DESCRIPTION, AUTHOR, SOCIAL_CARD, SOCIALS, titleTemplate } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, AUTHOR, SOCIAL_CARD, SOCIALS } from '../consts';
 import { hasPublishedPosts } from '../utils/content';
 import { personId } from '../utils/schema';
 
@@ -30,7 +30,7 @@ const {
   fullTitle = false,
 } = Astro.props;
 
-const documentTitle = fullTitle ? title : titleTemplate(title);
+const documentTitle = fullTitle ? title : `${title} — ${AUTHOR.shortName}`;
 const hasPosts = await hasPublishedPosts();
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const absoluteImageUrl = new URL(image, Astro.site);

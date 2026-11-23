@@ -34,6 +34,3 @@ export const SOCIALS = [
     href: 'https://www.linkedin.com/in/estebansaldarriaga',
   },
 ] as const;
-
-/** `<title>` for every page except the home page, which uses its own full title. */
-export const titleTemplate = (title: string) => `${title} — ${AUTHOR.shortName}`;
