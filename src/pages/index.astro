@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import CareerStrip from '../components/CareerStrip.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import SkillTrace from '../components/SkillTrace.astro';
-import { AUTHOR, CV_PDF, SITE_DESCRIPTION, SOCIALS } from '../consts';
+import { AUTHOR, CV_PDF, SOCIALS } from '../consts';
 import { EDUCATION } from '../data/education';
 import { SKILLS } from '../data/skills';
 import { getJobs, tenureOf } from '../utils/career';
@@ -59,7 +59,6 @@ const resumeSchema = {
 
 <BaseLayout
   title={`${AUTHOR.name} — ${AUTHOR.jobTitle}`}
-  description={SITE_DESCRIPTION}
   fullTitle
   schema={[resumeSchema]}
 >

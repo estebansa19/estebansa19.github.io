@@ -1,13 +1,13 @@
 ---
 // Imported here so global.css is included on every page that renders <BaseHead />.
 import '../styles/global.css';
-import { SITE_TITLE, AUTHOR, SOCIAL_CARD, SOCIALS, titleTemplate } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, AUTHOR, SOCIAL_CARD, SOCIALS, titleTemplate } from '../consts';
 import { hasPublishedPosts } from '../utils/content';
 import { personId } from '../utils/schema';
 
 interface Props {
   title: string;
-  description: string;
+  description?: string;
   /** Site-relative or absolute URL used for og:image / twitter:image. */
   image?: string;
   type?: 'website' | 'article';
@@ -21,7 +21,7 @@ interface Props {
 
 const {
   title,
-  description,
+  description = SITE_DESCRIPTION,
   image = SOCIAL_CARD.src,
   type = 'website',
   publishedTime,
