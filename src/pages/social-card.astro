@@ -46,7 +46,7 @@ const careerMonths = monthsBetween(jobs.at(-1)!.data.date_start, new Date());
 
       <footer class="site">
         <img src="/favicon.svg" alt="" width="30" height="30" />
-        {new URL(Astro.site!).host}
+        {Astro.site!.host}
       </footer>
     </main>
   </body>
