@@ -1,5 +1,5 @@
 // @ts-check
-import { readFile, rm, writeFile } from 'node:fs/promises';
+import { rm, writeFile } from 'node:fs/promises';
 import { extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -68,23 +68,8 @@ async function serve(root, route) {
   let path = decodeURIComponent(new URL(route.request().url()).pathname);
   if (path.endsWith('/')) path += 'index.html';
   try {
-    const body = await readFile(join(root, path));
-    await route.fulfill({ body, contentType: CONTENT_TYPES[extname(path)] });
+    await route.fulfill({ path: join(root, path) });
   } catch {
     await route.fulfill({ status: 404 });
   }
 }
-
-/** @type {Record<string, string>} */
-const CONTENT_TYPES = {
-  '.html': 'text/html',
-  '.css': 'text/css',
-  '.js': 'text/javascript',
-  '.woff2': 'font/woff2',
-  '.svg': 'image/svg+xml',
-  '.webp': 'image/webp',
-  '.jpg': 'image/jpeg',
-  '.png': 'image/png',
-  '.json': 'application/json',
-  '.webmanifest': 'application/manifest+json',
-};
